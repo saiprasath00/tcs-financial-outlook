@@ -1,0 +1,132 @@
+/* =====================================================================
+   charts.css — styling for the hand-built SVG chart kit
+   Classes referenced by charts.js / charts2.js:
+   #heroChart #runwayChart #spreadChart #trendChart #marginChart
+   #cashChart #compareChart, [data-kpi-spark] hosts;
+   .chart-tooltip .tooltip-title .tooltip-row, .axis-text(--muted/--strong),
+   .chart-label(--inverse), .chart-bar, .grid-line, .forecast-zone,
+   .forecast-edge, .chart-line--actual, .crosshair, .hover-dot, .draw.
+   Colors come from base.css tokens. SVG text never smaller than ~10px
+   rendered: charts.js legibleText() and the classes here enforce it.
+   ===================================================================== */
+
+.chart-viewport {
+  position: relative;
+  z-index: 1;
+}
+.chart-viewport > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* ---- axis + label voices ------------------------------------------------- */
+
+.axis-text {
+  fill: var(--ink-mid);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+.axis-text--muted { fill: var(--ink-mid); }
+.axis-text--strong { fill: var(--ink); font-weight: 700; }
+
+.chart-label {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  /* labels that carry a fill attribute keep it; unstyled labels fall to ink */
+}
+.chart-viewport .chart-label:not([fill]) { fill: var(--ink); }
+.chart-label--inverse { fill: var(--ground) !important; font-weight: 700; }
+
+/* ---- structural lines ------------------------------------------------------- */
+
+.grid-line { stroke: var(--hairline); }
+.chart-line--actual {
+  stroke: var(--ink);
+  fill: none;
+}
+
+.forecast-zone { fill: #e9e3f8; }           /* a violet wash marks the case years */
+.forecast-edge {
+  stroke: var(--violet-line);
+  stroke-dasharray: 2 4;
+}
+
+.crosshair {
+  stroke: var(--hairline-strong);
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-micro);
+}
+.crosshair.is-visible { opacity: 1; }
+
+.hover-dot { opacity: 0; transition: opacity var(--dur-2) var(--ease-micro); }
+.hover-dot.is-visible { opacity: 1; }
+
+/* ---- bars ------------------------------------------------------------------ */
+
+.chart-bar {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+:root[data-motion="full"] .chart-bar {
+  animation: chart-bar-in 0.6s var(--ease-out-quart) both;
+}
+@keyframes chart-bar-in {
+  from { transform: scaleY(0.02); }
+  to { transform: scaleY(1); }
+}
+
+/* ---- tooltip ----------------------------------------------------------------- */
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 40;
+  pointer-events: none;
+  min-width: 11rem;
+  max-width: 17rem;
+  background: var(--ink);
+  color: var(--ground);
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  opacity: 0;
+  translate: 0 5px;
+  scale: 0.985;
+  transition: opacity var(--dur-2) var(--ease-micro), translate var(--dur-2) var(--ease-micro);
+  box-shadow: var(--shadow-lift);
+}
+.chart-tooltip.is-visible { opacity: 1; translate: 0 0; scale: 1; }
+.tooltip-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.9rem;
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  white-space: nowrap;
+}
+.tooltip-title span { color: #c1b3f5; font-weight: 500; }
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  color: #cdd3c8;
+  padding-block: 0.12rem;
+}
+.tooltip-row b { color: #fff; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tooltip-row.is-active span { color: #c1b3f5; }
+
+/* dark-chapter tooltips (charts live on paper plates there, but the
+   futures chapter tooltips may also sit on night cards) */
+.chapter--dark .kpi .chart-tooltip { background: var(--night-card); border: 1px solid var(--night-line); color: var(--night-ink); }
+.chapter--dark .kpi .chart-tooltip .tooltip-title span,
+.chapter--dark .kpi .chart-tooltip .tooltip-row.is-active span { color: #b9a4e8; }
+.chapter--dark .kpi .chart-tooltip .tooltip-row { color: var(--night-mid); }
+.chapter--dark .kpi .chart-tooltip .tooltip-row b { color: #f4f6ea; }

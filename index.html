@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en" data-motion="full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TCS Financial Outlook — a hand-built earnings model, FY2018–FY2028</title>
+  <meta name="description" content="An interactive financial story of Tata Consultancy Services: nine verified years, FY2026 results, and three analytical futures. Hand-built SVG charts, a live data ledger and a downloadable CSV.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#213bfa">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!-- Boot: motion gate (flags capability, hides nothing), then the intro deadline -->
+  <script>
+    (function (root) {
+      var osReduce = false;
+      try { osReduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+      var full = !osReduce;
+      root.setAttribute('data-motion', full ? 'full' : 'reduce');
+      if (full) root.classList.add('motion-ok');
+    })(document.documentElement);
+  </script>
+  <style>
+    :root[data-motion="full"]:not([data-intro-owned]) [data-intro] {
+      clip-path: inset(0 0 100% 0);
+      animation: intro-deadline-clip 1ms var(--intro-deadline, 2s) forwards;
+    }
+    :root[data-motion="full"]:not([data-intro-owned]) [data-intro-item] {
+      translate: 0 var(--intro-shift, 1rem);
+      animation: intro-deadline-shift 1ms var(--intro-deadline, 2s) forwards;
+    }
+    :root[data-motion="full"]:not([data-intro-owned]) [data-intro-media] {
+      scale: var(--intro-scale, 1.06);
+      animation: intro-deadline-scale 1ms var(--intro-deadline, 2s) forwards;
+    }
+    @keyframes intro-deadline-clip  { to { clip-path: none; } }
+    @keyframes intro-deadline-shift { to { translate: none; } }
+    @keyframes intro-deadline-scale { to { scale: none; } }
+  </style>
+
+  <!-- Pinned motion stack (Lenis + GSAP). The network fetches before the module boots. -->
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/gsap@3.15.0/+esm">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js/+esm">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js/+esm">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/gsap@3.15.0/CustomEase.js/+esm">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/+esm">
+  <script type="importmap">
+  {
+    "imports": {
+      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/+esm",
+      "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js/+esm",
+      "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js/+esm",
+      "gsap/CustomEase": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/CustomEase.js/+esm",
+      "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/+esm"
+    }
+  }
+  </script>
+
+  <!-- The rebuilt data atlas uses one self-hosted typeface. -->
+  <link rel="preload" href="assets/fonts/switzer-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/switzer-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="assets/story.css">
+  <link rel="stylesheet" href="assets/charts.css">
+  <link rel="stylesheet" href="assets/motion-core.css">
+  <link rel="stylesheet" href="assets/reboot.css">
+</head>
+<body>
+  <a class="skip" href="#overview">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span id="scrollProgress"></span></div>
+
+  <header class="topbar">
+    <div class="topbar-row">
+      <a class="wordmark" href="#overview">TCS <b>·</b> Financial Outlook</a>
+      <nav class="top-nav" aria-label="Chapters">
+        <a href="#workbook" data-nav="workbook">The workbook</a>
+        <a href="#trend" data-nav="trend">The trend</a>
+        <a href="#futures" data-nav="futures">Futures</a>
+        <a href="#margins" data-nav="margins">Margins</a>
+        <a href="#ledger" data-nav="ledger">The ledger</a>
+        <a href="#method" data-nav="method">Method</a>
+      </nav>
+      <span id="topbarSection" class="topbar-chip">00 / Overview</span>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ================= HERO ================= -->
+    <section class="chapter chapter--hero" id="overview" aria-labelledby="heroTitle">
+      <div class="shell">
+        <p class="kicker" data-intro-item>TCS Financial Outlook · FY2018 – FY2028 · Bear / Base / Bull</p>
+        <h1 class="hero-title" id="heroTitle" data-intro>Nine years. <em>Three futures.</em></h1>
+        <p class="lede hero-lede" data-intro-item>Nine years of the record. One statutory FY2026 bridge. Three analytical cases you can switch in real time. Trace every number through the model, charts and ledger.</p>
+        <ul class="hero-tags" data-intro-item>
+          <li><span>FY2026 reported revenue</span><b>₹2,67,021 Cr</b></li>
+          <li><span>FY2026 statutory PAT</span><b>₹49,454 Cr</b></li>
+          <li><span>Model horizon</span><b>FY2027 – FY2028</b></li>
+        </ul>
+
+        <figure class="hero-panel" data-intro-media>
+          <div class="hero-deck">
+            <b class="hero-value" id="heroValue">3,12,762<small> Cr revenue</small></b>
+            <div class="hero-deck-eyebrow">
+              <span id="heroScenario">Base Case</span> · <span id="heroYear">FY2028</span>
+              <b class="hero-delta" id="heroDelta">+6.0%</b>
+              <span id="heroDeltaLabel">vs FY2027</span>
+            </div>
+            <div class="hero-deck-right">
+              <span class="hero-range">FY2026 actual <b id="heroActual">₹2,67,021 Cr</b></span>
+              <span class="hero-range">FY2028 all cases <b id="heroRange">₹2.97L – ₹3.27L Cr</b></span>
+            </div>
+          </div>
+          <div class="hero-controls" aria-label="Explore the model">
+            <div class="hero-control-group" role="group" aria-label="Scenario">
+              <span>01 / Pick a case</span>
+              <button type="button" data-scenario="Bear Case" aria-pressed="false">Bear</button>
+              <button type="button" data-scenario="Base Case" aria-pressed="true">Base</button>
+              <button type="button" data-scenario="Bull Case" aria-pressed="false">Bull</button>
+            </div>
+            <div class="hero-control-group" role="group" aria-label="Fiscal year">
+              <span>02 / Pick a year</span>
+              <button type="button" data-year="FY2026" aria-pressed="false">FY26</button>
+              <button type="button" data-year="FY2027" aria-pressed="false">FY27</button>
+              <button type="button" data-year="FY2028" aria-pressed="true">FY28</button>
+            </div>
+          </div>
+          <div class="chart-viewport" id="heroChart" role="img" aria-label="Revenue line FY2018 to FY2028: reported history, FY2026 actual, then the selected analytical case">
+            <!-- static no-JS fallback: replaced as soon as the chart kit draws -->
+            <svg class="fallback-chart" viewBox="0 0 900 330" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" style="display:block;width:100%;height:auto">
+              <line x1="56" y1="294" x2="884" y2="294" stroke="rgba(22,27,24,0.15)"/>
+              <line x1="56" y1="187" x2="884" y2="187" stroke="rgba(22,27,24,0.10)"/>
+              <line x1="56" y1="80" x2="884" y2="80" stroke="rgba(22,27,24,0.10)"/>
+              <text x="48" y="298" font-size="12" font-family="ui-monospace, Consolas, monospace" fill="#565e55" text-anchor="end">₹1L</text>
+              <text x="48" y="191" font-size="12" font-family="ui-monospace, Consolas, monospace" fill="#565e55" text-anchor="end">₹2L</text>
+              <text x="48" y="84" font-size="12" font-family="ui-monospace, Consolas, monospace" fill="#565e55" text-anchor="end">₹3L</text>
+              <path d="M56 269.2 L138.8 244.2 L221.6 233 L304.4 225.2 L387.2 195.6 L470 159.5 L552.8 143 L635.6 127.5 L718.4 115 L884 65.9 L884 294 L56 294 Z" fill="rgba(22,27,24,0.09)"/>
+              <path d="M56 269.2 L138.8 244.2 L221.6 233 L304.4 225.2 L387.2 195.6 L470 159.5 L552.8 143 L635.6 127.5 L718.4 115" fill="none" stroke="#161b18" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+              <path d="M718.4 115 L801.2 84.9 L884 65.9" fill="none" stroke="#1d4ed8" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="56" cy="269.2" r="3.5" fill="#161b18" stroke="#fbfcf7" stroke-width="1.2"/>
+              <circle cx="718.4" cy="115" r="4" fill="#161b18" stroke="#fbfcf7" stroke-width="1.4"/>
+              <circle cx="884" cy="65.9" r="4" fill="#1d4ed8" stroke="#fbfcf7" stroke-width="1.4"/>
+              <text x="60" y="257" font-size="11" font-family="ui-monospace, Consolas, monospace" fill="#3a423b">₹1.23L</text>
+              <text x="716" y="104" font-size="12" font-weight="700" font-family="ui-monospace, Consolas, monospace" fill="#161b18" text-anchor="middle">FY2026 · ₹2,67,021 Cr</text>
+              <text x="878" y="54" font-size="12" font-weight="700" font-family="ui-monospace, Consolas, monospace" fill="#1d4ed8" text-anchor="end">FY2028 · ₹3.13L · Base Case</text>
+              <text x="56" y="322" font-size="11" font-family="ui-monospace, Consolas, monospace" fill="#565e55" text-anchor="middle">FY18</text>
+              <text x="387" y="322" font-size="11" font-family="ui-monospace, Consolas, monospace" fill="#565e55" text-anchor="middle">FY22</text>
+              <text x="718" y="322" font-size="11" font-weight="600" font-family="ui-monospace, Consolas, monospace" fill="#161b18" text-anchor="middle">FY26</text>
+              <text x="884" y="322" font-size="11" font-family="ui-monospace, Consolas, monospace" fill="#565e55" text-anchor="middle">FY28</text>
+            </svg>
+          </div>
+        </figure>
+
+        <p class="scroll-cue" aria-hidden="true">Scroll the chapters</p>
+      </div>
+    </section>
+
+    <!-- ================= 01 THE WORKBOOK ================= -->
+    <section class="chapter" id="workbook" aria-labelledby="workbookTitle">
+      <div class="shell">
+        <header class="chapter-head">
+          <span class="chapter-no">01 — The workbook</span>
+          <h2 class="chapter-title" id="workbookTitle" data-reveal="lines">Every number here can point at its source.</h2>
+          <p class="lede chapter-lede" data-reveal="settle">The model runs on 88 historical cells across 11 metrics (FY2018–FY2025),
+            transcribed cell by cell from the supplied workbook, plus 30 scenario values in 10 assumption rows carried through three cases.
+            Each value was re-keyed and re-checked against the source — <strong>88/88 and 30/30 match</strong>.</p>
+        </header>
+
+        <div class="evidence-band" data-reveal="items">
+          <div class="evidence"><b data-count="88">88</b><span>historical cells verified</span></div>
+          <div class="evidence"><b data-count="30">30</b><span>case values in 3 scenarios</span></div>
+          <div class="evidence"><b data-count="118">118</b><span>data points in the model</span></div>
+          <div class="evidence"><b data-count="11">11</b><span>fiscal years, FY2018–FY2028</span></div>
+        </div>
+
+        <div class="workbook-grid" data-reveal="settle" style="margin-top:1rem">
+          <div class="panel">
+            <span class="foot-label">What lives on this page</span>
+            <ul class="workbook-list">
+              <li><b>data.js</b><p>A frozen data module: 8 reported years, the FY2026 actuals, and one row per case per forecast year. The source workbook's SHA-256 hash is pinned inside.</p></li>
+              <li><b>charts</b><p>A hand-written SVG chart kit in two files — line, area, bar, paired bars, margin lines, spread and sparklines. No charting library is imported; reading the source fully explains any pixel.</p></li>
+              <li><b>ledger</b><p>The complete table — reported, actual and all six case-years — clickable, filterable, and exportable as CSV.</p></li>
+              <li><b>rules</b><p>Definitions are kept visible: reported vs model-derived values, statutory PAT, and where the model's own estimates are drawn and why.</p></li>
+            </ul>
+          </div>
+          <div class="panel panel--flat">
+            <span class="foot-label">The reported shape, FY2018–FY2025</span>
+            <div class="spark-rail">
+              <article class="spark-card">
+                <h3 style="--dot:#1d4ed8">Revenue</h3>
+                <div data-sys-spark="revenue"></div>
+                <span class="num">₹2.55L Cr</span><small>FY2025, reported</small>
+              </article>
+              <article class="spark-card">
+                <h3 style="--dot:#0f766e">EBITDA</h3>
+                <div data-sys-spark="ebitda"></div>
+                <span class="num">₹71,369 Cr</span><small>FY2025, reported</small>
+              </article>
+              <article class="spark-card">
+                <h3 style="--dot:#6d28d9">PAT</h3>
+                <div data-sys-spark="pat"></div>
+                <span class="num">₹48,797 Cr</span><small>FY2025, workbook</small>
+              </article>
+              <article class="spark-card">
+                <h3 style="--dot:#c2410c">FCF</h3>
+                <div data-sys-spark="fcf"></div>
+                <span class="num">₹47,776 Cr</span><small>FY2025, reported</small>
+              </article>
+            </div>
+            <p class="workbook-note" style="margin-top:1rem"><b>FY2026 is reported, not forecast.</b>
+              Revenue ₹2,67,021 Cr (+4.6%) · EBIT ₹66,838 Cr · statutory PAT ₹49,454 Cr · EPS ₹136.01 ·
+              operating cash flow ₹52,094 Cr · 5,84,519 employees — from TCS's Q4 & FY2026 results, filed 9 April 2026.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 02 THE TREND ================= -->
+    <section class="chapter" id="trend" aria-labelledby="trendHeading">
+      <div class="shell">
+        <header class="chapter-head">
+          <span class="chapter-no">02 — The trend</span>
+          <h2 class="chapter-title" id="trendHeading" data-reveal="lines">Nine reported years. Then the model takes over.</h2>
+          <p class="lede chapter-lede" data-reveal="settle">Pick a metric below. Bars switch between reported, actual and case data;
+            hover any year for the exact figure; the growth strip underneath charts every year-on-year move.</p>
+        </header>
+
+        <div class="control-row" role="group" aria-label="Trend controls">
+          <span class="control-label">Metric</span>
+          <button class="chip is-active" type="button" data-trend-metric="revenue" aria-pressed="true">Revenue</button>
+          <button class="chip" type="button" data-trend-metric="ebitda" aria-pressed="false">EBITDA</button>
+          <button class="chip" type="button" data-trend-metric="pat" aria-pressed="false">Net profit</button>
+          <button class="chip" type="button" data-trend-metric="eps" aria-pressed="false">EPS</button>
+          <button class="chip" type="button" data-trend-metric="fcf" aria-pressed="false">FCF</button>
+          <span class="control-label" style="margin-left:auto">Case</span>
+          <button class="chip" type="button" data-scenario="Bear Case" aria-pressed="false">Bear</button>
+          <button class="chip" type="button" data-scenario="Base Case" aria-pressed="true">Base</button>
+          <button class="chip" type="button" data-scenario="Bull Case" aria-pressed="false">Bull</button>
+          <span class="control-label">Year</span>
+          <button class="chip" type="button" data-year="FY2026" aria-pressed="false">FY2026</button>
+          <button class="chip" type="button" data-year="FY2027" aria-pressed="false">FY2027</button>
+          <button class="chip" type="button" data-year="FY2028" aria-pressed="true">FY2028</button>
+        </div>
+
+        <div class="trend-grid">
+          <div class="panel">
+            <span class="foot-label">Bars — reported · actual · selected case</span>
+            <h3 id="trendTitle">Revenue</h3>
+            <p id="trendCaption" class="face-label">
+              Reported revenue through FY2025; FY2026 actual ₹2,67,021 Cr; then the selected analytical case. Bars are direct-labelled at the latest actual and the selected forecast year.
+            </p>
+            <div class="chart-viewport" id="trendChart" role="img" aria-label="Bar chart FY2018 to FY2028"><p class="chart-fallback">The bar chart draws in on load — every figure behind it is also listed in The ledger chapter.</p></div>
+            <div class="growth-strip-wrap">
+              <span class="foot-label group-label">Year-on-year growth by year</span>
+              <div class="growth-strip" id="trendGrowthStrip">
+                <p class="muted-note">The growth strip loads with JavaScript. The exact numbers are in the table in The ledger chapter.</p>
+              </div>
+              <div class="spark-labels" aria-hidden="true">
+                <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel trend-side">
+            <div class="stat-stack">
+              <div class="stat">
+                <label id="trendLatestKicker">Latest actual</label>
+                <div><span id="trendLatest">₹2,67,021 <small>Cr</small></span></div>
+                <small id="trendLatestLabel">FY2026 reported</small>
+              </div>
+              <div class="cagr-pair">
+                <div><label>7-year CAGR</label><div class="num" id="trendCagr" style="font-size:1.4rem;font-weight:700">11.0%</div></div>
+                <div><label>3-year CAGR</label><div class="num" id="trendCagr3" style="font-size:1.4rem;font-weight:700">10.0%</div></div>
+              </div>
+              <div class="stat">
+                <label id="trendForecastLabel">FY2028 · Base Case</label>
+                <div><span id="trendForecast">₹3,12,762 <small>Cr</small></span></div>
+                <small id="trendChange">+17.1% vs FY2026 · ₹ crore</small>
+              </div>
+              <p id="trendNote" class="face-label" style="text-transform:none;letter-spacing:0;color:var(--ink-mid);font-weight:400">
+                The forecast is an analytical case, not a projection of guidance. Every metric definition stays qualified in the ledger.
+              </p>
+              <p class="foot-label" id="trendFootCase" style="margin-top:0.55rem">Assumption base: Base Case</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MARQUEE DIVIDER ================= -->
+    <aside class="marquee-field" aria-label="The record in nine figures">
+      <div class="marquee-inner">
+        <span class="marquee-seed">The record, on repeat</span>
+        <div data-marquee data-marquee-speed="62">
+          <div data-marquee-track>
+            <ul data-marquee-group>
+              <li class="marquee-item"><span>FY18</span><b>₹1.23L Cr</b></li>
+              <li class="marquee-item"><span>FY20</span><b>₹1.57L Cr</b></li>
+              <li class="marquee-item"><span>FY22</span><b>₹1.92L Cr</b></li>
+              <li class="marquee-item"><span>FY24</span><b>₹2.41L Cr</b></li>
+              <li class="marquee-item"><span>FY26</span><b>₹2.67L Cr</b><span>reported</span></li>
+              <li class="marquee-item"><span>FY28</span><b>₹3.13L Cr</b><span>base case</span></li>
+              <li class="marquee-item"><span>FY26 PAT</span><b>₹49,454 Cr</b></li>
+              <li class="marquee-item"><span>FY26 EPS</span><b>₹136.01</b></li>
+              <li class="marquee-item"><span>cells verified</span><b>88 / 88</b></li>
+              <li class="marquee-item"><span>charting libraries</span><b>0</b></li>
+            </ul>
+          </div>
+          <button type="button" class="marquee-ctl" data-marquee-toggle aria-pressed="false" hidden>Pause ticker</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= 03 THREE FUTURES ================= -->
+    <section class="chapter chapter--dark" id="futures" aria-labelledby="futuresHeading">
+      <div class="shell">
+        <header class="chapter-head">
+          <span class="chapter-no">03 — Three futures</span>
+          <h2 class="chapter-title" id="futuresHeading" data-reveal="lines">Same company. Three different FY2028s.</h2>
+          <p class="lede chapter-lede" data-reveal="settle">One selector, wired through everything on this dark chapter — KPI cards, runway,
+            spread, comparison, assumptions and drivers. Choose Bear, Base or Bull below and every number follows.</p>
+        </header>
+
+        <div class="control-row" role="group" aria-label="Case selector">
+          <button class="chip" type="button" data-scenario="Bear Case" aria-pressed="false">Bear Case</button>
+          <button class="chip" type="button" data-scenario="Base Case" aria-pressed="true">Base Case</button>
+          <button class="chip" type="button" data-scenario="Bull Case" aria-pressed="false">Bull Case</button>
+          <span id="kpiTitle" class="control-label" style="margin-left:auto;color:var(--night-dim)">Base Case · FY2028</span>
+        </div>
+
+        <div class="kpi-band" data-reveal="items">
+          <article class="kpi">
+            <div class="kpi-head"><h3>Revenue</h3><span class="kpi-year">FY2028</span></div>
+            <div data-kpi-spark="revenue"></div>
+            <div class="kpi-body"><b class="kpi-value" data-kpi-value="revenue">3,12,762</b><span class="kpi-delta" data-kpi-delta="revenue">+6.0%</span></div>
+            <p class="kpi-foot" data-kpi-compare="revenue">vs FY2027 · ₹ Cr</p>
+          </article>
+          <article class="kpi">
+            <div class="kpi-head"><h3>EBITDA, model</h3><span class="kpi-year">FY2028</span></div>
+            <div data-kpi-spark="ebitda"></div>
+            <div class="kpi-body"><b class="kpi-value" data-kpi-value="ebitda">82,726</b><span class="kpi-delta" data-kpi-delta="ebitda">+8.0%</span></div>
+            <p class="kpi-foot" data-kpi-compare="ebitda">vs FY2027 · ₹ Cr</p>
+          </article>
+          <article class="kpi">
+            <div class="kpi-head"><h3>Net profit</h3><span class="kpi-year">FY2028</span></div>
+            <div data-kpi-spark="pat"></div>
+            <div class="kpi-body"><b class="kpi-value" data-kpi-value="pat">60,676</b><span class="kpi-delta" data-kpi-delta="pat">+7.7%</span></div>
+            <p class="kpi-foot" data-kpi-compare="pat">vs FY2027 · ₹ Cr</p>
+          </article>
+          <article class="kpi">
+            <div class="kpi-head"><h3>FCF, model</h3><span class="kpi-year">FY2028</span></div>
+            <div data-kpi-spark="fcf"></div>
+            <div class="kpi-body"><b class="kpi-value" data-kpi-value="fcf">55,672</b><span class="kpi-delta" data-kpi-delta="fcf">+7.8%</span></div>
+            <p class="kpi-foot" data-kpi-compare="fcf">vs FY2027 · ₹ Cr</p>
+          </article>
+        </div>
+
+        <div class="futures-row">
+          <figure class="plate" data-reveal="settle">
+            <span class="foot-label">Revenue runway — history, actual and all three cases</span>
+            <h3>Revenue runway</h3>
+            <p class="face-label">The ink line is the nine-year reported record with the FY2026 actual; each case colors its own path into FY2027–FY2028.</p>
+            <div class="chart-viewport" id="runwayChart" role="img" aria-label="Revenue runway FY2018 to FY2028 with three cases"><p class="chart-fallback">The line chart draws in on load — the case row values are listed in The ledger chapter.</p></div>
+          </figure>
+          <div class="context-card" data-reveal="settle">
+            <span class="face-label">Where you are</span>
+            <div class="context-line">
+              <b class="context-value" id="spreadTitle">₹3.13L — 3.27L <small>Cr</small></b>
+              <span class="year-badge" id="spreadBadge">FY2028</span>
+            </div>
+            <div class="context-line">
+              <span class="context-meta"><b id="contextScenario">Base Case</b> · <span id="contextYear">FY2028</span></span>
+              <span class="context-meta">vs FY2026 actual: <b id="contextVsActual">+17.1%</b></span>
+            </div>
+            <div class="case-scale-dots" aria-hidden="true">
+              <span class="case-scale-dot" data-case-dot="Bear Case"></span>
+              <span class="case-scale-dot" data-case-dot="Base Case"></span>
+              <span class="case-scale-dot" data-case-dot="Bull Case"></span>
+            </div>
+            <p class="context-note" id="contextNote">Base sits between the two sensitivity cases. Select any case to move every selected output together.</p>
+            <p class="context-note" style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.02em">FY2027–FY2028 rows are analytical cases — not TCS guidance.</p>
+          </div>
+        </div>
+
+        <div class="cases-band" data-reveal="items">
+          <button class="case-card" type="button" data-scenario="Bear Case" aria-pressed="false">
+            <div class="case-top"><span class="case-name">Bear Case</span><span class="case-delta" data-case-delta="Bear Case">−5.0% vs Base</span></div>
+            <div class="case-value" data-case-value="Bear Case">2,97,034 <small id="case-m-bear">Cr revenue · <span data-case-year="Bear Case">FY2028</span></small></div>
+            <div class="case-fill"><span data-case-fill="Bear Case"></span></div>
+            <span data-case-metric="Bear Case" class="sr-only">Revenue</span>
+          </button>
+          <button class="case-card" type="button" data-scenario="Base Case" aria-pressed="true">
+            <div class="case-top"><span class="case-name">Base Case</span><span class="case-delta" data-case-delta="Base Case">The modelled baseline</span></div>
+            <div class="case-value" data-case-value="Base Case">3,12,762 <small>Cr revenue · <span data-case-year="Base Case">FY2028</span></small></div>
+            <div class="case-fill"><span data-case-fill="Base Case"></span></div>
+            <span data-case-metric="Base Case" class="sr-only">Revenue</span>
+          </button>
+          <button class="case-card" type="button" data-scenario="Bull Case" aria-pressed="false">
+            <div class="case-top"><span class="case-name">Bull Case</span><span class="case-delta" data-case-delta="Bull Case">+4.7% vs Base</span></div>
+            <div class="case-value" data-case-value="Bull Case">3,27,435 <small>Cr revenue · <span data-case-year="Bull Case">FY2028</span></small></div>
+            <div class="case-fill"><span data-case-fill="Bull Case"></span></div>
+            <span data-case-metric="Bull Case" class="sr-only">Revenue</span>
+          </button>
+        </div>
+
+        <div class="futures-row2">
+          <figure class="plate" data-reveal="settle">
+            <span class="foot-label">Cases side by side</span>
+            <h3 id="compareTitle">Revenue · FY2027 vs FY2028</h3>
+            <div class="control-row" style="margin-block:0.7rem 0.9rem">
+              <button class="chip is-active" type="button" data-compare-metric="revenue" aria-pressed="true">Revenue</button>
+              <button class="chip" type="button" data-compare-metric="pat" aria-pressed="false">Net profit</button>
+              <button class="chip" type="button" data-compare-metric="eps" aria-pressed="false">EPS</button>
+              <button class="chip" type="button" data-compare-metric="fcf" aria-pressed="false">FCF</button>
+            </div>
+            <div class="chart-viewport" id="compareChart" role="img" aria-label="Case comparison for FY2027 and FY2028"><p class="chart-fallback">The comparison draws in on load — the case values are listed in The ledger chapter.</p></div>
+            <p class="face-label" style="margin-top:0.7rem">Click or focus a case column to adopt it.</p>
+          </figure>
+          <div class="assum-card" data-reveal="settle">
+            <span class="foot-label">Assumptions — Bear / Base / Bull, as supplied</span>
+            <div class="table-wrap">
+              <table>
+                <thead><tr>
+                  <th scope="col">Parameter</th>
+                  <th scope="col" data-assumption-case="Bear Case">Bear</th>
+                  <th scope="col" data-assumption-case="Base Case" class="is-selected">Base</th>
+                  <th scope="col" data-assumption-case="Bull Case">Bull</th>
+                  <th scope="col">Unit</th>
+                </tr></thead>
+                <tbody id="assumptionBody">
+                  <tr><td>The assumption grid loads with JavaScript. The full grid is also listed in the model workbook inside the project zip.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="drivers-card" data-reveal="settle">
+          <span class="face-label">What the selected case is made of</span>
+          <h3 id="driverTitle" style="font-family:var(--font-display);font-size:1.3rem;margin-top:0.3rem">Base Case · FY2028</h3>
+          <div id="driverList">
+            <p class="muted-note" style="border-color:var(--night-line);color:var(--night-mid)">Driver meters load with JavaScript. The underlying values sit in the ledger chapter.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 04 MARGINS & CASH ================= -->
+    <section class="chapter" id="margins" aria-labelledby="marginsHeading">
+      <div class="shell">
+        <header class="chapter-head">
+          <span class="chapter-no">04 — Margins & cash</span>
+          <h2 class="chapter-title" id="marginsHeading" data-reveal="lines">Where the profit and the cash part ways.</h2>
+          <p class="lede chapter-lede" data-reveal="settle">Margins first: EBITDA against PAT, every fiscal year through FY2028.
+            Then the cash story that made this page stricter — the year TCS stopped publishing a free cash flow line.</p>
+        </header>
+
+        <div class="margins-grid">
+          <figure class="panel" data-reveal="settle">
+            <span class="foot-label">Every fiscal year, both margins</span>
+            <h3>Margins, FY2018–FY2028</h3>
+            <p class="face-label">EBITDA is the model proxy (EBIT + depreciation). Solid lines are reported, dotted are the selected case.</p>
+            <div class="chart-viewport" id="marginChart" role="img" aria-label="EBITDA and PAT margins FY2018 to FY2028"><p class="chart-fallback">The margin lines draw in on load — the underlying rows are in The ledger chapter.</p></div>
+          </figure>
+          <div class="note-card" data-reveal="settle">
+            <span class="foot-label">Reading the FY2026 dip</span>
+            <p>Both margins dip into FY2026 on the plotted (statutory) basis: PAT lands at <b>18.5%</b> of revenue and EBITDA near <b>27.1%</b>,
+              because TCS booked roughly <b>₹3,362 Cr</b> of one-off items in the year.</p>
+            <p>Excluding those items, the company's own framing is <b>25.0% operating margin</b> (+70 bps) and <b>19.8% net margin</b>. The chart keeps the
+              statutory basis on purpose — the book that re-runs itself should not pick the flattering line.</p>
+          </div>
+        </div>
+
+        <div class="cash-grid">
+          <figure class="panel" data-reveal="settle">
+            <span class="foot-label">Net profit vs free cash flow</span>
+            <h3>Profit and cash, FY2018–FY2027</h3>
+            <p class="face-label">Ink bars = net profit. Amber bars = reported free cash flow. The final pair follows your selected case.</p>
+            <div class="chart-viewport" id="cashChart" role="img" aria-label="Net profit versus free cash flow FY2018 to FY2027"><p class="chart-fallback">The paired bars draw in on load — the FY2026 FCF slot stays empty by design.</p></div>
+          </figure>
+          <div class="note-card" data-reveal="settle">
+            <span class="foot-label">The empty FY2026 slot</span>
+            <p>For FY2026 the cash bar is <b>empty on purpose</b>: TCS reported <b>₹52,094 Cr</b> of operating cash flow, but no free cash flow line
+              — its FY2026 disclosures define cash differently, and the honest slot is an absent one, not a guessed number.</p>
+            <p>FY2027 opens in your selected case color, with the model's own FCF — operations less capex, per the workbook rules.
+              Hover any bar for the exact pair and the FCF/PAT conversion.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 05 THE LEDGER ================= -->
+    <section class="chapter" id="ledger" aria-labelledby="ledgerHeading">
+      <div class="shell">
+        <header class="chapter-head">
+          <span class="chapter-no">05 — The ledger</span>
+          <h2 class="chapter-title" id="ledgerHeading" data-reveal="lines">The whole model, one table.</h2>
+          <p class="lede chapter-lede" data-reveal="settle">Everything the charts show, in absolute figures.
+            Forecast rows are selectable — focus one and press Enter to adopt that case and year everywhere.</p>
+        </header>
+
+        <div class="ledger-card">
+          <div class="ledger-head">
+            <div class="control-row" style="margin:0" role="group" aria-label="Ledger filters">
+              <button class="chip is-active" type="button" data-table-filter="all" aria-pressed="true">Everything</button>
+              <button class="chip" type="button" data-table-filter="actual" aria-pressed="false">Reported + actual</button>
+              <button class="chip" type="button" data-table-filter="cases" aria-pressed="false">Cases only</button>
+              <span class="ledger-count" id="ledgerCount">15 rows</span>
+            </div>
+            <div class="ledger-actions">
+              <button class="btn btn--ghost" type="button" id="resetView">Reset view</button>
+              <button class="btn" type="button" id="exportCsv">↓ Export CSV</button>
+            </div>
+          </div>
+          <div class="table-wrap" style="max-height:34rem;overflow:auto" tabindex="0">
+            <table class="ledger-table">
+              <caption class="sr-only">The full model: reported years FY2018–FY2025, the FY2026 actuals, and all three cases for FY2027–FY2028, in ₹ crore.</caption>
+              <thead><tr>
+                <th scope="col">Fiscal year</th>
+                <th scope="col">Case</th>
+                <th scope="col">Revenue</th>
+                <th scope="col">EBITDA proxy</th>
+                <th scope="col">EBIT</th>
+                <th scope="col">PAT</th>
+                <th scope="col">EPS ₹</th>
+                <th scope="col">CFO</th>
+                <th scope="col">FCF</th>
+                <th scope="col">Employees</th>
+              </tr></thead>
+              <tbody id="ledgerBody">
+                <tr><td colspan="10" style="font-family:var(--font-body);white-space:normal">The ledger loads with JavaScript — download the CSV for a script-free copy of the same numbers.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="fineprint" data-reveal="settle">
+          <p><strong>Two FY2025 PAT references.</strong> The workbook records FY2025 PAT as ₹48,797 Cr — consolidated net profit, the figure the 88 cells and every
+            ratio on this page keep for internal consistency. The annual report also discloses PAT attributable to equity holders of ₹48,553 Cr. The
+            ₹244 Cr gap is disclosed here rather than smoothed away.</p>
+          <p><strong>FY2026 is statutory.</strong> The ₹49,454 Cr PAT comes straight from the Q4 & FY2026 results (9 April 2026) with no adjustment. Free cash
+            flow stays deliberately empty; operating cash flow of ₹52,094 Cr is reported instead.</p>
+          <p><strong>Cases are cases.</strong> FY2027–FY2028 rows are analytical scenarios built from the assumption grid — they are not forecasts by or guidance from TCS.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 06 METHOD ================= -->
+    <section class="chapter" id="method" aria-labelledby="methodHeading">
+      <div class="shell">
+        <header class="chapter-head">
+          <span class="chapter-no">06 — Method & sources</span>
+          <h2 class="chapter-title" id="methodHeading" data-reveal="lines">How this page was built.</h2>
+          <p class="lede chapter-lede" data-reveal="settle">It started as a Power BI dashboard; this page is its web edition —
+            rebuilt as a single interactive document with the same discipline. No charting library, no template, no generated filler.</p>
+        </header>
+
+        <div class="method-grid">
+          <div class="panel">
+            <span class="foot-label">The build, on the record</span>
+            <ol class="method-list">
+              <li>
+                <h3>Freeze the inputs</h3>
+                <p>The source workbook (FY2018–FY2025, 11 metrics; 10 assumption rows × 3 cases) is pinned by SHA-256 inside <span class="num">data.js</span>, so any future edit is a deliberate one.</p>
+              </li>
+              <li>
+                <h3>Re-key and verify</h3>
+                <p>Every cell was re-keyed by hand into the data module, then script-checked against the workbook — 88/88 historical cells and 30/30 case values match exactly.</p>
+              </li>
+              <li>
+                <h3>Pin FY2026 to the filing</h3>
+                <p>The FY2026 actuals come straight from TCS's Q4/FY2026 results of 9 April 2026 — revenue ₹2,67,021 Cr, statutory PAT ₹49,454 Cr, EPS ₹136.01. Where the model's proxy differs (EBITDA), the definition sits next to the number.</p>
+              </li>
+              <li>
+                <h3>Draw the charts by hand</h3>
+                <p>Eight chart kinds — line, area, bar, paired bars, margin lines, spread, comparison and sparklines — are written directly as SVG paths and rects in two small files. Hover, focus and crosshair behavior included.</p>
+              </li>
+              <li>
+                <h3>Make the state honest</h3>
+                <p>One shared state drives everything: the hero deck, KPI cards, both bar charts, the comparison, assumptions and the ledger. A live region announces each change to screen readers, and the CSV export hands you whatever view you have selected.</p>
+              </li>
+            </ol>
+            <div class="human-note">
+              <b>Made by hand</b>
+              <p>This page was built by a human, start to finish — no site generator, no chart library, no auto-filled copy. The slow parts (re-keying 118 values, verifying nine years of statements, drawing each chart as raw SVG) were done deliberately.</p>
+            </div>
+          </div>
+
+          <div class="panel panel--flat">
+            <span class="foot-label">The dashboard heritage</span>
+            <p class="face-label" style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink-mid)">
+              Before the web edition, the same model shipped as a Power BI report. Click a preview to enlarge it.
+            </p>
+            <div class="preview-grid">
+              <figure>
+                <button class="preview-card" type="button" data-preview="assets/previews/trend-layout.png" data-preview-title="Trend layout" data-preview-note="The Power BI report's metric trend page.">
+                  <img src="assets/previews/trend-layout.png" alt="Preview of the Power BI trend layout" loading="lazy">
+                  <figcaption>Trend layout</figcaption>
+                </button>
+              </figure>
+              <figure>
+                <button class="preview-card" type="button" data-preview="assets/previews/scenario-layout.png" data-preview-title="Scenario layout" data-preview-note="Assumptions and case outputs in the Power BI report.">
+                  <img src="assets/previews/scenario-layout.png" alt="Preview of the Power BI scenario layout" loading="lazy">
+                  <figcaption>Scenario layout</figcaption>
+                </button>
+              </figure>
+              <figure>
+                <button class="preview-card" type="button" data-preview="assets/previews/detail-layout.png" data-preview-title="Detail layout" data-preview-note="The analysis drilldown page.">
+                  <img src="assets/previews/detail-layout.png" alt="Preview of the Power BI detail layout" loading="lazy">
+                  <figcaption>Detail layout</figcaption>
+                </button>
+              </figure>
+              <figure>
+                <button class="preview-card" type="button" data-preview="assets/previews/executive-layout.png" data-preview-title="Executive layout" data-preview-note="The one-page summary report.">
+                  <img src="assets/previews/executive-layout.png" alt="Preview of the Power BI executive layout" loading="lazy">
+                  <figcaption>Executive layout</figcaption>
+                </button>
+              </figure>
+            </div>
+
+            <div style="margin-top:1.4rem">
+              <span class="foot-label">Sources</span>
+              <ul class="sources-list">
+                <li>
+                  <div><b>TCS Q4 & FY2026 results release</b><br><span>filed 9 Apr 2026 — FY2026 actuals used in this model</span></div>
+                  <a href="https://www.tcs.com/investor-relations/quarterly-results" target="_blank" rel="noopener">Open ↗</a>
+                </li>
+                <li>
+                  <div><b>TCS Integrated Annual Report 2024–25</b><br><span>FY2025 statements and headcount</span></div>
+                  <a href="https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2024-25/ar/annual-report-2024-2025.pdf" target="_blank" rel="noopener">PDF ↗</a>
+                </li>
+                <li>
+                  <div><b>Supplied historical workbook</b><br><span>FY2018–FY2025 · SHA-256 pinned in data.js</span></div>
+                  <a href="assets/TCS_Financial_Dashboard_Professional.zip" download>Download</a>
+                </li>
+              </ul>
+              <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1.2rem">
+                <button class="btn btn--ghost" type="button" id="exportCsvLedger">↓ Export the ledger (CSV)</button>
+              </div>
+              <div class="fineprint">
+                <p>The CSV exports the currently filtered rows (reported, actual and/or the selected case set). Scenario values are analytical — see the ledger fineprint.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-row">
+      <p>An independent analytical exercise built from a supplied workbook and public filings — <strong>not affiliated with, endorsed by, or
+        reviewed by TCS Limited</strong>. FY2027–FY2028 rows are model cases, not guidance.</p>
+      <p class="mono">TCS Financial Outlook · Made by hand · 2026</p>
+    </div>
+  </footer>
+
+  <div id="liveRegion" class="sr-only" role="status" aria-live="polite"></div>
+
+  <dialog class="preview-dialog" id="previewDialog" aria-labelledby="previewDialogTitle">
+    <header>
+      <h2 id="previewDialogTitle">Preview</h2>
+      <button class="dialog-close" type="button" aria-label="Close preview">Close ×</button>
+    </header>
+    <img id="previewDialogImage" alt="" src="">
+    <p id="previewDialogNote"></p>
+  </dialog>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/charts.js"></script>
+  <script src="assets/charts2.js"></script>
+  <script src="assets/app-core.js"></script>
+  <script src="assets/app.js"></script>
+  <script type="module">
+    import { init } from "./assets/motion-core.js";
+    init({ pin: false, stack: false });
+  </script>
+</body>
+</html>

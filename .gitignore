@@ -1,0 +1,14 @@
+# QA / build artefacts — not part of the published site
+assets/screenshots/
+.taste-skill/
+
+# Python tooling
+*.pyc
+__pycache__/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# NOTE: assets/fonts/ and assets/previews/ are required runtime assets
+# and MUST stay tracked. Do not add them here.

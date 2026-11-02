@@ -1,0 +1,91 @@
+/* TCS Financial Outlook — design tokens.
+   Load order: tokens.css → base.css → story.css → charts.css → motion-core.css → reboot.css
+   reboot.css is the final pass: it overrides the base palette with the cobalt/tangerine atlas.
+   -------------------------------------------------------------------- */
+
+:root {
+  /* ---- Type scale (fluid) ------------------------------------------ */
+  --step-display: clamp(4.2rem, 7.5vw, 9rem);
+  --step-h1:      clamp(2.8rem, 5.5vw, 6rem);
+  --step-h2:      clamp(2rem, 3.8vw, 4rem);
+  --step-h3:      clamp(1.3rem, 2.4vw, 2rem);
+  --step-body:    clamp(0.9375rem, 1.1vw, 1.0625rem);   /* ~15–17px */
+  --step-lead:    clamp(1.1rem, 1.6vw, 1.35rem);
+  --step-small:   0.82rem;
+  --step-mono:    0.8rem;
+
+  /* ---- Line heights -------------------------------------------------- */
+  --lh-heading: 0.94;
+  --lh-body:    1.55;
+  --lh-lead:    1.5;
+  --lh-tight:   1.15;
+
+  /* ---- Letter spacing ------------------------------------------------ */
+  --tracking-display: -0.04em;
+  --tracking-heading: -0.025em;
+  --tracking-caps:     0.08em;
+
+  /* ---- Durations & easings ------------------------------------------ */
+  --dur-0:  80ms;
+  --dur-1: 200ms;
+  --dur-2: 380ms;
+  --dur-3: 560ms;
+  --dur-4: 900ms;
+  --dur-5: 1200ms;
+  --ease-micro:       cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out:         cubic-bezier(0.16, 1, 0.30, 1);
+  --ease-in-out:      cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-spring:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-quart:   cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+  --ease-reveal:      cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- Base palette (light fallback; reboot.css replaces these) ------ */
+  --ground:          #ffffff;
+  --card:            #f4f5f7;
+  --plate:           #eceef2;
+  --field:           #dde2f0;
+  --ink:             #0b1439;
+  --ink-soft:        #2d3a5e;
+  --ink-mid:         #5c6b8a;
+  --ink-dim:         #8895b2;
+  --hairline:        rgba(11, 20, 57, 0.12);
+  --hairline-strong: rgba(11, 20, 57, 0.24);
+  --night:           #0b1439;
+  --night-card:      #112251;
+  --night-line:      rgba(222, 232, 255, 0.24);
+  --night-ink:       #fff5eb;
+  --night-mid:       #d3defb;
+  --night-dim:       #b9c9ef;
+
+  /* ---- Accent colors ------------------------------------------------- */
+  --violet:       #ff7043;
+  --violet-deep:  #e64a1b;
+  --violet-tint:  rgba(255, 112, 67, 0.12);
+  --violet-line:  rgba(255, 112, 67, 0.4);
+  --blue:         #213bfa;
+  --blue-mid:     #1d34d8;
+  --teal:         #0dc5a0;
+  --amber:        #f5a623;
+  --rose:         #f43f73;
+
+  /* ---- Chart series palette ----------------------------------------- */
+  --series-0: #213bfa;   /* cobalt — Base Case / reported */
+  --series-1: #ff7043;   /* tangerine — Bull Case accent */
+  --series-2: #0dc5a0;   /* teal — Bear Case */
+  --series-3: #f5a623;   /* amber — FCF */
+  --series-4: #c84bff;   /* violet — supplemental */
+  --series-5: #ff3d7c;   /* rose — supplemental */
+
+  /* ---- Structural tokens -------------------------------------------- */
+  --shell:       86rem;
+  --gutter:      clamp(1.1rem, 4vw, 4.5rem);
+  --r-lg:        0.75rem;
+  --r-md:        0.5rem;
+  --r-sm:        0.25rem;
+  --shadow-lift: 0 2px 12px rgba(11,20,57,0.12), 0 1px 3px rgba(11,20,57,0.08);
+  --shadow-dark: 0 4px 24px rgba(11,20,57,0.32), 0 2px 6px rgba(11,20,57,0.18);
+
+  /* ---- Grid units ---------------------------------------------------- */
+  --grid: 1rem;
+}
