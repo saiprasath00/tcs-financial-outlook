@@ -168,11 +168,13 @@
     return ((evt.clientX - rect.left) / rect.width) * vb.width;
   }
 
+  /* Draw at the container's real width so the viewBox scale is 1 and label
+     type is not shrunk by the browser's downscaling. */
   function frame(wrap, W, H) {
     const cw = wrap.clientWidth || W;
     const compact = cw < 560;
-    if (compact) return { W: 520, H: Math.round(H * 0.96), compact, heightScale: H };
-    return { W, H, compact, heightScale: H };
+    if (compact) return { W: Math.round(cw), H: Math.round(H * 0.96), compact, heightScale: H * 0.96 };
+    return { W: Math.round(cw), H, compact, heightScale: H };
   }
 
   function animatePaths(svg) {
@@ -311,7 +313,7 @@
       el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "grid-line" }, svg);
       text(svg, m.l - 9, y(t) + 3, fmtAxis(t, cfg.axis), "axis-text axis-text--muted", {
         "text-anchor": "end",
-        "font-size": compact ? 10.5 : 9.5
+        "font-size": compact ? 10.5 : 11.5
       });
     });
 
@@ -338,7 +340,7 @@
       if (s.value == null) {
         text(svg, cx, m.t + plotH - 8, "n/a", "axis-text axis-text--muted", {
           "text-anchor": "middle",
-          "font-size": compact ? 9.5 : 9
+          "font-size": compact ? 9.5 : 11
         });
         return;
       }
@@ -361,7 +363,7 @@
       if (compact ? i === 8 || i === 10 : i >= 7) {
         text(svg, cx, m.t + plotH - h - 6, fmtShortMoney(s.value), "chart-label", {
           "text-anchor": "middle",
-          "font-size": compact ? 10 : 8.8
+          "font-size": compact ? 10 : 10.8
         });
       }
     });
@@ -370,7 +372,7 @@
       if (compact && i % 2 !== 0 && i !== 9 && i !== 10) return;
       text(svg, m.l + band * i + band / 2, H - 13, `FY${yr.slice(2)}`, "axis-text", {
         "text-anchor": "middle",
-        "font-size": compact ? 10.5 : 9.5,
+        "font-size": compact ? 10.5 : 11.5,
         class: i === 8 ? "axis-text axis-text--strong" : "axis-text",
         "font-weight": i === 8 ? 600 : 400
       });
@@ -493,7 +495,7 @@
       el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "grid-line" }, svg);
       text(svg, m.l - 8, y(t) + 3, `${t}%`, "axis-text axis-text--muted", {
         "text-anchor": "end",
-        "font-size": compact ? 10.5 : 9.5
+        "font-size": compact ? 10.5 : 11.5
       });
     }
 
@@ -530,24 +532,24 @@
       if (compact && i % 2 !== 0 && i !== 9 && i !== 10) return;
       text(svg, m.l + (i / (n - 1)) * plotW, H - 12, `FY${yr.slice(2)}`, "axis-text", {
         "text-anchor": "middle",
-        "font-size": compact ? 10.5 : 9.5
+        "font-size": compact ? 10.5 : 11.5
       });
     });
 
     const lastE = ebitda[10];
     const lastP = pat[10];
     text(svg, W - 4, lastE.y + 3, `${fmtNum(lastE.value, 1)}%`, "chart-label", {
-      "text-anchor": "end", fill: ebitdaColor, "font-size": compact ? 10 : 9.4
+      "text-anchor": "end", fill: ebitdaColor, "font-size": compact ? 10 : 11.4
     });
     text(svg, W - 4, lastP.y + 3, `${fmtNum(lastP.value, 1)}%`, "chart-label", {
-      "text-anchor": "end", fill: patColor, "font-size": compact ? 10 : 9.4
+      "text-anchor": "end", fill: patColor, "font-size": compact ? 10 : 11.4
     });
 
     /* legend, drawn in the field's own ink */
     el("rect", { x: m.l, y: m.t - 16, width: 9, height: 9, fill: ebitdaColor }, svg);
-    text(svg, m.l + 16, m.t - 8, "EBITDA", "axis-text axis-text--muted", { "font-size": compact ? 10.5 : 9.5 });
+    text(svg, m.l + 16, m.t - 8, "EBITDA", "axis-text axis-text--muted", { "font-size": compact ? 10.5 : 11.5 });
     el("rect", { x: m.l + 66, y: m.t - 16, width: 9, height: 9, fill: patColor }, svg);
-    text(svg, m.l + 81, m.t - 8, "PAT", "axis-text axis-text--muted", { "font-size": compact ? 10.5 : 9.5 });
+    text(svg, m.l + 81, m.t - 8, "PAT", "axis-text axis-text--muted", { "font-size": compact ? 10.5 : 11.5 });
 
     const tip = tooltip(wrap);
     const cross = el("line", {
@@ -630,18 +632,18 @@
       el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "grid-line" }, svg);
       text(svg, m.l - 9, y(t) + 3.5, fmtAxisMoney(t), "axis-text axis-text--muted", {
         "text-anchor": "end",
-        "font-size": compact ? 10.5 : 9.5
+        "font-size": compact ? 10.5 : 11.5
       });
     });
 
     const legendY = m.t - 14;
     el("rect", { x: m.l, y: legendY - 8, width: 10, height: 10, fill: "var(--series-1, #fff6ea)" }, svg);
     text(svg, m.l + 15, legendY + 1, "Net profit", "axis-text axis-text--muted", {
-      "font-size": compact ? 10.5 : 9.5
+      "font-size": compact ? 10.5 : 11.5
     });
     el("rect", { x: m.l + 104, y: legendY - 8, width: 10, height: 10, fill: cashColor, opacity: 0.92 }, svg);
     text(svg, m.l + 119, legendY + 1, "Free cash flow", "axis-text axis-text--muted", {
-      "font-size": compact ? 10.5 : 9.5
+      "font-size": compact ? 10.5 : 11.5
     });
 
     const tip = tooltip(wrap);
@@ -689,12 +691,12 @@
         text(svg, cx + barW / 2 + 1, m.t + plotH - ghostH - 7, "n/a",
           "axis-text axis-text--muted", {
             "text-anchor": "middle",
-            "font-size": compact ? 9.5 : 9.5
+            "font-size": compact ? 9.5 : 11.5
           });
         text(svg, cx + barW / 2 + 1, m.t + plotH - 6, "CFO",
           "axis-text axis-text--muted", {
             "text-anchor": "middle",
-            "font-size": compact ? 8 : 8.5,
+            "font-size": compact ? 9.5 : 10.5,
             opacity: 0.75
           });
       }
@@ -704,20 +706,20 @@
         text(svg, cx - barW / 2, m.t + plotH - (row.pat / max) * plotH - 7,
           fmtNum(Math.round(row.pat)), "chart-label", {
             "text-anchor": "middle", fill: ink,
-            "font-size": compact ? 10 : 9
+            "font-size": compact ? 10 : 11
           });
       }
       if (row.kind === "forecast") {
         text(svg, cx - 1, m.t + plotH - (row.pat / max) * plotH - 7,
           fmtNum(Math.round(row.pat)), "chart-label", {
             "text-anchor": "end", fill: caseColor,
-            "font-size": compact ? 10 : 9
+            "font-size": compact ? 10 : 11
           });
         if (row.fcf != null) {
           text(svg, cx + 3, m.t + plotH - (row.fcf / max) * plotH - 7,
             fmtNum(Math.round(row.fcf)), "chart-label", {
               "text-anchor": "start", fill: cashColor,
-              "font-size": compact ? 10 : 9
+              "font-size": compact ? 10 : 11
             });
         }
       }
@@ -727,7 +729,7 @@
         : row.year;
       text(svg, cx, H - 13, axisYear, "axis-text", {
         "text-anchor": "middle",
-        "font-size": compact ? 10.5 : 9.5,
+        "font-size": compact ? 10.5 : 11.5,
         class: i === n - 2 ? "axis-text axis-text--strong" : "axis-text",
         "font-weight": i === n - 2 ? 600 : 400
       });
@@ -805,7 +807,7 @@
       el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "grid-line" }, svg);
       text(svg, m.l - 9, y(t) + 3, fmtAxis(t, cfg.axis), "axis-text axis-text--muted", {
         "text-anchor": "end",
-        "font-size": compact ? 10.5 : 9.5
+        "font-size": compact ? 10.5 : 11.5
       });
     });
 
@@ -845,7 +847,7 @@
         if (!compact || yi === 1) {
           text(svg, yi === 0 ? cx - 6 : cx + 6, m.t + plotH - h - 6, fmtShortMoney(v), "chart-label", {
             "text-anchor": yi === 0 ? "end" : "start",
-            "font-size": compact ? 10 : 8.8,
+            "font-size": compact ? 10 : 10.8,
             fill: caseInk(wrap, c),
             opacity: selected ? 1 : 0.72
           });
@@ -854,7 +856,7 @@
 
       text(svg, gx + groupW / 2, H - 13, SHORT[c], "axis-text", {
         "text-anchor": "middle",
-        "font-size": compact ? 10.5 : 10,
+        "font-size": compact ? 10.5 : 12,
         class: selected ? "axis-text axis-text--strong" : "axis-text"
       });
 
@@ -892,11 +894,11 @@
     });
 
     text(svg, m.l, m.t - 12, `${cfg.label} (${cfg.axis === "eps" ? "₹ / share" : "₹ Cr"})`, "axis-text axis-text--muted", {
-      "font-size": compact ? 10.5 : 9.5
+      "font-size": compact ? 10.5 : 11.5
     });
     text(svg, W - m.r, m.t - 12, "FY2027 outlined / FY2028 solid", "axis-text axis-text--muted", {
       "text-anchor": "end",
-      "font-size": compact ? 10 : 9.2
+      "font-size": compact ? 10 : 11.2
     });
 
     svg.addEventListener("pointerleave", () => tip.classList.remove("is-visible"));

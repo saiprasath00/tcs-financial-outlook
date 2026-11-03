@@ -104,13 +104,15 @@
     return svg;
   }
 
+  /* Charts are drawn at the width they are displayed at, so the viewBox scale
+     is 1 and label type lands on its real size. A viewBox wider than the
+     container is scaled down by the browser, which was shrinking every label
+     to roughly 9.8px. */
   function frame(wrap, W, H) {
     const cw = wrap.clientWidth || W;
     const compact = cw < 560;
-    if (compact) {
-      return { W: 520, H: Math.round(H * 0.96), compact, fs: 12 };
-    }
-    return { W, H, compact, fs: 9 };
+    if (compact) return { W: Math.round(cw), H: Math.round(H * 0.96), compact, fs: 12 };
+    return { W: Math.round(cw), H, compact, fs: 11 };
   }
 
   function animatePaths(svg) {
@@ -353,7 +355,7 @@
       el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "grid-line" }, svg);
       text(svg, m.l - 9, y(t) + 3, fmtAxisMoney(t), "axis-text axis-text--muted", {
         "text-anchor": "end",
-        "font-size": compact ? 11 : 8.5
+        "font-size": compact ? 11 : 10.5
       });
     });
 
@@ -366,7 +368,7 @@
       class: "forecast-edge"
     }, svg);
     text(svg, x(8) + 6, m.t + 10, "Forecast horizon", "axis-text axis-text--muted", {
-      "font-size": compact ? 10 : 7.5
+      "font-size": compact ? 10 : 9.5
     });
 
     const actual = years.map((yr, i) => {
@@ -428,14 +430,14 @@
     }, svg);
     text(svg, labelX - 6, labelY, fmtShortMoney(selVals[2]), "chart-label chart-label--inverse", {
       "text-anchor": "end",
-      "font-size": compact ? 10 : 8
+      "font-size": compact ? 10 : 10
     });
 
     years.forEach((yr, i) => {
       if (compact && i % 2 !== 0 && i !== n - 1) return;
       text(svg, x(i), H - 14, `FY${yr.slice(2)}`, "axis-text", {
         "text-anchor": "middle",
-        "font-size": compact ? 10.5 : 8.5,
+        "font-size": compact ? 10.5 : 10.5,
         class: i === 8 ? "axis-text axis-text--strong" : "axis-text",
         "font-weight": i === 8 ? 600 : 400
       });
@@ -563,7 +565,7 @@
       }, svg);
       text(svg, x(t), H - 5, fmtAxisMoney(t), "axis-text axis-text--muted", {
         "text-anchor": "middle",
-        "font-size": compact ? 10 : 7.5
+        "font-size": compact ? 10 : 9.5
       });
     });
 
@@ -573,7 +575,7 @@
       el("text", {
         x: 0, y: yy + 4,
         class: "axis-text",
-        "font-size": compact ? 12 : 9,
+        "font-size": compact ? 12 : 11,
         "font-weight": c === state.scenario ? 600 : 400
       }, svg).textContent = SHORT[c];
       el("line", {
@@ -586,7 +588,7 @@
         stroke: COLORS.white, "stroke-width": 1.8
       }, svg);
       text(svg, x(v) + 9, yy + 3.5, fmtShortMoney(v), "chart-label", {
-        "font-size": compact ? 11 : 8.5,
+        "font-size": compact ? 11 : 10.5,
         "font-weight": c === state.scenario ? 600 : 400,
         fill: c === state.scenario ? COLORS.ink : COLORS.slate
       });
