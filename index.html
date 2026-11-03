@@ -90,8 +90,6 @@
     <section class="chapter chapter--hero" id="overview" aria-labelledby="heroTitle">
       <div class="shell">
         <p class="kicker" data-intro-item>TCS Financial Outlook · FY2018 – FY2028 · Bear / Base / Bull</p>
-        <!-- Two-line lockup per DIRECTION.md §i.1: each line is its own block, so the break never
-             depends on text-wrap. Lines verified against rendered widths, not just the 0.535em model. -->
         <h1 class="hero-title" id="heroTitle" data-intro><span class="lockup-line">Ten years.</span><span class="lockup-line"><em class="hero-em">Three futures.</em></span></h1>
         <p class="lede hero-lede" data-intro-item>Nine years of the record. One statutory FY2026 bridge. Three analytical cases you can switch in real time. Trace every number through the model, charts and ledger.</p>
         <ul class="hero-tags" data-intro-item>
@@ -306,8 +304,6 @@
               <li class="marquee-item"><span>FY26 EPS</span><b>₹136.01</b></li>
               <li class="marquee-item"><span>cells verified</span><b>88 / 88</b></li>
               <li class="marquee-item"><span>charting libraries</span><b>0</b></li>
-              <!-- One item per case: the marquee carries the selected case's FY2028 revenue and its
-                   signed delta against Base (DIRECTION.md §b touchpoint 7). -->
               <li class="marquee-item" data-marquee-case="Bear Case"><span>Bear FY2028</span><b>₹2,97,034</b><span data-marquee-delta="Bear Case">−5.0%</span></li>
               <li class="marquee-item" data-marquee-case="Base Case"><span>Base FY2028</span><b>₹3,12,762</b><span data-marquee-delta="Base Case">baseline</span></li>
               <li class="marquee-item" data-marquee-case="Bull Case"><span>Bull FY2028</span><b>₹3,27,435</b><span data-marquee-delta="Bull Case">+4.7%</span></li>
@@ -328,8 +324,6 @@
             spread, comparison, assumptions and drivers. Choose Bear, Base or Bull below and every number follows.</p>
         </header>
 
-        <!-- The Case Lever (DIRECTION.md §g). app.js mounts the range control, three detents,
-             beacons and the four signed outputs into this host. Unpinned by design. -->
         <div class="lever" id="caseLever"></div>
 
         <div class="control-row" role="group" aria-label="Case selector">
@@ -366,8 +360,8 @@
           </article>
         </div>
 
-        <div class="futures-row">
-          <figure class="plate" data-reveal="settle">
+        <div class="futures-row" data-reveal="scrub">
+          <figure class="plate" data-scrub="plate">
             <span class="foot-label">Revenue runway — history, actual and all three cases</span>
             <h3>Revenue runway</h3>
             <p class="face-label">The ink line is the nine-year reported record with the FY2026 actual; each case colors its own path into FY2027–FY2028.</p>
@@ -393,20 +387,20 @@
           </div>
         </div>
 
-        <div class="cases-band" data-reveal="items">
-          <button class="case-card" type="button" data-scenario="Bear Case" aria-pressed="false">
+        <div class="cases-band" data-reveal="scrub">
+          <button class="case-card" type="button" data-scrub="case" data-scenario="Bear Case" aria-pressed="false">
             <div class="case-top"><span class="case-name">Bear Case</span><span class="case-delta" data-case-delta="Bear Case">−5.0% vs Base</span></div>
             <div class="case-value" data-case-value="Bear Case">2,97,034 <small id="case-m-bear">Cr revenue · <span data-case-year="Bear Case">FY2028</span></small></div>
             <div class="case-fill"><span data-case-fill="Bear Case"></span></div>
             <span data-case-metric="Bear Case" class="sr-only">Revenue</span>
           </button>
-          <button class="case-card" type="button" data-scenario="Base Case" aria-pressed="true">
+          <button class="case-card" type="button" data-scrub="case" data-scenario="Base Case" aria-pressed="true">
             <div class="case-top"><span class="case-name">Base Case</span><span class="case-delta" data-case-delta="Base Case">The modelled baseline</span></div>
             <div class="case-value" data-case-value="Base Case">3,12,762 <small>Cr revenue · <span data-case-year="Base Case">FY2028</span></small></div>
             <div class="case-fill"><span data-case-fill="Base Case"></span></div>
             <span data-case-metric="Base Case" class="sr-only">Revenue</span>
           </button>
-          <button class="case-card" type="button" data-scenario="Bull Case" aria-pressed="false">
+          <button class="case-card" type="button" data-scrub="case" data-scenario="Bull Case" aria-pressed="false">
             <div class="case-top"><span class="case-name">Bull Case</span><span class="case-delta" data-case-delta="Bull Case">+4.7% vs Base</span></div>
             <div class="case-value" data-case-value="Bull Case">3,27,435 <small>Cr revenue · <span data-case-year="Bull Case">FY2028</span></small></div>
             <div class="case-fill"><span data-case-fill="Bull Case"></span></div>
@@ -659,7 +653,6 @@
   </main>
 
   <footer class="footer">
-    <!-- The selected state, stamped in the footer (DIRECTION.md §b touchpoint 8). -->
     <div class="footer-state" id="footerState"></div>
     <div class="shell footer-row">
       <p>An independent analytical exercise built from a supplied workbook and public filings — <strong>not affiliated with, endorsed by, or

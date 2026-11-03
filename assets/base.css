@@ -1,8 +1,8 @@
 /* TCS Financial Outlook — base.css
-   Font face declarations, shell/reset, and typographic scale.
-   The cobalt/tangerine palette is set in reboot.css (final pass).
-   Load order: tokens.css → base.css → story.css → charts.css → motion-core.css → reboot.css
-   ----------------------------------------------------------------------- */
+ Font face declarations, shell/reset, and typographic scale.
+ The cobalt/tangerine palette is set in reboot.css (final pass).
+ Load order: tokens.css → base.css → story.css → charts.css → motion-core.css → reboot.css
+ ----------------------------------------------------------------------- */
 
 /* ---- Self-hosted typefaces -------------------------------------------- */
 
@@ -94,16 +94,16 @@ body {
 }
 
 /* Overflow containment lives on <html>, not <body>.
-   Measured at 390px: <html> had overflow-x: visible, so the body's overflow did
-   not propagate and the marquee's 6,668px translated track widened the page to
-   631px of scroll width. The scroll container for a document is the root
-   element — clipping there is what actually contains a full-bleed marquee. */
+ Measured at 390px: <html> had overflow-x: visible, so the body's overflow did
+ not propagate and the marquee's 6,668px translated track widened the page to
+ 631px of scroll width. The scroll container for a document is the root
+ element — clipping there is what actually contains a full-bleed marquee. */
 html {
   overflow-x: clip;
 }
 
 /* Belt and braces for the one field that is wider than any viewport by
-   construction. */
+ construction. */
 .marquee-field,
 [data-marquee],
 [data-marquee].is-live {
@@ -344,11 +344,11 @@ small { font-size: var(--step-small); }
 
 /* ---- Buttons and chips ------------------------------------------------ */
 
-/* ---- Headline two-line lockups (DIRECTION.md §i.1) --------------------
-   Every chapter headline and the hero are explicit two-line lockups. Each
-   line is a block, so the break never depends on text-wrap: balance and a
-   line can never reflow into three. Verified at 1440 and 390.
-   -------------------------------------------------------------------- */
+/* ---- Headline two-line lockups (--------------------
+ Every chapter headline and the hero are explicit two-line lockups. Each
+ line is a block, so the break never depends on text-wrap: balance and a
+ line can never reflow into three. Verified at 1440 and 390.
+ -------------------------------------------------------------------- */
 
 .lockup-line {
   display: block;
@@ -358,15 +358,14 @@ small { font-size: var(--step-small); }
 .hero-title .lockup-line { max-width: 720px; }
 
 /* The em is emphasis by position, not by slant: Switzer ships no italic file,
-   so font-style: italic would synthesise a fake oblique. DIRECTION.md §i.1.
-   Ink is warm gold #ffe9a8 (7.55:1 on #1f2bd0) — rejects tangerine at 3.31:1. */
+ so font-style: italic would synthesise a fake oblique.Ink is warm gold #ffe9a8 (7.55:1 on #1f2bd0) — rejects tangerine at 3.31:1. */
 .hero-em {
   font-style: normal;
   color: #ffe9a8;
 }
 
 /* On the oxblood and teal fields gold fails; there the em is the body ink and
-   the line break carries the emphasis (DIRECTION.md §i.2). */
+ the line break carries the emphasis (. */
 #margins .hero-em,
 #trend .hero-em {
   color: #fff6ea;

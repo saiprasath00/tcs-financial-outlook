@@ -1,7 +1,7 @@
 /* TCS Financial Outlook — design tokens.
-   Load order: tokens.css → base.css → story.css → charts.css → motion-core.css → reboot.css
-   reboot.css is the final pass: it overrides the base palette with the cobalt/tangerine atlas.
-   -------------------------------------------------------------------- */
+ Load order: tokens.css → base.css → story.css → charts.css → motion-core.css → reboot.css
+ reboot.css is the final pass: it overrides the base palette with the cobalt/tangerine atlas.
+ -------------------------------------------------------------------- */
 
 :root {
   /* ---- Type scale (fluid) ------------------------------------------ */
@@ -59,9 +59,9 @@
   --night-dim:       #b9c9ef;
 
   /* ---- Accent colors -------------------------------------------------
-     Honest names (DIRECTION.md §i.3): a token named for a hue it does not
-     hold is a trap for the next person reading this file. No aliases — the
-     old --violet* / --atlas-* names are deleted, not forwarded. */
+ Honest names (: a token named for a hue it does not
+ hold is a trap for the next person reading this file. No aliases — the
+ old --violet* / --atlas-* names are deleted, not forwarded. */
   --tangerine:       #ff7043;
   --tangerine-deep:  #e64a1b;
   --tangerine-tint:  rgba(255, 112, 67, 0.12);
@@ -71,7 +71,7 @@
   --midnight:        #0b1439;
   --warm-white:      #fff5eb;
   /* Warm gold — the selected-case and forecast-bar ink, and the hero <em>
-     (7.55:1 on the hero field; see DIRECTION.md §i.2). */
+ (7.55:1 on the hero field; see. */
   --gold:            #ffe9a8;
   --teal:            #0dc5a0;
   --amber:           #f5a623;
@@ -94,10 +94,10 @@
   --shadow-lift: 0 2px 12px rgba(11,20,57,0.12), 0 1px 3px rgba(11,20,57,0.08);
   --shadow-dark: 0 4px 24px rgba(11,20,57,0.32), 0 2px 6px rgba(11,20,57,0.18);
 
-  /* ---- The nine section fields (DIRECTION.md §c) ---------------------
-     reboot.css binds each to its section id; these tokens are the single
-     source of truth so charts, the footer stamp and the topbar rail all
-     read the same values. Hard steps, no gradient anywhere. */
+  /* ---- The nine section fields (---------------------
+ reboot.css binds each to its section id; these tokens are the single
+ source of truth so charts, the footer stamp and the topbar rail all
+ read the same values. Hard steps, no gradient anywhere. */
   --f-hero:     #1f2bd0;
   --f-workbook: #fff0e7;
   --f-trend:    #0c6e74;
@@ -127,7 +127,7 @@
   --case-line:    #54c8ff;
   --case-ink:     #0b1439;
 
-  /* ---- Type roles (DIRECTION.md §e) ---------------------------------- */
+  /* ---- Type roles (---------------------------------- */
   --font-display: "Switzer", "Segoe UI", system-ui, sans-serif;
   --font-body:    "Switzer", "Segoe UI", system-ui, sans-serif;
   --font-label:   "Switzer", "Segoe UI", system-ui, sans-serif;

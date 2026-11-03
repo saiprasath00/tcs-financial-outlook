@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------
-   TCS Financial Outlook — chart kit, part one
-   SVG primitives, formatters, hero, runway, spread, sparklines.
-   Hand-built. No charting library.
+ TCS Financial Outlook — chart kit, part one
+ SVG primitives, formatters, hero, runway, spread, sparklines.
+ Hand-built. No charting library.
 ------------------------------------------------------------------- */
 
 (() => {
@@ -29,11 +29,11 @@
     lime: "#f5df78"
   };
 
-  /* Case inks follow DIRECTION.md §d. charts.css overrides these per field via
-     the `data-field` attribute on each chart host; the values here are the
-     dark-field defaults (midnight #080c26), where the runway, the case
-     comparison and the scatter are drawn.
-     Measured on #080c26: Base 10.16:1, Bull 8.21:1, Bear 11.44:1. */
+  /* Case inks followcharts.css overrides these per field via
+ the `data-field` attribute on each chart host; the values here are the
+ dark-field defaults (midnight #080c26), where the runway, the case
+ comparison and the scatter are drawn.
+ Measured on #080c26: Base 10.16:1, Bull 8.21:1, Bear 11.44:1. */
   const CASE_COLOR = {
     "Bear Case": "#00e0c6",
     "Base Case": "#54c8ff",
@@ -178,7 +178,7 @@
   }
 
   /* SVG text shrinks with the viewBox. Keep the rendered size legible
-     even when a chart is drawn much narrower than its viewBox. */
+ even when a chart is drawn much narrower than its viewBox. */
   function legibleText(svg, wrap) {
     if (!svg || !wrap) return;
     const vb = svg.viewBox && svg.viewBox.baseVal;
@@ -191,7 +191,7 @@
       const min = node.classList.contains("chart-label") ? 9.8 : 10.4;
       if (current * scale < min) {
         /* Inline styles win over the SVG stylesheet, unlike presentation
-           attributes. */
+ attributes. */
         node.style.fontSize = `${(min / scale).toFixed(2)}px`;
       }
     });
@@ -204,8 +204,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Hero trend line
-  ---------------------------------------------------------------- */
+ Hero trend line
+ ---------------------------------------------------------------- */
 
   function hero(wrap, state) {
     const { W, H } = frame(wrap, 620, 78);
@@ -273,8 +273,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Revenue runway: actual history + three cases
-  ---------------------------------------------------------------- */
+ Revenue runway: actual history + three cases
+ ---------------------------------------------------------------- */
 
   function runway(wrap, state) {
     const desktop = (wrap.clientWidth || 900) >= 560;
@@ -481,8 +481,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Case spread dot plot
-  ---------------------------------------------------------------- */
+ Case spread dot plot
+ ---------------------------------------------------------------- */
 
   function spread(wrap, state) {
     const { W, H, compact, fs } = frame(wrap, 560, 196);
@@ -547,8 +547,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Sparkline
-  ---------------------------------------------------------------- */
+ Sparkline
+ ---------------------------------------------------------------- */
 
   function spark(wrap, values, color) {
     const { W, H } = frame(wrap, 220, 34);

@@ -1,14 +1,14 @@
 /* ------------------------------------------------------------------
-   TCS Financial Outlook — UI layer
-   Controls, charts wiring, the Case Lever, ledger, assumptions,
-   previews, counters, scroll spy, URL state and announcements.
-   All renders route through app-core; this layer only listens,
-   wires and syncs.
+ TCS Financial Outlook — UI layer
+ Controls, charts wiring, the Case Lever, ledger, assumptions,
+ previews, counters, scroll spy, URL state and announcements.
+ All renders route through app-core; this layer only listens,
+ wires and syncs.
 
-   ONE MUTATION POINT: update(patch, message). Every interaction —
-   chip, lever, ledger row, URL — funnels through it. app-core.js
-   still owns the state object and the render functions; this file
-   never writes state directly.
+ ONE MUTATION POINT: update(patch, message). Every interaction —
+ chip, lever, ledger row, URL — funnels through it. app-core.js
+ still owns the state object and the render functions; this file
+ never writes state directly.
 ------------------------------------------------------------------- */
 
 (() => {
@@ -25,8 +25,8 @@
   const reduceMotion = U.reduceMotion;
 
   /* ----------------------------------------------------------------
-     Live region
-  ---------------------------------------------------------------- */
+ Live region
+ ---------------------------------------------------------------- */
 
   const live = $("#liveRegion");
   let announceTimer = 0;
@@ -45,8 +45,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Chart hosts — field ink + routing
-  ---------------------------------------------------------------- */
+ Chart hosts — field ink + routing
+ ---------------------------------------------------------------- */
 
   const SPARK_COLORS = {
     revenue: U.COLORS.blue,
@@ -56,7 +56,7 @@
   };
 
   /* Which field each chart sits on. charts.css resolves --series-* from
-     the [data-field] attribute, so this is what re-inks a chart. */
+ the [data-field] attribute, so this is what re-inks a chart. */
   const CHART_FIELD = {
     heroChart: "cobalt",
     trendChart: "teal",
@@ -75,7 +75,7 @@
       if (node) {
         node.setAttribute("data-field", field);
         /* every chart with a year axis gets a keyboard entry point, including
-           the ones drawn by charts.js which does not set tabindex itself */
+ the ones drawn by charts.js which does not set tabindex itself */
         if (!node.hasAttribute("tabindex")) node.setAttribute("tabindex", "0");
       }
     });
@@ -156,12 +156,12 @@
   });
 
   /* ----------------------------------------------------------------
-     DOM hooks this layer owns
-     index.html is owned by another agent, so if a hook is absent the
-     layer MOUNTS it at the right place rather than silently no-oping.
-     Each mount is idempotent and marked data-mounted-by="app.js" so a
-     later author-supplied element simply supersedes it.
-  ---------------------------------------------------------------- */
+ DOM hooks this layer owns
+ index.html is owned by another agent, so if a hook is absent the
+ layer MOUNTS it at the right place rather than silently no-oping.
+ Each mount is idempotent and marked data-mounted-by="app.js" so a
+ later author-supplied element simply supersedes it.
+ ---------------------------------------------------------------- */
 
   function ensureHook(selector, mount, tag = "div", attrs = {}) {
     let node = $(selector);
@@ -175,7 +175,7 @@
   }
 
   function mountHooks() {
-    /* the Case Lever sits in #futures, under the chapter head (§g) */
+    /* the Case Lever sits in #futures, under the chapter head */
     const futuresShell = $("#futures .shell");
     if (futuresShell) {
       const head = futuresShell.querySelector(".chapter-head");
@@ -202,9 +202,9 @@
       );
     }
 
-    /* the marquee's Δ column mirrors the three cases (§b #7).
-       index.html now authors these items, so this is a fallback only:
-       it adds nothing when markup already provides one item per case. */
+    /* the marquee's Δ column mirrors the three cases#7).
+ index.html now authors these items, so this is a fallback only:
+ it adds nothing when markup already provides one item per case. */
     const track = $(".marquee-field [data-marquee-group], .marquee-field ul");
     if (track) {
       const present = new Set(
@@ -225,8 +225,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Ledger
-  ---------------------------------------------------------------- */
+ Ledger
+ ---------------------------------------------------------------- */
 
   function ledgerRows() {
     const rows = D.historical.map((h) => ({
@@ -367,8 +367,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Assumptions
-  ---------------------------------------------------------------- */
+ Assumptions
+ ---------------------------------------------------------------- */
 
   function formatAssumption(value, unit) {
     if (value == null) return "n/a";
@@ -395,8 +395,8 @@
   }
 
   /* ----------------------------------------------------------------
-     THE CASE LEVER (§g) — the live thing
-  ---------------------------------------------------------------- */
+ THE CASE LEVER — the live thing
+ ---------------------------------------------------------------- */
 
   const LEVER_METRICS = [
     { key: "revenue", label: "Revenue", unit: "₹ Cr", axis: "money" },
@@ -409,7 +409,7 @@
   const CASE_SLUG = { "Bear Case": "bear", "Base Case": "base", "Bull Case": "bull" };
 
   /* The lever is built once, then only mirrored. It is a real control:
-     a range input with three detents, arrow-keyable, 44px tall. */
+ a range input with three detents, arrow-keyable, 44px tall. */
   function buildLever() {
     const host = $("#caseLever");
     if (!host || host.dataset.built) return;
@@ -559,7 +559,7 @@
         }. Every output on the page follows.`
       );
     };
-    /* numbers snap only at detents — never interpolate a figure (§g) */
+    /* numbers snap only at detents — never interpolate a figure */
     input.addEventListener("input", () => commit(Number(input.value)));
     input.addEventListener("change", () => commit(Number(input.value)));
     $$("[data-lever-detent]").forEach((btn) => {
@@ -577,13 +577,13 @@
   }
 
   /* ----------------------------------------------------------------
-     Marquee Δ column + footer state stamp (§b #7, #8)
-  ---------------------------------------------------------------- */
+ Marquee Δ column + footer state stamp#7, #8)
+ ---------------------------------------------------------------- */
 
   function renderMarquee() {
     /* The marquee deliberately carries TWO track copies (one per loop
-       group), so "six items" is correct, not a duplicate. Mirror every
-       copy and never collapse them. */
+ group), so "six items" is correct, not a duplicate. Mirror every
+ copy and never collapse them. */
     const year = state.year === "FY2026" ? "FY2028" : state.year;
     const base = D.scenarios["Base Case"][year].revenue;
     $$("[data-marquee-case]").forEach((item) => {
@@ -620,8 +620,8 @@
   }
 
   /* ----------------------------------------------------------------
-     URL state — a shared link lands on its colour state (§b #9)
-  ---------------------------------------------------------------- */
+ URL state — a shared link lands on its colour state#9)
+ ---------------------------------------------------------------- */
 
   let urlTimer = 0;
   function syncUrl() {
@@ -647,8 +647,8 @@
   }
 
   /* ----------------------------------------------------------------
-     html-level case tokens: the signature's page-wide re-ink (§g)
-  ---------------------------------------------------------------- */
+ html-level case tokens: the signature's page-wide re-ink
+ ---------------------------------------------------------------- */
 
   const CASE_TOKENS = {
     "Bear Case": { field: "#ff8a3d", line: "#ff8a3d", ink: "#0d1024" },
@@ -661,8 +661,8 @@
     const slug = CASE_SLUG[state.scenario] || "base";
     root.setAttribute("data-case", slug);
     /* NOT data-year: that name belongs to the year <button>s, and putting
-       it on <html> makes closest("[data-year]") match the document root
-       from every element, hijacking every click. */
+ it on <html> makes closest("[data-year]") match the document root
+ from every element, hijacking every click. */
     root.setAttribute("data-state-year", state.year);
     const t = CASE_TOKENS[state.scenario] || CASE_TOKENS["Base Case"];
     root.style.setProperty("--case-field", t.field);
@@ -671,8 +671,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Controls and sync
-  ---------------------------------------------------------------- */
+ Controls and sync
+ ---------------------------------------------------------------- */
 
   function syncControls() {
     /* every case chip, card and lever detent in every group */
@@ -746,7 +746,7 @@
   }
 
   /* THE single mutation point. app-core's renderers read from state;
-     every listener below lands here and nowhere else. */
+ every listener below lands here and nowhere else. */
   function update(patch, message) {
     Object.assign(state, patch);
     renderAll(true);
@@ -815,8 +815,8 @@
   });
 
   /* ----------------------------------------------------------------
-     CSV — the filtered rows, with the selected case/year marked
-  ---------------------------------------------------------------- */
+ CSV — the filtered rows, with the selected case/year marked
+ ---------------------------------------------------------------- */
 
   function csvCell(value) {
     if (value == null) return "";
@@ -884,8 +884,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Previews (method chapter)
-  ---------------------------------------------------------------- */
+ Previews (method chapter)
+ ---------------------------------------------------------------- */
 
   function initPreviews() {
     const dialog = $("#previewDialog");
@@ -909,8 +909,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Counters (evidence band)
-  ---------------------------------------------------------------- */
+ Counters (evidence band)
+ ---------------------------------------------------------------- */
 
   function initCounters() {
     const band = $(".evidence-band");
@@ -952,8 +952,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Scroll spy + progress
-  ---------------------------------------------------------------- */
+ Scroll spy + progress
+ ---------------------------------------------------------------- */
 
   const SECTION_LABELS = {
     overview: "00 / Overview",
@@ -1017,8 +1017,8 @@
   window.addEventListener("resize", onScroll);
 
   /* ----------------------------------------------------------------
-     Boot
-  ---------------------------------------------------------------- */
+ Boot
+ ---------------------------------------------------------------- */
 
   function init() {
     stampChartFields();

@@ -1,92 +1,92 @@
 /* ==========================================================================
-   motion-core.js: smooth scroll plus scroll choreography from data attributes
-   --------------------------------------------------------------------------
-   What it does
-     Lenis smooth wheel scroll driven by GSAP's ticker and synced to
-     ScrollTrigger, plus a registry of scroll effects you switch on in markup:
-       data-intro / data-intro-item / data-intro-media   above-the-fold intro (needs the CSS deadline in the page <head>)
-       data-reveal="lines"   masked line rise (SplitText, headings only, reverted after)
-       data-reveal="image"   clip-inset un-clip plus media scale settle
-       data-reveal="settle"  small y settle with its content, never opacity-only
-       data-reveal="pop"     small y settle + a scale step for stat blocks
-       data-reveal="items"   children settle, row by row, total spread capped
-       data-reveal="scrub"   one scrubbed scene: [data-parallax] children travel,
-                             [data-scrub="case|plate|rule|glyph"] children do
-                             their own spatial move. Never pinned (see notes).
-       data-parallax="0.15"  scrubbed y travel = 0.15 x viewport height; + lags (reads deeper), - leads.
-                             On img/video/canvas/picture the media is over-scaled so its clipping frame never shows an edge.
-                             A number plus "mask" (data-parallax="0.12 mask") also un-clips the frame it sits in.
-       data-count            integer count-up when its block first enters
-       data-marquee          CSS keyframe loop + scroll-velocity boost + pause button (WCAG 2.2.2)
-       data-pin="horizontal" pinned horizontal track; vertical stack under reduced motion and below pinMinWidth
-       data-stack            sticky stacking cards (CSS does the stacking; JS adds the covered card's recede)
-     Plus the state layer this page needs:
-       observeState()   mirrors the app's own state changes as a window event
-                        'tcs:statechange' (detail: { scenario, year, metric, compare, filter }).
-                        The app fires no outbound event, so this watches the one KPI node the
-                        app rewrites on every update() with a MutationObserver. No proxy, no
-                        edit to app.js, and always read after the app's render has committed.
-       redrawCharts()   safety net for the chart draw-on: clears any stroke-dash styles a draw
-                        left paused if it was interrupted (a re-render normally restarts it
-                        from CSS on its own — charts.css runs --dur-2 on --ease-out).
-       popSettle()      THE RE-SET (DIRECTION §b): every figure that changed slides the 0.62em
-                        into its clipped window once, on one clock, inside --dur-2. The block
-                        never moves; nothing around it reflows.
-       count-up         [data-count] blocks count on first entry; re-runs with the re-set.
-                        Tabular figures and a reserved width: digits change, the box does not.
-       prefs            honours a page-level override (`<html data-motion>` flipped by a control):
-                        a live 'motionchange' rebuilds the whole motion layer.
-     Usage
-       <script type="module">
-         import { init } from './motion-core.js';
-         const motion = init();            // or init({ smoothScroll: false, pinMinWidth: '64em' })
-       </script>
-     Markup contracts are in motion-core.css.
-   Options (init)
-     root          Document|Element  scope for data-* lookups (default document)
-     smoothScroll  boolean  Lenis on wheel input; touch stays native (syncTouch: false). Default true
-     lenis         object   extra Lenis options, merged over { lerp: 0.1, anchors: true, stopInertiaOnNavigate: true,
-                            respectReducedMotion: true }. Pass lerp OR duration, never both
-     intro, reveals, parallax, marquee, pin, stack, state, counters   booleans, each default true
-     pinMinWidth   CSS length. Below it data-pin stays a vertical stack. Default '60em'
-     revealStart   ScrollTrigger start for reveals. Default 'top bottom' (the first pixel entering)
-     introFailsafe ms after which a starved intro is forced to its end state. Default 3500
-     introMaxStart ms since navigation start. If the module boots later than this, the intro is shown
-                   at rest instead of animated. Measured: the heading's LCP entry lands when the intro
-                   ENDS (SplitText's revert paints the full text node), i.e. boot + ~1.3s, so a late boot
-                   would push LCP past 2.5s. Default 800 (worst case LCP ~2.1s). Infinity disables it
-     stateProbe    selector whose textContent changes with every app state change, observed to raise
-                   'tcs:statechange'. Default '[data-kpi-value="revenue"], #heroValue'
-   Exports
-     init(options) -> api { gsap, ScrollTrigger, SplitText, lenis (getter), refresh(), scrollTo(target, opts),
-                            destroy(), redraw() }   -- redraw() is redrawCharts()
-     destroy(), registerReveal(name, fn), getLenis(), redrawCharts(scope), counterSweep(scope)
-   Window events
-     'motionchange'    (detail: 'full'|'reduce') fires when the effective motion setting flips,
-                       so WebGL, video and other recipes can follow it.
-     'tcs:statechange' (detail: { scenario, year, metric, compare, filter }) fires once per app state
-                       change. The re-set, the counter re-run and the redraw safety net hang off it.
-   Fallback behaviour
-     - HTML+CSS render every element at rest. JS sets a hidden start state only in the
-       frame its animation starts, only inside gsap.matchMedia('(prefers-reduced-motion:
-       no-preference)'), and never on an element already on screen at boot. The one
-       exception is the intro, which the CSS deadline protects.
-     - If a CDN import fails, this module never runs: nothing was hidden, the CSS
-       deadline releases the intro, the marquee stays a static wrapped row, the pin
-       section stays a vertical stack, and sticky cards still stack. If only Lenis
-       fails, native scroll is kept. Charts, KPIs and the ledger are data-driven by the
-       app's own scripts and are unaffected.
-     - The chart draw-on nested inside a reveal is a child timeline of that reveal, so a
-       reduced-motion flip mid-reveal reverts it with its parent; nothing stays paused
-       mid-draw.
-     - Reduced motion (OS setting) reverts everything live: Lenis destroyed, split text
-       restored, pins removed, scrub scenes cleared, marquee static (the button hides
-       with it), counters jump straight to their final numbers.
-   Tested against
-     gsap 3.15.0 and lenis 1.3.26 from cdn.jsdelivr.net (+esm builds via the import map
-     in index.html). Chromium/Edge 145 headless over CDP: no-JS, reduced motion, full
-     motion at 1440x900 and 390x844, blocked CDN, and the case/year switch path.
-   ========================================================================== */
+ motion-core.js: smooth scroll plus scroll choreography from data attributes
+ --------------------------------------------------------------------------
+ What it does
+ Lenis smooth wheel scroll driven by GSAP's ticker and synced to
+ ScrollTrigger, plus a registry of scroll effects you switch on in markup:
+ data-intro / data-intro-item / data-intro-media above-the-fold intro (needs the CSS deadline in the page <head>)
+ data-reveal="lines" masked line rise (SplitText, headings only, reverted after)
+ data-reveal="image" clip-inset un-clip plus media scale settle
+ data-reveal="settle" small y settle with its content, never opacity-only
+ data-reveal="pop" small y settle + a scale step for stat blocks
+ data-reveal="items" children settle, row by row, total spread capped
+ data-reveal="scrub" one scrubbed scene: [data-parallax] children travel,
+ [data-scrub="case|plate|rule|glyph"] children do
+ their own spatial move. Never pinned (see notes).
+ data-parallax="0.15" scrubbed y travel = 0.15 x viewport height; + lags (reads deeper), - leads.
+ On img/video/canvas/picture the media is over-scaled so its clipping frame never shows an edge.
+ A number plus "mask" (data-parallax="0.12 mask") also un-clips the frame it sits in.
+ data-count integer count-up when its block first enters
+ data-marquee CSS keyframe loop + scroll-velocity boost + pause button (WCAG 2.2.2)
+ data-pin="horizontal" pinned horizontal track; vertical stack under reduced motion and below pinMinWidth
+ data-stack sticky stacking cards (CSS does the stacking; JS adds the covered card's recede)
+ Plus the state layer this page needs:
+ observeState mirrors the app's own state changes as a window event
+ 'tcs:statechange' (detail: { scenario, year, metric, compare, filter }).
+ The app fires no outbound event, so this watches the one KPI node the
+ app rewrites on every update with a MutationObserver. No proxy, no
+ edit to app.js, and always read after the app's render has committed.
+ redrawCharts safety net for the chart draw-on: clears any stroke-dash styles a draw
+ left paused if it was interrupted (a re-render normally restarts it
+ from CSS on its own — charts.css runs --dur-2 on --ease-out).
+ popSettle THE RE-SET (: every figure that changed slides the 0.62em
+ into its clipped window once, on one clock, inside --dur-2. The block
+ never moves; nothing around it reflows.
+ count-up [data-count] blocks count on first entry; re-runs with the re-set.
+ Tabular figures and a reserved width: digits change, the box does not.
+ prefs honours a page-level override (`<html data-motion>` flipped by a control):
+ a live 'motionchange' rebuilds the whole motion layer.
+ Usage
+ <script type="module">
+ import { init } from './motion-core.js';
+ const motion = init; // or init({ smoothScroll: false, pinMinWidth: '64em' })
+ </script>
+ Markup contracts are in motion-core.css.
+ Options (init)
+ root Document|Element scope for data-* lookups (default document)
+ smoothScroll boolean Lenis on wheel input; touch stays native (syncTouch: false). Default true
+ lenis object extra Lenis options, merged over { lerp: 0.1, anchors: true, stopInertiaOnNavigate: true,
+ respectReducedMotion: true }. Pass lerp OR duration, never both
+ intro, reveals, parallax, marquee, pin, stack, state, counters booleans, each default true
+ pinMinWidth CSS length. Below it data-pin stays a vertical stack. Default '60em'
+ revealStart ScrollTrigger start for reveals. Default 'top bottom' (the first pixel entering)
+ introFailsafe ms after which a starved intro is forced to its end state. Default 3500
+ introMaxStart ms since navigation start. If the module boots later than this, the intro is shown
+ at rest instead of animated. Measured: the heading's LCP entry lands when the intro
+ ENDS (SplitText's revert paints the full text node), i.e. boot + ~1.3s, so a late boot
+ would push LCP past 2.5s. Default 800 (worst case LCP ~2.1s). Infinity disables it
+ stateProbe selector whose textContent changes with every app state change, observed to raise
+ 'tcs:statechange'. Default '[data-kpi-value="revenue"], #heroValue'
+ Exports
+ init(options) -> api { gsap, ScrollTrigger, SplitText, lenis (getter), refresh, scrollTo(target, opts),
+ destroy, redraw } -- redraw is redrawCharts
+ destroy, registerReveal(name, fn), getLenis, redrawCharts(scope), counterSweep(scope)
+ Window events
+ 'motionchange' (detail: 'full'|'reduce') fires when the effective motion setting flips,
+ so WebGL, video and other recipes can follow it.
+ 'tcs:statechange' (detail: { scenario, year, metric, compare, filter }) fires once per app state
+ change. The re-set, the counter re-run and the redraw safety net hang off it.
+ Fallback behaviour
+ - HTML+CSS render every element at rest. JS sets a hidden start state only in the
+ frame its animation starts, only inside gsap.matchMedia('(prefers-reduced-motion:
+ no-preference)'), and never on an element already on screen at boot. The one
+ exception is the intro, which the CSS deadline protects.
+ - If a CDN import fails, this module never runs: nothing was hidden, the CSS
+ deadline releases the intro, the marquee stays a static wrapped row, the pin
+ section stays a vertical stack, and sticky cards still stack. If only Lenis
+ fails, native scroll is kept. Charts, KPIs and the ledger are data-driven by the
+ app's own scripts and are unaffected.
+ - The chart draw-on nested inside a reveal is a child timeline of that reveal, so a
+ reduced-motion flip mid-reveal reverts it with its parent; nothing stays paused
+ mid-draw.
+ - Reduced motion (OS setting) reverts everything live: Lenis destroyed, split text
+ restored, pins removed, scrub scenes cleared, marquee static (the button hides
+ with it), counters jump straight to their final numbers.
+ Tested against
+ gsap 3.15.0 and lenis 1.3.26 from cdn.jsdelivr.net (+esm builds via the import map
+ in index.html). Chromium/Edge 145 headless over CDP: no-JS, reduced motion, full
+ motion at 1440x900 and 390x844, blocked CDN, and the case/year switch path.
+ ========================================================================== */
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
@@ -98,7 +98,7 @@ const Q_FULL = '(prefers-reduced-motion: no-preference)';
 const Q_REDUCE = '(prefers-reduced-motion: reduce)';
 const INTERACTIVE = 'a, button, input, select, textarea, summary, [tabindex], [contenteditable]';
 // clearProps at rest: GSAP writes inline translate/rotate/scale: none next to its transform, which would
-// otherwise keep overriding author CSS (e.g. a :hover translate) after the motion has finished.
+// otherwise keep overriding author CSS (e.g. a:hover translate) after the motion has finished.
 const REST = 'transform,translate,rotate,scale';
 
 const DEFAULTS = {
@@ -122,7 +122,7 @@ const DEFAULTS = {
 
 // Token name -> fallback, used when tokens.css is absent.
 // Each ease is registered as CustomEase 'motion<Key>' so JS and CSS share one family.
-// design/DIRECTION.md §f: ONE family, decelerate, led by --ease-reveal. --ease-spring is
+//ONE family, decelerate, led by --ease-reveal. --ease-spring is
 // banned site-wide (an overshoot is the slop tell) and is deliberately not registered here.
 const EASES = {
   Reveal: ['--ease-reveal', '.22,1,.36,1'],        // every entrance and every numeral travel
@@ -134,7 +134,7 @@ const EASES = {
 };
 // Duration ladder. tokens.css carries 80/200/380/560/900/1200ms; the house caps
 // (hero 1400ms, one line 1000ms, reveal 600ms, stagger spread 600ms) are literals here.
-// §f caps EVERY interactive state change at --dur-2 (380ms) and nothing at --dur-5 (1200ms).
+//caps EVERY interactive state change at --dur-2 (380ms) and nothing at --dur-5 (1200ms).
 const SCALARS = {
   dur0: ['--dur-0', 0.08], dur1: ['--dur-1', 0.2], dur2: ['--dur-2', 0.38],
   dur3: ['--dur-3', 0.56], dur4: ['--dur-4', 0.9], dur5: ['--dur-5', 1.2],
@@ -143,7 +143,7 @@ const SCALARS = {
   rowStagger: 0.085,         // item rows: 60-90ms, never more
   lineStagger: 0.08,
   staggerMax: 0.6,           // total spread cap
-  stateSwap: 0.38,           // §f: an interactive state change never exceeds --dur-2
+  stateSwap: 0.38,           //an interactive state change never exceeds --dur-2
   countUp: 0.38,
 };
 
@@ -197,7 +197,7 @@ export function destroy() {
 export const getLenis = () => S?.lenis ?? null;
 
 /** Add a reveal type. fn(el, tokens) runs when el first enters; it must create its hidden
- *  start state and start animating in the same call, and return the animation. */
+ * start state and start animating in the same call, and return the animation. */
 export function registerReveal(name, fn) { REVEALS.set(name, fn); }
 
 function scrollTo(target, opts = {}) {
@@ -212,7 +212,7 @@ function scrollTo(target, opts = {}) {
 const osReduces = () => matchMedia(Q_REDUCE).matches;
 const allowed = () => !osReduces();
 
-// Mirrors the boot script: data-motion="full|reduce" (+ .motion-ok alias) on <html>.
+// Mirrors the boot script: data-motion="full|reduce" (+.motion-ok alias) on <html>.
 function syncFlag(announce) {
   const root = document.documentElement;
   const next = allowed() ? 'full' : 'reduce';
@@ -251,7 +251,7 @@ function build() {
     document.querySelectorAll('[data-marquee-toggle]').forEach((b) => { b.hidden = true; });
   });
 
-  // The state layer runs under reduced motion too: it is a state change, not a movement,
+  // The state layer runs under reduced motion too: it is a state change, not a movement
   // so the redraw still happens and the counters simply write their final value at once.
   if (o.state) setupState();
   if (o.counters) setupCounters();
@@ -264,7 +264,7 @@ function readTokens() {
       const m = cs.getPropertyValue(prop).match(/cubic-bezier\(([^)]+)\)/);
       CustomEase.create('motion' + key, m ? m[1].replace(/\s+/g, '') : fallback);
     }
-    // design/DIRECTION.md §f: ONE family and no second clock. The re-set's "old figure
+    //ONE family and no second clock. The re-set's "old figure
     // leaves, new figure arrives" both run on --ease-reveal; there is no separate
     // acceleration curve anywhere on the page.
     FAMILY = { set: 'motionReveal' };
@@ -340,7 +340,7 @@ function setupIntro(T) {
   const shifts = items.map((el) => parseFloat(getComputedStyle(el).translate.split(' ')[1]) || 0);
   const scales = media.map((el) => parseFloat(getComputedStyle(el).scale) || 1);
   // Release the CSS arm BEFORE creating any tween. GSAP 3.12+ folds the CSS individual transform
-  // properties (translate, scale) into its transform cache, so a from() created while the arm is
+  // properties (translate, scale) into its transform cache, so a from created while the arm is
   // still applied records the ARMED offset as its end state: it would tween 16px -> 16px and leave
   // the item low (and a later revert would restore the armed look). Everything below runs in this
   // same task, so no frame is painted between un-arming and the JS start states: no flash.
@@ -457,7 +457,7 @@ function revealLines(el, T) {
 function revealImage(el, T) {
   const media = el.querySelector('img, video, canvas, picture, svg');
   const tl = gsap.timeline();
-  // Both ends are inset(): GSAP cannot interpolate from `none`. The start is only partly
+  // Both ends are inset: GSAP cannot interpolate from `none`. The start is only partly
   // clipped, so a frozen frame still shows the image.
   tl.fromTo(el, { clipPath: 'inset(14% 10% 14% 10%)' },
     { clipPath: 'inset(0% 0% 0% 0%)', duration: T.dur5, ease: 'motionReveal', clearProps: 'clipPath' }, 0);
@@ -601,7 +601,7 @@ function liveMarquee(m) {
     btn.setAttribute('aria-label', 'Pause the ticker');
   }
   // The button is the WCAG 2.2.2 control (hover-pause alone fails keyboard and touch).
-  // It drives the CSS core through .is-paused, labelled by its own aria-pressed state.
+  // It drives the CSS core through.is-paused, labelled by its own aria-pressed state.
   const onClick = () => {
     const paused = m.classList.toggle('is-paused');
     if (!btn) return;
@@ -685,7 +685,7 @@ function setupStack() {
     cards.forEach((card, i) => {
       const next = cards[i + 1];
       if (!next) return;
-      // Overlay opacity composites; animating filter: brightness() would repaint every frame.
+      // Overlay opacity composites; animating filter: brightness would repaint every frame.
       const shade = document.createElement('span');
       shade.className = 'stack-shade';
       shade.setAttribute('aria-hidden', 'true');
@@ -708,17 +708,17 @@ function setupStack() {
 
 
 /* ---------- state layer: observe, redraw, count, settle ---------------------
-   The app (assets/app.js) fires no outbound event on a selection: every control goes
-   through one update() that rewrites the KPI and hero values and then calls the chart
-   kit synchronously. So this file does not need app.js to change. It observes the one
-   node the app rewrites on every update, raises its own window event from that, and
-   hangs the redraw, the count-up and the settle off the event. Downstream of a
-   MutationObserver, it always reads the app's finished render, never a half-written DOM. */
+ The app (assets/app.js) fires no outbound event on a selection: every control goes
+ through one update that rewrites the KPI and hero values and then calls the chart
+ kit synchronously. So this file does not need app.js to change. It observes the one
+ node the app rewrites on every update, raises its own window event from that, and
+ hangs the redraw, the count-up and the settle off the event. Downstream of a
+ MutationObserver, it always reads the app's finished render, never a half-written DOM. */
 
 const STATE_EVENT = 'tcs:statechange';
 
 // Clear the paused inline styles the chart kit leaves behind (charts.js / charts2.js set
-// stroke-dashoffset + `animation: none` and read layout before adding their CSS transition,
+// stroke-dashoffset + `animation: none` and read layout before adding their CSS transition
 // which parks every draw-on at zero progress). Removing them is what releases the
 // animation those files authored; a CSS re-render then replays it. This is not an edit to
 // their contract — it only clears styles nothing else reads.
@@ -736,7 +736,7 @@ function resyncCharts(scope = document) {
 
 // The chart draw-on nested inside a reveal (data-reveal="lines|items" on a panel that holds a
 // chart). The kit drew the SVG after the page loaded, so its draw-on sits paused at zero
-// until something plays it. Releasing the styles starts the animation the kit authored;
+// until something plays it. Releasing the styles starts the animation the kit authored
 // the parent timeline only paces it so it lands after the panel does.
 function armDrawOn(scope, tl, at = 0) {
   const paths = [...(scope.matches?.('path.draw') ? [scope] : scope.querySelectorAll('path.draw'))];
@@ -816,12 +816,12 @@ const POP_SEL = [
   '#spreadTitle', '#heroDelta', '#trendForecast', '#trendLatest',
 ].join(', ');
 
-// THE RE-SET (design/DIRECTION.md §b, §f, §g). A selection re-sets every figure on the
+// THE RE-SET (. A selection re-sets every figure on the
 // page to its whole new value. The app has already written the new text by the time this
-// runs, so this does not fade the number in: it moves the readout that just changed, once,
+// runs, so this does not fade the number in: it moves the readout that just changed, once
 // from below into place inside the window motion-core.css clips. A class swap starts it
 // (and a forced reflow restarts it mid-change); the class is dropped after --dur-2, so the
-// node returns to its resting state. Nothing moves position: the block is the same box,
+// node returns to its resting state. Nothing moves position: the block is the same box
 // only its inside translates, which is why nothing around it reflows.
 const RESET_CLASS = 'is-reset';
 let resetTimer = 0;
@@ -904,10 +904,10 @@ function setupState() {
 }
 
 /* Every value a re-setting figure is known to be able to show, measured once in its own
-   font, and pinned as a min-width. Digits are tabular (motion-core.css), so the widest
-   value is simply the most characters; this keeps a figure going from 9,999 to 2,67,021
-   from reflowing the line it sits in (§e: "numbers are right-aligned in their own column,
-   always"). Skips any node that is not laid out, and leaves the width alone under 0. */
+ font, and pinned as a min-width. Digits are tabular (motion-core.css), so the widest
+ value is simply the most characters; this keeps a figure going from 9,999 to 2,67,021
+ from reflowing the line it sits in: "numbers are right-aligned in their own column,
+ always"). Skips any node that is not laid out, and leaves the width alone under 0. */
 function reserveWidths() {
   const D = window.TCS_DATA;
   const App = window.TCSApp;

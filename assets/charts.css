@@ -1,35 +1,35 @@
 /* =====================================================================
-   charts.css — styling for the hand-built SVG chart kit
-   ---------------------------------------------------------------------
-   THE INK RULE: a chart is drawn on a *field*, so its ink is resolved
-   from the field it sits on, never from one global palette. Every chart
-   host carries data-field="cobalt|midnight|tangerine|pale|paper".
-   Each field block below sets:
-     --field      the flat field colour (no gradients, ever)
-     --field-ink  text on that field (>=4.5:1, proven in .verify/contrast.mjs)
-     --series-0..3 chart strokes (>=3:1 against --field)
-     --field-grid / --field-hair structural hairlines
-     --field-zone  the forecast-zone wash (flat rgba, not a gradient)
-   Measured contrast, field by field, lives in .verify/contrast.mjs.
-   Classes: .axis-text(--muted/--strong), .chart-label(--inverse),
-   .chart-bar, .grid-line, .forecast-zone, .forecast-edge,
-   .chart-line--actual, .crosshair, .hover-dot, .draw,
-   .chart-tooltip .tooltip-title .tooltip-row, .chart-hit.
-   ===================================================================== */
+ charts.css — styling for the hand-built SVG chart kit
+ ---------------------------------------------------------------------
+ THE INK RULE: a chart is drawn on a *field*, so its ink is resolved
+ from the field it sits on, never from one global palette. Every chart
+ host carries data-field="cobalt|midnight|tangerine|pale|paper".
+ Each field block below sets:
+ --field the flat field colour (no gradients, ever)
+ --field-ink text on that field (>=4.5:1, proven in.verify/contrast.mjs)
+ --series-0..3 chart strokes (>=3:1 against --field)
+ --field-grid / --field-hair structural hairlines
+ --field-zone the forecast-zone wash (flat rgba, not a gradient)
+ Measured contrast, field by field, lives in.verify/contrast.mjs.
+ Classes:.axis-text(--muted/--strong),.chart-label(--inverse),
+.chart-bar,.grid-line,.forecast-zone,.forecast-edge,
+.chart-line--actual,.crosshair,.hover-dot,.draw,
+.chart-tooltip.tooltip-title.tooltip-row,.chart-hit.
+ ===================================================================== */
 
 /* ---------------------------------------------------------------------
-   1. FIELD INK MAP — the single source of truth for chart colour
-   ---------------------------------------------------------------------
-   Field names match design/DIRECTION.md §c exactly. app.js stamps
-   data-field on each chart host (see CHART_FIELD in app.js):
-     heroChart   → cobalt     (#overview)
-     trendChart  → teal       (#trend)
-     runway/compare/spread → midnight (#futures)
-     margin/cash → oxblood    (#margins)
-     workbook sparks → paper  (#workbook)
-   --------------------------------------------------------------------- */
+ 1. FIELD INK MAP — the single source of truth for chart colour
+ ---------------------------------------------------------------------
+ Field names matchexactly. app.js stamps
+ data-field on each chart host (see CHART_FIELD in app.js):
+ heroChart → cobalt (#overview)
+ trendChart → teal (#trend)
+ runway/compare/spread → midnight (#futures)
+ margin/cash → oxblood (#margins)
+ workbook sparks → paper (#workbook)
+ --------------------------------------------------------------------- */
 
-/* #overview — #1f2bd0. Only light series clear the floor here (§d). */
+/* #overview — #1f2bd0. Only light series clear the floor here. */
 [data-field="cobalt"] {
   --field: #1f2bd0;
   --field-ink: #fff6ea;            /* 8.48:1 */
@@ -50,14 +50,14 @@
   --field-grid: #2a3050;
   --field-hair: #6b6a74;
   --field-zone: color-mix(in oklab, #fff6ea 8%, #080c26);
-  --series-0: #54c8ff;             /* Base   10.16 */
-  --series-1: #ff8a3d;             /* Bull    8.21 */
-  --series-2: #00e0c6;             /* Bear   11.44 */
-  --series-3: #f5c400;             /* FCF    11.71 */
+  --series-0: #54c8ff;             /* Base 10.16 */
+  --series-1: #ff8a3d;             /* Bull 8.21 */
+  --series-2: #00e0c6;             /* Bear 11.44 */
+  --series-3: #f5c400;             /* FCF 11.71 */
   color-scheme: dark;
 }
 
-/* #trend — #0c6e74. Encode is lightness rank, not hue (§d). */
+/* #trend — #0c6e74. Encode is lightness rank, not hue. */
 [data-field="teal"] {
   --field: #0c6e74;
   --field-ink: #fff3d6;            /* 5.44:1 */
@@ -106,10 +106,10 @@
   --field-grid: #d6c9b4;
   --field-hair: #757180;           /* 3.99:1 */
   --field-zone: color-mix(in oklab, #12123a 8%, #f3ebd8);
-  --series-0: #1f2bd0;             /* 7.64 Base   */
-  --series-1: #8a1f3a;             /* 7.57 Bear   */
-  --series-2: #0a5c61;             /* 6.51 Bull   */
-  --series-3: #5a5468;             /* 6.09 muted  */
+  --series-0: #1f2bd0;             /* 7.64 Base */
+  --series-1: #8a1f3a;             /* 7.57 Bear */
+  --series-2: #0a5c61;             /* 6.51 Bull */
+  --series-3: #5a5468;             /* 6.09 muted */
   color-scheme: light;
 }
 
@@ -124,8 +124,8 @@
 }
 
 /* ---------------------------------------------------------------------
-   2. Chart viewport + tooltip layer
-   --------------------------------------------------------------------- */
+ 2. Chart viewport + tooltip layer
+ --------------------------------------------------------------------- */
 
 .chart-viewport {
   position: relative;

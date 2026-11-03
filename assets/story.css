@@ -1,8 +1,8 @@
 /* =====================================================================
-   story.css — chapters, panels, cards and tables for the ledger story
-   Layout + interaction chrome only; chart coloring lives in charts.css,
-   motion contract lives in motion-core.css.
-   ===================================================================== */
+ story.css — chapters, panels, cards and tables for the ledger story
+ Layout + interaction chrome only; chart coloring lives in charts.css,
+ motion contract lives in motion-core.css.
+ ===================================================================== */
 
 .chart-fallback {
   padding: 1.3rem 0.3rem;
@@ -481,8 +481,8 @@
   top: 50%;
   inset-inline-end: 0.25rem;
   translate: 0 -50%;
-  /* DIRECTION §c: no glass on a field. The table cell that used to sit on a 36% veil +
-     blur(3px) now takes a solid field so its label stays legible over the moving band. */
+  /*no glass on a field. The table cell that used to sit on a 36% veil +
+ blur(3px) now takes a solid field so its label stays legible over the moving band. */
   background: var(--field);
   color: var(--ink);
   backdrop-filter: none;

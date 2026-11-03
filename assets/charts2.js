@@ -1,18 +1,18 @@
 /* ------------------------------------------------------------------
-   TCS Financial Outlook — chart kit, part two
-   Trend bars, margin lines, profit vs cash, case comparison.
+ TCS Financial Outlook — chart kit, part two
+ Trend bars, margin lines, profit vs cash, case comparison.
 
-   INTERACTION CONTRACT (charts2.js owns it for its own charts):
-     · Every chart that plots a year axis gets a crosshair + tooltip.
-     · Pointer move/enter scrubs; ArrowLeft/ArrowRight scrubs; Escape
-       clears. Each host is tabbable (tabindex=0) because it carries
-       role="img" and now also answers keys.
-     · Exact values only. No rounded, abbreviated or interpolated figure
-       ever appears in a tooltip.
-     · colour resolves from the FIELD, never globally: each SVG element
-       that needs series ink reads --series-N from its host. See
-       charts.css for the per-field map.
-   ------------------------------------------------------------------- */
+ INTERACTION CONTRACT (charts2.js owns it for its own charts):
+ · Every chart that plots a year axis gets a crosshair + tooltip.
+ · Pointer move/enter scrubs; ArrowLeft/ArrowRight scrubs; Escape
+ clears. Each host is tabbable (tabindex=0) because it carries
+ role="img" and now also answers keys.
+ · Exact values only. No rounded, abbreviated or interpolated figure
+ ever appears in a tooltip.
+ · colour resolves from the FIELD, never globally: each SVG element
+ that needs series ink reads --series-N from its host. See
+ charts.css for the per-field map.
+ ------------------------------------------------------------------- */
 
 (() => {
   "use strict";
@@ -30,10 +30,10 @@
     series: (i) => `var(--series-${i}, #1428bf)`
   };
 
-  /* Case identity re-inks per field (§d). On #futures the saturated set is
-     live (Base #54c8ff / Bull #ff8a3d / Bear #00e0c6); on #trend the encode
-     is lightness rank inside one family, so every forecast bar is --series-2.
-     Never let a case colour cross a field boundary unchanged. */
+  /* Case identity re-inks per field. On #futures the saturated set is
+ live (Base #54c8ff / Bull #ff8a3d / Bear #00e0c6); on #trend the encode
+ is lightness rank inside one family, so every forecast bar is --series-2.
+ Never let a case colour cross a field boundary unchanged. */
   const CASE_SERIES = {
     midnight: { "Base Case": "--series-0", "Bull Case": "--series-1", "Bear Case": "--series-2" },
     teal: { "Base Case": "--series-2", "Bull Case": "--series-2", "Bear Case": "--series-2" },
@@ -145,7 +145,7 @@
   }
 
   /* Place the tooltip by pixel offset, flipping sides near an edge so it
-     never leaves the plot. x/y are SVG viewBox coordinates. */
+ never leaves the plot. x/y are SVG viewBox coordinates. */
   function placeTip(wrap, tip, x, y, W, H, html) {
     tip.innerHTML = html;
     tip.classList.add("is-visible");
@@ -287,8 +287,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Trend columns — one scrub column per fiscal year
-  ---------------------------------------------------------------- */
+ Trend columns — one scrub column per fiscal year
+ ---------------------------------------------------------------- */
 
   function trend(wrap, state) {
     const { W, H, compact } = frame(wrap, 900, 336);
@@ -328,7 +328,7 @@
     col.style.opacity = "0";
 
     /* and a vertical crosshair on the scrubbed year, as on every other
-       time-axis chart here — the bar chart should not be the odd one out */
+ time-axis chart here — the bar chart should not be the odd one out */
     const cross = el("line", {
       x1: 0, x2: 0, y1: m.t, y2: m.t + plotH, class: "crosshair"
     }, svg);
@@ -343,8 +343,8 @@
         return;
       }
       const h = Math.max(1.5, (s.value / max) * plotH);
-      /* §d on #trend: reported → actual → forecast are three lightness steps
-         within one family. Bars take the SERIES ink, never the text ink. */
+      /*on #trend: reported → actual → forecast are three lightness steps
+ within one family. Bars take the SERIES ink, never the text ink. */
       const fill = s.kind === "forecast"
         ? caseInk(wrap, state.scenario)
         : s.kind === "actual"
@@ -444,7 +444,7 @@
       let periods = 1;
       if (prev == null && i === 9) {
         /* FY2026 free cash flow is not modelled, so bridge FY2025 to FY2027
-           and annualise the two-year change. */
+ and annualise the two-year change. */
         prev = D.historical[7][METRICS[metricKey].hist];
         periods = 2;
       }
@@ -456,8 +456,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Margin lines
-  ---------------------------------------------------------------- */
+ Margin lines
+ ---------------------------------------------------------------- */
 
   function margin(wrap, state) {
     const { W, H, compact } = frame(wrap, 760, 300);
@@ -596,8 +596,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Profit versus free cash flow
-  ---------------------------------------------------------------- */
+ Profit versus free cash flow
+ ---------------------------------------------------------------- */
 
   function cash(wrap, state) {
     const { W, H, compact } = frame(wrap, 780, 330);
@@ -606,7 +606,7 @@
     const plotW = W - m.l - m.r;
     const plotH = H - m.t - m.b;
     /* Eight reported years, then FY2026 (statutory PAT) and FY2027 (the
-       selected analytical case) so every year on the axis shows real data. */
+ selected analytical case) so every year on the axis shows real data. */
     const rows = D.historical
       .map((h) => ({ ...h, pat: h.netProfit, kind: "reported" }))
       .concat([
@@ -766,8 +766,8 @@
   }
 
   /* ----------------------------------------------------------------
-     Scenario comparison — click/focus a case column to adopt it
-  ---------------------------------------------------------------- */
+ Scenario comparison — click/focus a case column to adopt it
+ ---------------------------------------------------------------- */
 
   function compare(wrap, state) {
     const { W, H, compact } = frame(wrap, 900, 320);

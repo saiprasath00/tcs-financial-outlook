@@ -1,31 +1,31 @@
 /* =====================================================================
-   TCS / SIGNAL FIELD — the final CSS pass.
-   Direction: Kinetic poster (+ Archive index), per design/DIRECTION.md.
-   TEN FLAT COLOUR MODULES, hard cuts at every seam, zero gradients
-   on a field. Each module derives its own surfaces from ONE pair of
-   properties (--field / --ink), so a chart, a panel and a label on the
-   same module can never drift apart.
+ TCS / SIGNAL FIELD — the final CSS pass.
+ Direction: Kinetic poster (+ Archive index), per.
+ TEN FLAT COLOUR MODULES, hard cuts at every seam, zero gradients
+ on a field. Each module derives its own surfaces from ONE pair of
+ properties (--field / --ink), so a chart, a panel and a label on the
+ same module can never drift apart.
 
-   Load order: tokens → base → story → charts → motion-core → reboot
-   This file is last, so every rule here wins.
-   ===================================================================== */
+ Load order: tokens → base → story → charts → motion-core → reboot
+ This file is last, so every rule here wins.
+ ===================================================================== */
 
 /* ---------------------------------------------------------------------
-   0. MODULE + CONTROL TOKENS
-   --------------------------------------------------------------------- */
+ 0. MODULE + CONTROL TOKENS
+ --------------------------------------------------------------------- */
 
 :root {
   /* --- the nine fields, as one lookup ------------------------------ */
-  --f-hero:      #1f2bd0;  /* cobalt flux                                  */
-  --f-workbook:  #fff0e7;  /* warm paper                                   */
-  --f-trend:     #0c6e74;  /* deep teal                                    */
-  --f-marquee:   #ff5b45;  /* signal coral                                 */
-  --f-futures:   #080c26;  /* midnight navy                                */
-  --f-margins:   #b22a4e;  /* ledger oxblood                               */
-  --f-ledger:    #f3ebd8;  /* aged ledger paper                            */
-  --f-method:    #ff7043;  /* tangerine                                    */
-  --f-footer:    #0a0f1f;  /* press black                                  */
-  --f-topbar:    #141c5a;  /* cobalt dusk (fixed layer, off the cycle)     */
+  --f-hero:      #1f2bd0;  /* cobalt flux */
+  --f-workbook:  #fff0e7;  /* warm paper */
+  --f-trend:     #0c6e74;  /* deep teal */
+  --f-marquee:   #ff5b45;  /* signal coral */
+  --f-futures:   #080c26;  /* midnight navy */
+  --f-margins:   #b22a4e;  /* ledger oxblood */
+  --f-ledger:    #f3ebd8;  /* aged ledger paper */
+  --f-method:    #ff7043;  /* tangerine */
+  --f-footer:    #0a0f1f;  /* press black */
+  --f-topbar:    #141c5a;  /* cobalt dusk (fixed layer, off the cycle) */
 
   /* --- ink on those fields ---------------------------------------- */
   --i-hero:      #fff6ea;
@@ -43,12 +43,12 @@
   --accent:      #ff7043;
   --accent-deep: #c2410c;
 
-  /* --- case identity, driven from <html data-case> (see §g) ------- */
+  /* --- case identity, driven from <html data-case> (see ------- */
   --case-field:  #54c8ff;  /* Base */
   --case-line:   #54c8ff;
   --case-ink:    #fff6ea;
 
-  /* --- type roles (DIRECTION §e). --font-mono is retired here. ---- */
+  /* --- type roles (. --font-mono is retired here. ---- */
   --font-label:  "Switzer", "Segoe UI", system-ui, sans-serif;
   --font-num:    "Switzer", "Segoe UI", system-ui, sans-serif;
   --font-quote:  "Zodiak", Georgia, serif;
@@ -67,7 +67,7 @@
 html { background: #1f2bd0; color: var(--i-hero); }
 body { background: transparent; color: var(--i-hero); }
 
-/* ---- one universal derivation, declared once (DIRECTION §c) ----- */
+/* ---- one universal derivation, declared once (----- */
 
 .chapter,
 .marquee-field,
@@ -77,8 +77,8 @@ body { background: transparent; color: var(--i-hero); }
 ::selection { background: var(--accent); color: #12123a; }
 
 /* ---------------------------------------------------------------------
-   1. SECTION FIELDS — hard cuts, no gradients
-   --------------------------------------------------------------------- */
+ 1. SECTION FIELDS — hard cuts, no gradients
+ --------------------------------------------------------------------- */
 
 .chapter,
 section[id] { position: relative; }
@@ -88,7 +88,7 @@ section[id] { position: relative; }
   --field: var(--f-hero);    --ink: var(--i-hero);
   --ink-2: #c7d0ff;          /* 6.00:1 */
   --line:   #4d55dd;         /* decorative */
-  --line-2: #9c9ddf;         /* 3.59:1     */
+  --line-2: #9c9ddf;         /* 3.59:1 */
   --series-0: #fff6ea; --series-1: #ffe9a8; --series-2: #c7d0ff; --series-3: #ff7043;
   background: var(--field);
   color: var(--ink);
@@ -108,7 +108,7 @@ section[id] { position: relative; }
   --field: var(--f-trend);    --ink: var(--i-trend);
   --ink-2: #d6f2ee;           /* 5.09:1 */
   --line:   #3f8f92;
-  --line-2: #c9e6e2;          /* 3.9:1  */
+  --line-2: #c9e6e2;          /* 3.9:1 */
   --series-0: #c9e6e2; --series-1: #ffffff; --series-2: #ffe9a8; --series-3: #7dffe8;
   background: var(--field);
   color: var(--ink);
@@ -194,13 +194,13 @@ section[id] { position: relative; }
 .topbar .top-nav a.is-active { color: var(--i-topbar); border-bottom-color: var(--accent); }
 .topbar .topbar-chip { color: #bfc6ea; }
 
-/* kill the old radial/bloom fields outright (§h) */
+/* kill the old radial/bloom fields outright */
 .chapter--hero,
 .chapter--dark { background: var(--field); }
 
 /* ---------------------------------------------------------------------
-   2. TYPE — Switzer for the model, Zodiak for the record's own voice
-   --------------------------------------------------------------------- */
+ 2. TYPE — Switzer for the model, Zodiak for the record's own voice
+ --------------------------------------------------------------------- */
 
 body { font-family: var(--font-body); }
 h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
@@ -235,9 +235,9 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .chapter-lede, .lede { color: var(--ink); opacity: 1; }
 .chapter-lede { max-width: 46ch; }
 
-/* --- Zodiak is job-locked to these four sites (§e) ---------------
-   1 workbook disclosure quote · 2 ledger fineprint · 3 method note ·
-   4 margins FY2026-empty-slot note + footer disclaimer. Nothing else. */
+/* --- Zodiak is job-locked to these four sites ---------------
+ 1 workbook disclosure quote · 2 ledger fineprint · 3 method note ·
+ 4 margins FY2026-empty-slot note + footer disclaimer. Nothing else. */
 .workbook-note,
 .workbook-note b,
 .fineprint p,
@@ -258,13 +258,13 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .cash-grid .note-card p { font-size: 17px; line-height: 1.5; }
 .footer p       { font-size: 15px; line-height: 1.5; }
 .human-note > b:first-child, .human-note .human-note-lead { font-weight: 700; }
-/* no Zodiak numerals, ever: a numeral in the quote face is a bug (§e) */
+/* no Zodiak numerals, ever: a numeral in the quote face is a bug */
 .workbook-note .num, .fineprint .num, .human-note .num,
 .cash-grid .note-card .num { font-family: var(--font-quote); }
 
 /* ---------------------------------------------------------------------
-   3. GENERIC SURFACES — tonal steps, radius 0, shadow none
-   --------------------------------------------------------------------- */
+ 3. GENERIC SURFACES — tonal steps, radius 0, shadow none
+ --------------------------------------------------------------------- */
 
 .panel,
 .plate,
@@ -296,34 +296,34 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .panel h3, .plate h3, .note-card h3 { color: var(--ink); font-family: var(--font-display); font-weight: 600; }
 
 /* ---------------------------------------------------------------------
-   4. HERO — cobalt flux. The one display-size numeral.
-   --------------------------------------------------------------------- */
+ 4. HERO — cobalt flux. The one display-size numeral.
+ --------------------------------------------------------------------- */
 
 .chapter--hero { background: var(--field); padding-block: clamp(6rem, 9vw, 8.5rem) clamp(3.5rem, 5vw, 5.5rem); }
-/* §i.1: display is 96px @1440 → 46px @390, and it is a two-line lockup
-   authored in markup. No max-width in ch, no balance — those re-wrap it. */
+/*display is 96px @1440 → 46px @390, and it is a two-line lockup
+ authored in markup. No max-width in ch, no balance — those re-wrap it. */
 .hero-title {
   color: var(--ink);
   font-size: clamp(2.875rem, 6.667vw, 6rem);   /* 46px → 96px */
   line-height: 0.9;
   letter-spacing: -0.045em;
 }
-/* §i.1: the headline is a two-line lockup built in markup, never a wrapped
-   paragraph. Do not re-wrap it from CSS. The em keeps the face/weight and
-   gets §i.2's gold — "the part of the sentence that is a forecast". */
+/*the headline is a two-line lockup built in markup, never a wrapped
+ paragraph. Do not re-wrap it from CSS. The em keeps the face/weight and
+ gets's gold — "the part of the sentence that is a forecast". */
 .hero-title,
 .chapter-title { text-wrap: nowrap; }
 .hero-title { max-width: 720px; }
-/* no max-width on .chapter-title: the lead authors each line as a block,
-   so any ch-based cap here would re-wrap their lockup. */
+/* no max-width on.chapter-title: the lead authors each line as a block,
+ so any ch-based cap here would re-wrap their lockup. */
 .hero-title em,
 .hero-em {
-  color: #ffe9a8;          /* 7.55:1 on #1f2bd0 (§i.2) */
+  color: #ffe9a8;          /* 7.55:1 on #1f2bd0 */
   font-style: normal;      /* Switzer ships no italic: never synthesise one */
   font-weight: 700;
   font-size: 1em;
 }
-/* never gold on these two fields — it fails (§i.2) */
+/* never gold on these two fields — it fails */
 #trend .hero-title em, #trend .hero-em, #trend .chapter-title em,
 #margins .hero-title em, #margins .hero-em, #margins .chapter-title em {
   color: #fff6ea;          /* 5.61 / 5.89 */
@@ -373,8 +373,8 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .scroll-cue::after { background: var(--ink-2); }
 
 /* ---------------------------------------------------------------------
-   5. WORKBOOK — warm paper
-   --------------------------------------------------------------------- */
+ 5. WORKBOOK — warm paper
+ --------------------------------------------------------------------- */
 
 #workbook { background: var(--field); }
 #workbook .evidence,
@@ -409,8 +409,8 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .spark-card h3::before { background: var(--dot, var(--ink)); }
 
 /* ---------------------------------------------------------------------
-   6. TREND — deep teal. Lightness rank, not hue.
-   --------------------------------------------------------------------- */
+ 6. TREND — deep teal. Lightness rank, not hue.
+ --------------------------------------------------------------------- */
 
 #trend { background: var(--field); }
 #trend .chapter-head { margin-left: 0; }
@@ -424,8 +424,8 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .growth-label { color: var(--ink-2); }
 
 /* ---------------------------------------------------------------------
-   7. MARQUEE — signal coral, the only thing that "arrives"
-   --------------------------------------------------------------------- */
+ 7. MARQUEE — signal coral, the only thing that "arrives"
+ --------------------------------------------------------------------- */
 
 .marquee-field {
   background: var(--field);
@@ -444,7 +444,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 }
 .marquee-ctl:hover { background: color-mix(in srgb, var(--ink) 12%, transparent); }
 
-/* the marquee's Δ column re-renders the three-case FY2028 spread (§b #7) */
+/* the marquee's Δ column re-renders the three-case FY2028 spread#7) */
 .marquee-item[data-marquee-case] {
   border: 1px solid transparent;
   padding-inline: 0.5rem;
@@ -458,8 +458,8 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .marquee-item[data-marquee-case].is-selected b { color: var(--field); }
 
 /* ---------------------------------------------------------------------
-   8. FUTURES — midnight navy + THE CASE LEVER (§g)
-   --------------------------------------------------------------------- */
+ 8. FUTURES — midnight navy + THE CASE LEVER
+ --------------------------------------------------------------------- */
 
 .chapter--dark, #futures {
   background: var(--field);
@@ -561,7 +561,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .driver-meter span { background: var(--case-field); }
 .driver-meter span.is-negative { background: #ff8a3d; }
 
-/* --- THE CASE LEVER (§g) ----------------------------------------- */
+/* --- THE CASE LEVER ----------------------------------------- */
 .lever {
   margin-block: 1.6rem 2rem;
   border-top: 1px solid var(--line-2);
@@ -735,8 +735,8 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 }
 
 /* ---------------------------------------------------------------------
-   9. MARGINS — ledger oxblood
-   --------------------------------------------------------------------- */
+ 9. MARGINS — ledger oxblood
+ --------------------------------------------------------------------- */
 
 #margins { background: var(--field); }
 #margins .chapter-lede { color: var(--ink); }
@@ -749,8 +749,8 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .margins-grid .foot-label, .cash-grid .foot-label { color: var(--ink-2); }
 
 /* ---------------------------------------------------------------------
-   10. LEDGER — aged paper, a printed register
-   --------------------------------------------------------------------- */
+ 10. LEDGER — aged paper, a printed register
+ --------------------------------------------------------------------- */
 
 #ledger { background: var(--field); }
 #ledger .chapter-title, #ledger .chapter-lede { color: var(--ink); }
@@ -789,7 +789,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .ledger-table tr.is-selected .case-chip { background: var(--f-workbook); }
 .ledger-table tr.is-selected .dash,
 .ledger-table tr.is-selected .not-disclosed { color: color-mix(in srgb, var(--f-workbook) 82%, var(--f-hero)); }
-/* per-case row ink (§d) */
+/* per-case row ink */
 .case-chip { background: currentColor; }
 tr[data-row-scenario="Base Case"] .case-chip,
 .assumption-case-base { color: #1f2bd0; }
@@ -837,8 +837,8 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
 .fineprint p { color: var(--ink); }
 
 /* ---------------------------------------------------------------------
-   11. METHOD — tangerine, the final act
-   --------------------------------------------------------------------- */
+ 11. METHOD — tangerine, the final act
+ --------------------------------------------------------------------- */
 
 #method { background: var(--field); color: var(--ink); }
 #method .chapter-title, #method .chapter-lede { color: var(--ink); }
@@ -867,8 +867,8 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
 #method .fineprint p { color: var(--ink); }
 
 /* ---------------------------------------------------------------------
-   12. FOOTER — press black, with the state stamp (§b #8)
-   --------------------------------------------------------------------- */
+ 12. FOOTER — press black, with the state stamp#8)
+ --------------------------------------------------------------------- */
 
 .footer {
   background: var(--field);
@@ -909,8 +909,8 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
 .footer-state .stamp-dot { color: var(--case-field); }
 
 /* ---------------------------------------------------------------------
-   13. CONTROLS — chips, buttons: 24px floor, 44px primary
-   --------------------------------------------------------------------- */
+ 13. CONTROLS — chips, buttons: 24px floor, 44px primary
+ --------------------------------------------------------------------- */
 
 .chip, .btn, .dialog-close { border-radius: 0; box-shadow: none; }
 .chip {
@@ -950,12 +950,12 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
 .control-label { color: var(--ink-2); }
 
 /* ---------------------------------------------------------------------
-   14. FOCUS — a two-tone ring that survives EVERY field
-   ---------------------------------------------------------------------
-   No single colour clears 3:1 on all nine fields (measured). So the ring
-   is a PAIR: a dark inner band + a light outer band. Whatever the field,
-   at least one band clears 3:1 against it. Same geometry everywhere.
-   --------------------------------------------------------------------- */
+ 14. FOCUS — a two-tone ring that survives EVERY field
+ ---------------------------------------------------------------------
+ No single colour clears 3:1 on all nine fields (measured). So the ring
+ is a PAIR: a dark inner band + a light outer band. Whatever the field,
+ at least one band clears 3:1 against it. Same geometry everywhere.
+ --------------------------------------------------------------------- */
 
 :where(a, button, input, select, textarea, summary,
        [tabindex]:not([tabindex="-1"]),
@@ -976,8 +976,8 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
 }
 
 /* ---------------------------------------------------------------------
-   15. MOTION — decelerate only. --ease-spring is banned.
-   --------------------------------------------------------------------- */
+ 15. MOTION — decelerate only. --ease-spring is banned.
+ --------------------------------------------------------------------- */
 
 .case-card, .chip, .btn, .kpi, .driver-meter span {
   transition:
@@ -985,7 +985,7 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
     color var(--dur-1) var(--ease-micro),
     border-color var(--dur-1) var(--ease-micro);
 }
-/* field colour NEVER animates (DIRECTION §f) */
+/* field colour NEVER animates (*/
 #overview, #workbook, #trend, #futures, #margins, #ledger, #method,
 .marquee-field, .footer, .topbar { transition: none !important; }
 
@@ -1023,8 +1023,8 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
 }
 
 /* ---------------------------------------------------------------------
-   16. RESPONSIVE
-   --------------------------------------------------------------------- */
+ 16. RESPONSIVE
+ --------------------------------------------------------------------- */
 
 @media (max-width: 72em) {
   .chapter--hero .shell { grid-template-columns: 1fr; }
@@ -1038,7 +1038,7 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
   .chapter-title { font-size: clamp(2rem, 7vw, 3.4rem); }
 }
 @media (max-width: 37em) {
-  /* §i.1 @390: display 46px, h1 44px, h2 38px */
+  /*@390: display 46px, h1 44px, h2 38px */
   .hero-title { font-size: 2.875rem; }
   #futures .chapter-title { font-size: 2.75rem; }
   .chapter-title { font-size: 2.375rem; }
