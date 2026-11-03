@@ -1,0 +1,204 @@
+/* ==========================================================================
+   workbook.css — chapter 01, the reported record.
+
+   This chapter earns trust in the inputs, so it shows the source rather than
+   describing it. Eleven metrics by eight filed years is exactly the eighty-
+   eight cells the model is reconciled against, and the grid renders all of
+   them, so the verification claim is countable instead of asserted.
+
+   The surface is deliberately spreadsheet-like: monospace figures, tabular
+   numerals, hairline rules and a sticky metric column. On the paper field
+   that reads as the workbook itself, which is the point.
+
+   Colours come only from colours.css. Emphasis is a tint of --accent; text
+   never takes the accent, because it does not clear contrast on paper.
+   ========================================================================== */
+
+.source-sheet {
+  margin: clamp(1.1rem, 2.2vw, 1.9rem) 0 0;
+}
+
+.source-sheet-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.25rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.source-sheet-hint {
+  font-family: var(--font-num);
+  font-size: 0.76rem;
+  letter-spacing: 0.01em;
+  color: var(--ink-2);
+}
+
+/* ---- the grid --------------------------------------------------------- */
+
+.source-sheet-scroll {
+  max-height: 30rem;
+  overflow: auto;
+  border-bottom: 1px solid var(--line-2);
+  scrollbar-width: thin;
+}
+
+.source-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-num);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.source-grid thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding: 0.55rem 0.6rem;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+  background: var(--f-workbook);
+  border-bottom: 1px solid var(--line-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.source-grid thead th:first-child {
+  left: 0;
+  z-index: 4;
+  text-align: left;
+  cursor: default;
+}
+
+.source-grid thead th.is-pinned {
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.source-grid tbody th,
+.source-grid tbody td {
+  padding: 0.42rem 0.6rem;
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+
+.source-grid tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  text-align: left;
+  font-weight: 400;
+  background: var(--f-workbook);
+}
+
+/* The metric name is the keyboard route into the row, so it is a real button
+   with a 24px minimum hit area rather than a bare label. */
+.row-key {
+  appearance: none;
+  padding: 0.25rem 0.15rem;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+}
+.row-key:hover { border-bottom-color: currentColor; }
+.row-key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.row-unit {
+  margin-left: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+}
+
+.source-grid tbody td {
+  cursor: crosshair;
+  transition: background 120ms linear;
+}
+
+.source-grid tbody td:hover,
+.source-grid tbody td:focus-visible {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  outline: none;
+}
+
+.source-grid tbody tr:hover td {
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+}
+
+/* Pinned row and highlighted column sit after the hover rules so a held
+   selection survives the pointer moving across it. */
+.source-grid tbody tr.is-pinned th {
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.source-grid tbody tr.is-pinned td {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.source-grid tbody td.is-col {
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+}
+
+/* The FY2026 column is reported actuals, not workbook cells, so it is marked
+   apart and accepts no hover emphasis of its own. */
+.source-grid .is-gap {
+  border-left: 1px solid var(--line-2);
+  color: var(--ink-2);
+}
+.source-grid thead th.is-gap { color: var(--ink-2); }
+
+/* ---- the readout ------------------------------------------------------ */
+
+.sheet-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.25rem;
+  padding-top: 0.8rem;
+}
+
+.sheet-readout-main {
+  font-family: var(--font-num);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sheet-readout-sub {
+  font-size: 0.8rem;
+  color: var(--ink-2);
+}
+
+/* The FY2026 note closes the chapter the way the cash chart closes the model:
+   naming the one absent figure rather than hiding it. */
+#workbook .workbook-note { max-width: 62ch; }
+
+/* ---- responsive -------------------------------------------------------
+   The grid is the one thing here that may scroll sideways; the page may not. */
+
+@media (max-width: 60em) {
+  .source-grid { font-size: 0.78rem; }
+  .source-grid thead th,
+  .source-grid tbody th,
+  .source-grid tbody td { padding: 0.4rem 0.45rem; }
+  .source-sheet-scroll { max-height: 24rem; }
+}
+
+@media (max-width: 40em) {
+  .source-sheet-hint { font-size: 0.72rem; }
+  .source-grid { font-size: 0.74rem; }
+  .row-unit { display: none; }
+  .sheet-readout-main { font-size: 0.82rem; }
+}

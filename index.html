@@ -68,6 +68,7 @@
   <link rel="stylesheet" href="assets/motion-core.css">
   <link rel="stylesheet" href="assets/reboot.css">
   <link rel="stylesheet" href="assets/hero.css">
+  <link rel="stylesheet" href="assets/workbook.css">
 </head>
 <body>
   <a class="skip" href="#overview">Skip to content</a>
@@ -149,66 +150,56 @@
     </section>
 
     <!-- ================= 01 THE WORKBOOK ================= -->
+    <!-- ================= 01 — THE WORKBOOK =================
+         This chapter's job is provenance: earn trust in the inputs before any
+         analysis appears. Eleven reported metrics across eight filed years is
+         exactly the eighty-eight cells the model is checked against, so the
+         grid below is not an illustration of that claim — it is the claim. -->
     <section class="chapter" id="workbook" aria-labelledby="workbookTitle">
       <div class="shell">
         <header class="chapter-head">
           <span class="chapter-no">01 — The workbook</span>
           <h2 class="chapter-title" id="workbookTitle" data-reveal="lines"><span class="lockup-line">Every cell,</span><span class="lockup-line">sourced.</span></h2>
-          <p class="lede chapter-lede" data-reveal="settle">The model runs on 88 historical cells across 11 metrics (FY2018–FY2025),
-            transcribed cell by cell from the supplied workbook, plus 30 scenario values in 10 assumption rows carried through three cases.
-            Each value was re-keyed and re-checked against the source — <strong>88/88 and 30/30 match</strong>.</p>
+          <p class="lede chapter-lede" data-reveal="settle">Eleven reported metrics across eight filed years. That is eighty-eight cells,
+            transcribed from the supplied workbook and re-keyed against the source one at a time — <strong>88 of 88 match</strong>.
+            Nothing on this page is modelled until you reach the scenarios.</p>
         </header>
 
         <div class="evidence-band" data-reveal="items">
-          <div class="evidence"><b data-count="88">88</b><span>historical cells verified</span></div>
-          <div class="evidence"><b data-count="30">30</b><span>case values in 3 scenarios</span></div>
-          <div class="evidence"><b data-count="118">118</b><span>data points in the model</span></div>
-          <div class="evidence"><b data-count="11">11</b><span>fiscal years, FY2018–FY2028</span></div>
+          <div class="evidence"><b data-count="88">88</b><span>reported cells, all reconciled</span></div>
+          <div class="evidence"><b data-count="30">30</b><span>case values, three scenarios</span></div>
+          <div class="evidence"><b data-count="8">8</b><span>filed years, FY2018–FY2025</span></div>
+          <div class="evidence"><b data-count="11">11</b><span>metrics in the record</span></div>
         </div>
 
-        <div class="workbook-grid" data-reveal="settle" style="margin-top:1rem">
-          <div class="panel">
-            <span class="foot-label">What lives on this page</span>
-            <ul class="workbook-list">
-              <li><b>data.js</b><p>A frozen data module: 8 reported years, the FY2026 actuals, and one row per case per forecast year. The source workbook's SHA-256 hash is pinned inside.</p></li>
-              <li><b>charts</b><p>A hand-written SVG chart kit in two files — line, area, bar, paired bars, margin lines, spread and sparklines. No charting library is imported; reading the source fully explains any pixel.</p></li>
-              <li><b>ledger</b><p>The complete table — reported, actual and all six case-years — clickable, filterable, and exportable as CSV.</p></li>
-              <li><b>rules</b><p>Definitions are kept visible: reported vs model-derived values, statutory PAT, and where the model's own estimates are drawn and why.</p></li>
-            </ul>
+        <figure class="source-sheet" data-reveal="settle">
+          <div class="source-sheet-head">
+            <span class="foot-label">The reported record · FY2018 — FY2025</span>
+            <span class="source-sheet-hint" id="sheetHint">Hover any cell for the exact figure · click a metric to hold it</span>
           </div>
-          <div class="panel panel--flat">
-            <span class="foot-label">The reported shape, FY2018–FY2025</span>
-            <div class="spark-rail">
-              <article class="spark-card">
-                <h3 style="--dot:#1d4ed8">Revenue</h3>
-                <div data-sys-spark="revenue"></div>
-                <span class="num">₹2.55L Cr</span><small>FY2025, reported</small>
-              </article>
-              <article class="spark-card">
-                <h3 style="--dot:#0f766e">EBITDA</h3>
-                <div data-sys-spark="ebitda"></div>
-                <span class="num">₹71,369 Cr</span><small>FY2025, reported</small>
-              </article>
-              <article class="spark-card">
-                <h3 style="--dot:var(--series-violet)">PAT</h3>
-                <div data-sys-spark="pat"></div>
-                <span class="num">₹48,797 Cr</span><small>FY2025, workbook</small>
-              </article>
-              <article class="spark-card">
-                <h3 style="--dot:#c2410c">FCF</h3>
-                <div data-sys-spark="fcf"></div>
-                <span class="num">₹47,776 Cr</span><small>FY2025, reported</small>
-              </article>
-            </div>
-            <p class="workbook-note" style="margin-top:1rem"><b>FY2026 is reported, not forecast.</b>
-              Revenue ₹2,67,021 Cr (+4.6%) · EBIT ₹66,838 Cr · statutory PAT ₹49,454 Cr · EPS ₹136.01 ·
-              operating cash flow ₹52,094 Cr · 5,84,519 employees — from TCS's Q4 & FY2026 results, filed 9 April 2026.</p>
+
+          <div class="source-sheet-scroll" role="group" aria-label="Reported figures by metric and year" tabindex="0">
+            <table class="source-grid" id="sourceGrid">
+              <caption class="sr-only">Eleven reported metrics for FY2018 to FY2025, in ₹ crore except EPS in rupees, shares in crore, and employees in headcount. The final column carries FY2026 reported actuals, which come from the results filing rather than the workbook.</caption>
+              <thead><tr><th scope="col">Metric</th></tr></thead>
+              <tbody id="sourceBody">
+                <tr><td>The reported grid loads with JavaScript. Every figure is also listed in The ledger chapter.</td></tr>
+              </tbody>
+            </table>
           </div>
-        </div>
+
+          <div class="sheet-readout" role="status" aria-live="polite">
+            <span class="sheet-readout-main" id="readoutMain">88 cells · 88 matches</span>
+            <span class="sheet-readout-sub" id="readoutSub">FY2018–FY2025 · ₹ crore unless noted</span>
+          </div>
+        </figure>
+
+        <p class="workbook-note" data-reveal="settle"><b>FY2026 is reported, not forecast.</b>
+          Revenue ₹2,67,021 Cr (+4.6%) · EBIT ₹66,838 Cr · statutory PAT ₹49,454 Cr · EPS ₹136.01 ·
+          operating cash flow ₹52,094 Cr · 5,84,519 employees — from TCS's Q4 &amp; FY2026 results, filed 9 April 2026.
+          TCS publishes no free-cash-flow line for that year, so the cell stays empty here and in every chart.</p>
       </div>
     </section>
-
-    <!-- ================= 02 THE TREND ================= -->
     <section class="chapter" id="trend" aria-labelledby="trendHeading">
       <div class="shell">
         <header class="chapter-head">
@@ -670,6 +661,7 @@
   <script src="assets/charts2.js"></script>
   <script src="assets/app-core.js"></script>
   <script src="assets/app.js"></script>
+    <script src="assets/workbook.js"></script>
   <script type="module">
     import { init } from "./assets/motion-core.js";
     init({ pin: false, stack: false });
