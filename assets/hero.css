@@ -1,0 +1,291 @@
+/* ==========================================================================
+   hero.css — the opening screen, rebuilt.
+
+   WHAT WAS WRONG
+   Measured at 1440x900, the old hero was 1212px tall in a 900px viewport, and
+   carried nine separate blocks: kicker, headline, lede, three tags, a giant
+   number, an eyebrow, two side stats, two control groups and a chart. Nothing
+   dominated, the chart began at y=883 (below the fold), and the chart itself
+   was a 620x78 aspect ratio rendered at 151px — a strip, not a chart.
+
+   WHAT THIS IS
+   One dominant object and everything else subordinate to it:
+
+       headline        ten years of the record, at display size
+       stage           the readout and the line share one frame, because the
+                       number IS a point on the line
+       pickers         the interaction, on the first screen, not 900px down
+
+   The whole composition is capped to the viewport so the chart is never below
+   the fold. On short viewports the statement shrinks first; the chart does not.
+   ========================================================================== */
+
+.chapter--hero {
+  min-height: 100svh;
+  display: flex;
+  align-items: stretch;
+  padding-block: 0;
+  background: var(--f-overview);
+  color: var(--i-overview);
+}
+
+.hero-shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding: clamp(1rem, 2vw, 1.75rem) var(--gutter) clamp(1.25rem, 2.5vw, 2rem);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: clamp(0.75rem, 1.6vh, 1.5rem);
+  min-height: 100svh;
+}
+
+/* ---- top rail ----------------------------------------------------------- */
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.hero-mark {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.hero-mark b { color: var(--accent); }
+
+.hero-span {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-mid);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- the statement -----------------------------------------------------
+   Two locked lines. It is the biggest thing on the page and it is allowed to
+   be, because everything under it is small and precise. */
+
+.hero-statement { padding-top: clamp(0.5rem, 2vh, 1.5rem); }
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 5.4vw, 5.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.038em;
+  margin: 0;
+  max-width: 20ch;
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* ---- the stage ---------------------------------------------------------
+   Readout and chart share one frame. The readout is not a separate card that
+   sits above the chart; it is the annotation to the point being plotted. */
+
+.hero-stage {
+  display: grid;
+  grid-template-columns: minmax(9.5rem, 15rem) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  min-height: 0;
+}
+
+.hero-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-bottom: 0.35rem;
+}
+
+.hero-readout-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.hero-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 3.6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.hero-value small {
+  font-size: 0.34em;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ink-mid);
+  margin-left: 0.15em;
+}
+
+.hero-readout-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.84rem;
+  color: var(--ink-mid);
+}
+.hero-sep { opacity: 0.4; }
+
+.hero-delta {
+  font-weight: 700;
+  color: var(--case-line);
+  font-variant-numeric: tabular-nums;
+}
+.hero-delta.is-down { color: var(--case-bear); }
+.hero-delta-note { color: var(--ink-dim); font-size: 0.78rem; }
+
+.hero-compare {
+  margin: 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--hairline);
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+}
+.hero-compare div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.hero-compare dt { color: var(--ink-dim); }
+.hero-compare dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+/* The chart owns the rest of the stage and is given real height. */
+#heroChart {
+  min-height: clamp(11rem, 30vh, 20rem);
+  height: 100%;
+  align-self: stretch;
+}
+#heroChart svg { display: block; width: 100%; height: 100%; }
+
+/* ---- pickers -----------------------------------------------------------
+   The interaction sits on the first screen. Big enough to hit, close enough
+   to the number it changes that cause and effect are in one glance. */
+
+.hero-pickers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding-top: clamp(0.75rem, 1.6vh, 1.25rem);
+  border-top: 1px solid var(--hairline);
+}
+
+.hero-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.hero-picker-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-right: 0.35rem;
+}
+
+.hero-picker button {
+  min-width: 3.6rem;
+  min-height: 44px;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease-reveal),
+              color var(--dur-1) var(--ease-reveal),
+              border-color var(--dur-1) var(--ease-reveal);
+}
+.hero-picker button:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.hero-picker button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0d0d0c;
+  font-weight: 700;
+}
+.hero-picker button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px var(--f-overview);
+}
+
+.hero-hint {
+  margin: 0;
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+  max-width: 30ch;
+}
+
+/* ---- responsive --------------------------------------------------------
+   The chart is the last thing to give way. On a phone the readout moves above
+   the chart and the statement drops a step, but the interaction stays on the
+   first screen. */
+
+@media (max-width: 60em) {
+  .hero-stage {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+  .hero-readout {
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+  .hero-compare {
+    border-top: 0;
+    padding-top: 0;
+    flex: 1 1 12rem;
+  }
+  #heroChart { min-height: clamp(9rem, 26vh, 14rem); }
+  .hero-hint { display: none; }
+}
+
+@media (max-width: 40em) {
+  .chapter--hero { min-height: 0; }
+  .hero-shell { min-height: 0; gap: 0.9rem; }
+  .hero-title { font-size: clamp(2.4rem, 11vw, 3.2rem); }
+  .hero-value { font-size: clamp(2rem, 9vw, 2.6rem); }
+  .hero-pickers { gap: 0.75rem 1.25rem; }
+  .hero-picker button { min-width: 3.1rem; padding: 0.45rem 0.7rem; font-size: 0.85rem; }
+  #heroChart { min-height: 10rem; }
+}
+
+/* Short viewports: the statement gives way first, the chart never does. */
+@media (max-height: 44em) and (min-width: 60em) {
+  .hero-title { font-size: clamp(2.2rem, 3.6vw, 3.4rem); }
+  .hero-value { font-size: clamp(1.8rem, 2.6vw, 2.4rem); }
+  .hero-compare { display: none; }
+  #heroChart { min-height: 10rem; }
+}

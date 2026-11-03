@@ -207,10 +207,26 @@
  Hero trend line
  ---------------------------------------------------------------- */
 
+  /* The hero chart is the page's opening object, so it is drawn at the size it
+     is displayed: the viewBox tracks the container instead of assuming 620px.
+     A fixed viewBox scaled into a wide box is what made it read as a squashed
+     strip with unreadably small type. */
   function hero(wrap, state) {
-    const { W, H } = frame(wrap, 620, 78);
+    const cw = wrap.clientWidth || 900;
+    const ch = wrap.clientHeight || 320;
+    const compact = cw < 560;
+    const W = Math.round(Math.max(compact ? 460 : 760, cw));
+    const H = Math.round(Math.max(compact ? 200 : 260, ch));
     const svg = makeSvg(wrap, W, H);
-    const m = { l: 4, r: 8, t: 10, b: 10 };
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    const fs = compact ? 11 : 12;
+    const m = {
+      l: compact ? 34 : 56,
+      r: compact ? 12 : 20,
+      t: compact ? 20 : 28,
+      b: compact ? 30 : 38
+    };
     const years = D.meta.years;
     const caseName = state.scenario;
     const values = years.map((y, i) => {
@@ -218,11 +234,26 @@
       if (i === 8) return D.actual.revenue;
       return D.scenarios[caseName][y].revenue;
     });
-    const min = Math.min(...values) * 0.97;
-    const max = Math.max(...values) * 1.03;
+    const min = Math.min(...values) * 0.94;
+    const max = Math.max(...values) * 1.04;
     const x = (i) => m.l + (i / (values.length - 1)) * (W - m.l - m.r);
     const y = (v) => m.t + (1 - (v - min) / (max - min)) * (H - m.t - m.b);
     const pts = values.map((v, i) => ({ x: x(i), y: y(v) }));
+
+    /* Baseline and one guide per lakh, so the line has a scale to read against. */
+    const gridVals = [100000, 150000, 200000, 250000, 300000].filter(
+      (v) => v >= min && v <= max
+    );
+    gridVals.forEach((v) => {
+      const gy = y(v);
+      el("line", {
+        x1: m.l, x2: W - m.r, y1: gy, y2: gy,
+        stroke: COLORS.line, "stroke-width": 1, "stroke-dasharray": v === 100000 ? "none" : "2 4"
+      }, svg);
+      text(svg, m.l - 8, gy + 4, `${(v / 100000).toFixed(1)}L`, "axis-text", {
+        "text-anchor": "end", "font-size": fs, opacity: 0.7
+      });
+    });
 
     const defs = el("defs", {}, svg);
     const grad = el(
@@ -230,7 +261,7 @@
       { id: "heroFill", x1: "0", x2: "0", y1: "0", y2: "1" },
       defs
     );
-    el("stop", { offset: "0%", "stop-color": CASE_COLOR[caseName], "stop-opacity": "0.26" }, grad);
+    el("stop", { offset: "0%", "stop-color": CASE_COLOR[caseName], "stop-opacity": "0.30" }, grad);
     el("stop", { offset: "100%", "stop-color": CASE_COLOR[caseName], "stop-opacity": "0" }, grad);
 
     el("path", { d: areaPath(pts, H - m.b), fill: "url(#heroFill)" }, svg);
@@ -239,7 +270,7 @@
     const casePts = pts.slice(8);
     el(
       "path",
-      { d: linePath(actualPts), class: "chart-line chart-line--actual draw", "stroke-width": 2.1 },
+      { d: linePath(actualPts), class: "chart-line chart-line--actual draw", "stroke-width": 2.4 },
       svg
     );
     el(
@@ -248,7 +279,7 @@
         d: linePath(casePts),
         fill: "none",
         stroke: CASE_COLOR[caseName],
-        "stroke-width": 2.4,
+        "stroke-width": 3,
         "stroke-linecap": "round",
         "stroke-linejoin": "round",
         class: "draw"
@@ -265,9 +296,34 @@
 
     const last = pts[pts.length - 1];
     el("circle", {
-      cx: last.x, cy: last.y, r: 4.6,
-      fill: CASE_COLOR[caseName], stroke: COLORS.white, "stroke-width": 1.8
+      cx: last.x, cy: last.y, r: 5,
+      fill: CASE_COLOR[caseName], stroke: COLORS.white, "stroke-width": 2
     }, svg);
+
+    /* Year labels on the baseline. Without them the line floats with no
+       reference and the whole chart reads as decoration. */
+    const labelIdx = compact ? [0, 4, 8, 10] : [0, 2, 4, 6, 8, 9, 10];
+    labelIdx.forEach((i) => {
+      const yr = years[i];
+      const short = i === 8 ? "FY26*" : `FY${String(yr).slice(4)}`;
+      text(svg, x(i), H - m.b + fs + 8, short, "axis-text", {
+        "text-anchor": i === 0 ? "start" : i === values.length - 1 ? "end" : "middle",
+        "font-size": fs,
+        opacity: 0.72,
+        "font-weight": i === 8 ? 700 : 400
+      });
+    });
+
+    /* The selected year's point gets a direct label, so the largest number on
+       the screen is visibly attached to this chart rather than floating near it. */
+    const selIdx = state.year === "FY2026" ? 8 : state.year === "FY2027" ? 9 : 10;
+    const selPt = pts[selIdx];
+    if (selPt) {
+      el("circle", {
+        cx: selPt.x, cy: selPt.y, r: 3.2,
+        fill: COLORS.ink, stroke: CASE_COLOR[caseName], "stroke-width": 2
+      }, svg);
+    }
 
     animatePaths(svg);
   }
