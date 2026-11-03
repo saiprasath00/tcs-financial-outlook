@@ -12,3 +12,7 @@ Thumbs.db
 
 # NOTE: assets/fonts/ and assets/previews/ are required runtime assets
 # and MUST stay tracked. Do not add them here.
+
+# Test harnesses
+.verify/
+

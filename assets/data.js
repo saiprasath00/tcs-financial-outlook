@@ -304,7 +304,7 @@ window.TCS_DATA = {
       "bull": 0.198,
       "bear": 0.175,
       "unit": "%",
-      "note": "⚠️ ESTIMATE ONLY: Model derives NP from EBIT−Tax. Actual margins: Bull=21-21.8%, Base=19.3%, Bear=17.5%"
+      "note": "ESTIMATE ONLY: Model derives NP from EBIT−Tax. Actual margins: Bull=21-21.8%, Base=19.3%, Bear=17.5%"
     },
     {
       "parameter": "Tax Rate",

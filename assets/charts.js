@@ -29,10 +29,15 @@
     lime: "#f5df78"
   };
 
+  /* Case inks follow DIRECTION.md §d. charts.css overrides these per field via
+     the `data-field` attribute on each chart host; the values here are the
+     dark-field defaults (midnight #080c26), where the runway, the case
+     comparison and the scatter are drawn.
+     Measured on #080c26: Base 10.16:1, Bull 8.21:1, Bear 11.44:1. */
   const CASE_COLOR = {
-    "Bear Case": COLORS.rose,
-    "Base Case": COLORS.blue,
-    "Bull Case": COLORS.teal
+    "Bear Case": "#00e0c6",
+    "Base Case": "#54c8ff",
+    "Bull Case": "#ff8a3d"
   };
 
   const reduceMql = window.matchMedia("(prefers-reduced-motion: reduce)");

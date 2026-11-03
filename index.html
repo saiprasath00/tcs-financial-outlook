@@ -90,7 +90,9 @@
     <section class="chapter chapter--hero" id="overview" aria-labelledby="heroTitle">
       <div class="shell">
         <p class="kicker" data-intro-item>TCS Financial Outlook · FY2018 – FY2028 · Bear / Base / Bull</p>
-        <h1 class="hero-title" id="heroTitle" data-intro>Nine years. <em>Three futures.</em></h1>
+        <!-- Two-line lockup per DIRECTION.md §i.1: each line is its own block, so the break never
+             depends on text-wrap. Lines verified against rendered widths, not just the 0.535em model. -->
+        <h1 class="hero-title" id="heroTitle" data-intro><span class="lockup-line">Ten years.</span><span class="lockup-line"><em class="hero-em">Three futures.</em></span></h1>
         <p class="lede hero-lede" data-intro-item>Nine years of the record. One statutory FY2026 bridge. Three analytical cases you can switch in real time. Trace every number through the model, charts and ledger.</p>
         <ul class="hero-tags" data-intro-item>
           <li><span>FY2026 reported revenue</span><b>₹2,67,021 Cr</b></li>
@@ -160,7 +162,7 @@
       <div class="shell">
         <header class="chapter-head">
           <span class="chapter-no">01 — The workbook</span>
-          <h2 class="chapter-title" id="workbookTitle" data-reveal="lines">Every number here can point at its source.</h2>
+          <h2 class="chapter-title" id="workbookTitle" data-reveal="lines"><span class="lockup-line">Every cell,</span><span class="lockup-line">sourced.</span></h2>
           <p class="lede chapter-lede" data-reveal="settle">The model runs on 88 historical cells across 11 metrics (FY2018–FY2025),
             transcribed cell by cell from the supplied workbook, plus 30 scenario values in 10 assumption rows carried through three cases.
             Each value was re-keyed and re-checked against the source — <strong>88/88 and 30/30 match</strong>.</p>
@@ -197,7 +199,7 @@
                 <span class="num">₹71,369 Cr</span><small>FY2025, reported</small>
               </article>
               <article class="spark-card">
-                <h3 style="--dot:#6d28d9">PAT</h3>
+                <h3 style="--dot:var(--series-violet)">PAT</h3>
                 <div data-sys-spark="pat"></div>
                 <span class="num">₹48,797 Cr</span><small>FY2025, workbook</small>
               </article>
@@ -220,7 +222,7 @@
       <div class="shell">
         <header class="chapter-head">
           <span class="chapter-no">02 — The trend</span>
-          <h2 class="chapter-title" id="trendHeading" data-reveal="lines">Nine reported years. Then the model takes over.</h2>
+          <h2 class="chapter-title" id="trendHeading" data-reveal="lines"><span class="lockup-line">Nine years,</span><span class="lockup-line">then the model.</span></h2>
           <p class="lede chapter-lede" data-reveal="settle">Pick a metric below. Bars switch between reported, actual and case data;
             hover any year for the exact figure; the growth strip underneath charts every year-on-year move.</p>
         </header>
@@ -304,6 +306,11 @@
               <li class="marquee-item"><span>FY26 EPS</span><b>₹136.01</b></li>
               <li class="marquee-item"><span>cells verified</span><b>88 / 88</b></li>
               <li class="marquee-item"><span>charting libraries</span><b>0</b></li>
+              <!-- One item per case: the marquee carries the selected case's FY2028 revenue and its
+                   signed delta against Base (DIRECTION.md §b touchpoint 7). -->
+              <li class="marquee-item" data-marquee-case="Bear Case"><span>Bear FY2028</span><b>₹2,97,034</b><span data-marquee-delta="Bear Case">−5.0%</span></li>
+              <li class="marquee-item" data-marquee-case="Base Case"><span>Base FY2028</span><b>₹3,12,762</b><span data-marquee-delta="Base Case">baseline</span></li>
+              <li class="marquee-item" data-marquee-case="Bull Case"><span>Bull FY2028</span><b>₹3,27,435</b><span data-marquee-delta="Bull Case">+4.7%</span></li>
             </ul>
           </div>
           <button type="button" class="marquee-ctl" data-marquee-toggle aria-pressed="false" hidden>Pause ticker</button>
@@ -316,10 +323,14 @@
       <div class="shell">
         <header class="chapter-head">
           <span class="chapter-no">03 — Three futures</span>
-          <h2 class="chapter-title" id="futuresHeading" data-reveal="lines">Same company. Three different FY2028s.</h2>
+          <h2 class="chapter-title" id="futuresHeading" data-reveal="lines"><span class="lockup-line">One company.</span><span class="lockup-line">Three FY2028s.</span></h2>
           <p class="lede chapter-lede" data-reveal="settle">One selector, wired through everything on this dark chapter — KPI cards, runway,
             spread, comparison, assumptions and drivers. Choose Bear, Base or Bull below and every number follows.</p>
         </header>
+
+        <!-- The Case Lever (DIRECTION.md §g). app.js mounts the range control, three detents,
+             beacons and the four signed outputs into this host. Unpinned by design. -->
+        <div class="lever" id="caseLever"></div>
 
         <div class="control-row" role="group" aria-label="Case selector">
           <button class="chip" type="button" data-scenario="Bear Case" aria-pressed="false">Bear Case</button>
@@ -450,7 +461,7 @@
       <div class="shell">
         <header class="chapter-head">
           <span class="chapter-no">04 — Margins & cash</span>
-          <h2 class="chapter-title" id="marginsHeading" data-reveal="lines">Where the profit and the cash part ways.</h2>
+          <h2 class="chapter-title" id="marginsHeading" data-reveal="lines"><span class="lockup-line">Profit and cash</span><span class="lockup-line">part ways.</span></h2>
           <p class="lede chapter-lede" data-reveal="settle">Margins first: EBITDA against PAT, every fiscal year through FY2028.
             Then the cash story that made this page stricter — the year TCS stopped publishing a free cash flow line.</p>
         </header>
@@ -494,7 +505,7 @@
       <div class="shell">
         <header class="chapter-head">
           <span class="chapter-no">05 — The ledger</span>
-          <h2 class="chapter-title" id="ledgerHeading" data-reveal="lines">The whole model, one table.</h2>
+          <h2 class="chapter-title" id="ledgerHeading" data-reveal="lines"><span class="lockup-line">The whole model.</span><span class="lockup-line">One table.</span></h2>
           <p class="lede chapter-lede" data-reveal="settle">Everything the charts show, in absolute figures.
             Forecast rows are selectable — focus one and press Enter to adopt that case and year everywhere.</p>
         </header>
@@ -550,7 +561,7 @@
       <div class="shell">
         <header class="chapter-head">
           <span class="chapter-no">06 — Method & sources</span>
-          <h2 class="chapter-title" id="methodHeading" data-reveal="lines">How this page was built.</h2>
+          <h2 class="chapter-title" id="methodHeading" data-reveal="lines"><span class="lockup-line">How this page</span><span class="lockup-line">was built.</span></h2>
           <p class="lede chapter-lede" data-reveal="settle">It started as a Power BI dashboard; this page is its web edition —
             rebuilt as a single interactive document with the same discipline. No charting library, no template, no generated filler.</p>
         </header>
@@ -648,6 +659,8 @@
   </main>
 
   <footer class="footer">
+    <!-- The selected state, stamped in the footer (DIRECTION.md §b touchpoint 8). -->
+    <div class="footer-state" id="footerState"></div>
     <div class="shell footer-row">
       <p>An independent analytical exercise built from a supplied workbook and public filings — <strong>not affiliated with, endorsed by, or
         reviewed by TCS Limited</strong>. FY2027–FY2028 rows are model cases, not guidance.</p>

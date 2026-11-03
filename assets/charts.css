@@ -1,85 +1,231 @@
 /* =====================================================================
    charts.css — styling for the hand-built SVG chart kit
-   Classes referenced by charts.js / charts2.js:
-   #heroChart #runwayChart #spreadChart #trendChart #marginChart
-   #cashChart #compareChart, [data-kpi-spark] hosts;
-   .chart-tooltip .tooltip-title .tooltip-row, .axis-text(--muted/--strong),
-   .chart-label(--inverse), .chart-bar, .grid-line, .forecast-zone,
-   .forecast-edge, .chart-line--actual, .crosshair, .hover-dot, .draw.
-   Colors come from base.css tokens. SVG text never smaller than ~10px
-   rendered: charts.js legibleText() and the classes here enforce it.
+   ---------------------------------------------------------------------
+   THE INK RULE: a chart is drawn on a *field*, so its ink is resolved
+   from the field it sits on, never from one global palette. Every chart
+   host carries data-field="cobalt|midnight|tangerine|pale|paper".
+   Each field block below sets:
+     --field      the flat field colour (no gradients, ever)
+     --field-ink  text on that field (>=4.5:1, proven in .verify/contrast.mjs)
+     --series-0..3 chart strokes (>=3:1 against --field)
+     --field-grid / --field-hair structural hairlines
+     --field-zone  the forecast-zone wash (flat rgba, not a gradient)
+   Measured contrast, field by field, lives in .verify/contrast.mjs.
+   Classes: .axis-text(--muted/--strong), .chart-label(--inverse),
+   .chart-bar, .grid-line, .forecast-zone, .forecast-edge,
+   .chart-line--actual, .crosshair, .hover-dot, .draw,
+   .chart-tooltip .tooltip-title .tooltip-row, .chart-hit.
    ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. FIELD INK MAP — the single source of truth for chart colour
+   ---------------------------------------------------------------------
+   Field names match design/DIRECTION.md §c exactly. app.js stamps
+   data-field on each chart host (see CHART_FIELD in app.js):
+     heroChart   → cobalt     (#overview)
+     trendChart  → teal       (#trend)
+     runway/compare/spread → midnight (#futures)
+     margin/cash → oxblood    (#margins)
+     workbook sparks → paper  (#workbook)
+   --------------------------------------------------------------------- */
+
+/* #overview — #1f2bd0. Only light series clear the floor here (§d). */
+[data-field="cobalt"] {
+  --field: #1f2bd0;
+  --field-ink: #fff6ea;            /* 8.48:1 */
+  --field-grid: #4d55dd;
+  --field-hair: #9c9ddf;           /* 3.59:1 */
+  --field-zone: color-mix(in oklab, #fff6ea 8%, #1f2bd0);
+  --series-0: #fff6ea;             /* 8.48 reported / actual */
+  --series-1: #ffe9a8;             /* 7.55 selected case */
+  --series-2: #c7d0ff;             /* 5.95 unselected cases */
+  --series-3: #ff7043;             /* 3.31 marker halo only */
+  color-scheme: dark;
+}
+
+/* #futures — #080c26. The only field where the saturated set is live. */
+[data-field="midnight"] {
+  --field: #080c26;
+  --field-ink: #fff6ea;            /* 17.99:1 */
+  --field-grid: #2a3050;
+  --field-hair: #6b6a74;
+  --field-zone: color-mix(in oklab, #fff6ea 8%, #080c26);
+  --series-0: #54c8ff;             /* Base   10.16 */
+  --series-1: #ff8a3d;             /* Bull    8.21 */
+  --series-2: #00e0c6;             /* Bear   11.44 */
+  --series-3: #f5c400;             /* FCF    11.71 */
+  color-scheme: dark;
+}
+
+/* #trend — #0c6e74. Encode is lightness rank, not hue (§d). */
+[data-field="teal"] {
+  --field: #0c6e74;
+  --field-ink: #fff3d6;            /* 5.44:1 */
+  --field-grid: #3f8f92;
+  --field-hair: #c9e6e2;           /* 3.9:1 */
+  --field-zone: color-mix(in oklab, #fff3d6 8%, #0c6e74);
+  --series-0: #c9e6e2;             /* 4.55 reported bars */
+  --series-1: #ffffff;             /* 6.00 FY2026 actual */
+  --series-2: #ffe9a8;             /* 4.99 forecast bars */
+  --series-3: #7dffe8;             /* 4.96 growth positive */
+  color-scheme: dark;
+}
+
+/* #margins — #b22a4e. Two series, separated by lightness AND dash. */
+[data-field="oxblood"] {
+  --field: #b22a4e;
+  --field-ink: #fff6ea;            /* 5.89:1 */
+  --field-grid: #d17c8c;
+  --field-hair: #eab4bb;           /* 3.52:1 */
+  --field-zone: color-mix(in oklab, #fff6ea 8%, #b22a4e);
+  --series-0: #ffd9a8;             /* 4.72 EBITDA margin */
+  --series-1: #fff6ea;             /* 5.89 PAT margin */
+  --series-2: #7dffe8;             /* 5.20 forecast half */
+  --series-3: #c9d2ff;             /* 4.24 FCF bars */
+  color-scheme: dark;
+}
+
+/* #workbook — #fff0e7. Reported data never gets the saturated palette. */
+[data-field="paper"] {
+  --field: #fff0e7;
+  --field-ink: #12123a;            /* 16.08:1 */
+  --field-grid: #d8cbc0;
+  --field-hair: #7a7486;           /* 4.04:1 */
+  --field-zone: color-mix(in oklab, #12123a 8%, #fff0e7);
+  --series-0: #12123a;
+  --series-1: #1f2bd0;
+  --series-2: #0c6e74;
+  --series-3: #b22a4e;
+  color-scheme: light;
+}
+
+/* #ledger — #f3ebd8. The register's dark inks. */
+[data-field="ledger"] {
+  --field: #f3ebd8;
+  --field-ink: #12123a;            /* 15.07:1 */
+  --field-grid: #d6c9b4;
+  --field-hair: #757180;           /* 3.99:1 */
+  --field-zone: color-mix(in oklab, #12123a 8%, #f3ebd8);
+  --series-0: #1f2bd0;             /* 7.64 Base   */
+  --series-1: #8a1f3a;             /* 7.57 Bear   */
+  --series-2: #0a5c61;             /* 6.51 Bull   */
+  --series-3: #5a5468;             /* 6.09 muted  */
+  color-scheme: light;
+}
+
+/* #method — #ff7043 */
+[data-field="method"] {
+  --field: #ff7043;
+  --field-ink: #12123a;            /* 6.52:1 */
+  --field-grid: #b3572f;
+  --field-hair: #7a3b3e;           /* 3.03:1 */
+  --series-0: #12123a;
+  color-scheme: light;
+}
+
+/* ---------------------------------------------------------------------
+   2. Chart viewport + tooltip layer
+   --------------------------------------------------------------------- */
 
 .chart-viewport {
   position: relative;
   z-index: 1;
+  isolation: isolate;
 }
 .chart-viewport > svg {
   display: block;
   width: 100%;
   height: auto;
   overflow: visible;
+  touch-action: pan-y; /* horizontal scrub never traps vertical scroll */
+}
+.chart-viewport.is-scrubbing { cursor: crosshair; }
+
+/* Visible keyboard entry point into a chart's crosshair. */
+.chart-viewport[tabindex]:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #0b1439,
+    0 0 0 6px #ffca84;
+}
+[data-field="midnight"] .chart-viewport[tabindex]:focus-visible {
+  box-shadow:
+    0 0 0 2px #fff5eb,
+    0 0 0 6px #ff7043;
 }
 
-/* ---- axis + label voices ------------------------------------------------- */
+/* ---- axis + label voices -------------------------------------------- */
 
 .axis-text {
-  fill: var(--ink-mid);
+  fill: var(--field-ink, var(--ink-mid));
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.01em;
+  opacity: 0.82;
 }
-.axis-text--muted { fill: var(--ink-mid); }
-.axis-text--strong { fill: var(--ink); font-weight: 700; }
+.axis-text--muted { fill: var(--field-ink, var(--ink-mid)); opacity: 0.74; }
+.axis-text--strong {
+  fill: var(--field-ink, var(--ink));
+  font-weight: 700;
+  opacity: 1;
+}
 
 .chart-label {
   font-family: var(--font-mono);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  /* labels that carry a fill attribute keep it; unstyled labels fall to ink */
 }
-.chart-viewport .chart-label:not([fill]) { fill: var(--ink); }
-.chart-label--inverse { fill: var(--ground) !important; font-weight: 700; }
+.chart-viewport .chart-label:not([fill]) { fill: var(--field-ink, var(--ink)); }
+.chart-label--inverse { fill: var(--field) !important; font-weight: 700; }
 
-/* ---- structural lines ------------------------------------------------------- */
+/* ---- structural lines ------------------------------------------------ */
 
-.grid-line { stroke: var(--hairline); }
+.grid-line { stroke: var(--field-grid, var(--hairline)); }
 .chart-line--actual {
-  stroke: var(--ink);
+  stroke: var(--field-ink, var(--ink));
   fill: none;
 }
 
-.forecast-zone { fill: #e9e3f8; }           /* a violet wash marks the case years */
+.forecast-zone { fill: var(--field-zone, #e9e3f8); }
 .forecast-edge {
-  stroke: var(--violet-line);
+  stroke: var(--field-hair, var(--tangerine-line));
   stroke-dasharray: 2 4;
 }
 
 .crosshair {
-  stroke: var(--hairline-strong);
+  stroke: var(--field-hair, var(--hairline-strong));
+  stroke-width: 1;
   opacity: 0;
-  transition: opacity var(--dur-2) var(--ease-micro);
+  transition: opacity var(--dur-1, 120ms) var(--ease-micro, ease);
+  pointer-events: none;
 }
 .crosshair.is-visible { opacity: 1; }
 
-.hover-dot { opacity: 0; transition: opacity var(--dur-2) var(--ease-micro); }
-.hover-dot.is-visible { opacity: 1; }
+.hover-dot,
+.hover-ring { opacity: 0; transition: opacity var(--dur-1, 120ms) var(--ease-micro, ease); }
+.hover-dot.is-visible,
+.hover-ring.is-visible { opacity: 1; }
+.hover-ring { fill: none; stroke: var(--field-ink, var(--ink)); stroke-width: 1.5; }
 
-/* ---- bars ------------------------------------------------------------------ */
+/* ---- bars ------------------------------------------------------------ */
 
 .chart-bar {
   transform-box: fill-box;
   transform-origin: 50% 100%;
 }
 :root[data-motion="full"] .chart-bar {
-  animation: chart-bar-in 0.6s var(--ease-out-quart) both;
+  animation: chart-bar-in 0.6s var(--ease-out-quart, ease) both;
 }
 @keyframes chart-bar-in {
   from { transform: scaleY(0.02); }
-  to { transform: scaleY(1); }
+  to   { transform: scaleY(1); }
 }
 
-/* ---- tooltip ----------------------------------------------------------------- */
+/* Transparent hover columns. A pointer target that never moves the box. */
+.chart-hit { fill: transparent; cursor: pointer; }
+.chart-hit.is-active { fill: var(--field-ink, #000); fill-opacity: 0.07; }
+
+/* ---- tooltip --------------------------------------------------------- */
 
 .chart-tooltip {
   position: absolute;
@@ -87,46 +233,72 @@
   pointer-events: none;
   min-width: 11rem;
   max-width: 17rem;
-  background: var(--ink);
-  color: var(--ground);
-  border-radius: 10px;
-  padding: 0.65rem 0.75rem;
+  /* Never transparent: ink on paper, readable on every field. */
+  background: var(--field-ink, #0b1439);
+  color: var(--field, #fff5eb);
+  border-radius: 0;
+  padding: 0.6rem 0.7rem;
   font-family: var(--font-mono);
   font-size: 0.74rem;
-  line-height: 1.4;
+  line-height: 1.35;
   opacity: 0;
-  translate: 0 5px;
+  translate: 0 4px;
   scale: 0.985;
-  transition: opacity var(--dur-2) var(--ease-micro), translate var(--dur-2) var(--ease-micro);
-  box-shadow: var(--shadow-lift);
+  transition:
+    opacity var(--dur-1, 120ms) var(--ease-micro, ease),
+    translate var(--dur-1, 120ms) var(--ease-micro, ease);
 }
 .chart-tooltip.is-visible { opacity: 1; translate: 0 0; scale: 1; }
+.chart-tooltip.is-flipped { translate: 0 4px; }
+
 .tooltip-title {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 0.9rem;
-  color: #fff;
+  color: var(--field, #fff);
   font-weight: 700;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--field, #fff) 32%, transparent);
   white-space: nowrap;
 }
-.tooltip-title span { color: #c1b3f5; font-weight: 500; }
+.tooltip-title span { font-weight: 500; opacity: 0.78; }
+
 .tooltip-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 1rem;
-  color: #cdd3c8;
-  padding-block: 0.12rem;
+  gap: 1.1rem;
+  color: var(--field, #fff);
+  opacity: 0.78;
+  padding-block: 0.1rem;
 }
-.tooltip-row b { color: #fff; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.tooltip-row.is-active span { color: #c1b3f5; }
+.tooltip-row b {
+  color: var(--field, #fff);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 1;
+}
+.tooltip-row.is-active { opacity: 1; }
+.tooltip-row.is-active span { font-weight: 600; }
+/* the little swatch that ties a tooltip row to a series stroke */
+.tooltip-row .dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.35rem;
+  vertical-align: baseline;
+  background: currentColor;
+}
 
-/* dark-chapter tooltips (charts live on paper plates there, but the
-   futures chapter tooltips may also sit on night cards) */
-.chapter--dark .kpi .chart-tooltip { background: var(--night-card); border: 1px solid var(--night-line); color: var(--night-ink); }
-.chapter--dark .kpi .chart-tooltip .tooltip-title span,
-.chapter--dark .kpi .chart-tooltip .tooltip-row.is-active span { color: #b9a4e8; }
-.chapter--dark .kpi .chart-tooltip .tooltip-row { color: var(--night-mid); }
-.chapter--dark .kpi .chart-tooltip .tooltip-row b { color: #f4f6ea; }
+/* ---- selection cue on charts ----------------------------------------- */
+
+.chart-viewport svg .is-dim { opacity: 0.38; transition: opacity var(--dur-1) var(--ease-micro); }
+.chart-viewport svg .is-em { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-bar { animation: none !important; }
+  .crosshair, .hover-dot, .hover-ring, .chart-tooltip { transition: none; }
+}

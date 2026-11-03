@@ -1,474 +1,1016 @@
-/* TCS / SIGNAL FIELD — saturated data atlas, not a paper dashboard.
-   The workbook and all chart geometry remain unchanged. */
+/* =====================================================================
+   TCS / SIGNAL FIELD — the final CSS pass.
+   Direction: Kinetic poster (+ Archive index), per design/DIRECTION.md.
+   TEN FLAT COLOUR MODULES, hard cuts at every seam, zero gradients
+   on a field. Each module derives its own surfaces from ONE pair of
+   properties (--field / --ink), so a chart, a panel and a label on the
+   same module can never drift apart.
+
+   Load order: tokens → base → story → charts → motion-core → reboot
+   This file is last, so every rule here wins.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   0. MODULE + CONTROL TOKENS
+   --------------------------------------------------------------------- */
 
 :root {
-  --ground: #0b1439;
-  --card: #112251;
-  --plate: #16285b;
-  --field: #1c3091;
-  --ink: #fff5eb;
-  --ink-soft: #e2eaff;
-  --ink-mid: #c5d3fa;
-  --ink-dim: #b8c7f2;
-  --hairline: rgba(222, 232, 255, 0.24);
-  --hairline-strong: rgba(222, 232, 255, 0.48);
-  --night: #0b1439;
-  --night-card: #112251;
-  --night-line: rgba(222, 232, 255, 0.24);
-  --night-ink: #fff5eb;
-  --night-mid: #d3defb;
-  --night-dim: #b9c9ef;
-  --violet: #ff7043;
-  --violet-deep: #ffb18d;
-  --violet-tint: #273b9c;
-  --violet-line: #ff9975;
-  --blue: #69b9ff;
-  --teal: #5de5c6;
-  --amber: #ffad66;
-  --rose: #ff809a;
-  --font-display: "Switzer", "Segoe UI", sans-serif;
-  --font-body: "Switzer", "Segoe UI", sans-serif;
-  --font-mono: "Switzer", "Segoe UI", sans-serif;
-  --r-lg: 0;
-  --r-md: 0;
-  --r-sm: 0;
-  --shadow-lift: none;
-  --shadow-dark: none;
+  /* --- the nine fields, as one lookup ------------------------------ */
+  --f-hero:      #1f2bd0;  /* cobalt flux                                  */
+  --f-workbook:  #fff0e7;  /* warm paper                                   */
+  --f-trend:     #0c6e74;  /* deep teal                                    */
+  --f-marquee:   #ff5b45;  /* signal coral                                 */
+  --f-futures:   #080c26;  /* midnight navy                                */
+  --f-margins:   #b22a4e;  /* ledger oxblood                               */
+  --f-ledger:    #f3ebd8;  /* aged ledger paper                            */
+  --f-method:    #ff7043;  /* tangerine                                    */
+  --f-footer:    #0a0f1f;  /* press black                                  */
+  --f-topbar:    #141c5a;  /* cobalt dusk (fixed layer, off the cycle)     */
+
+  /* --- ink on those fields ---------------------------------------- */
+  --i-hero:      #fff6ea;
+  --i-workbook:  #12123a;
+  --i-trend:     #fff3d6;
+  --i-marquee:   #1a0f12;
+  --i-futures:   #fff6ea;
+  --i-margins:   #fff6ea;
+  --i-ledger:    #12123a;
+  --i-method:    #12123a;
+  --i-footer:    #fff6ea;
+  --i-topbar:    #fff6ea;
+
+  /* --- the accent: tangerine. Marks that MEAN something only ------ */
+  --accent:      #ff7043;
+  --accent-deep: #c2410c;
+
+  /* --- case identity, driven from <html data-case> (see §g) ------- */
+  --case-field:  #54c8ff;  /* Base */
+  --case-line:   #54c8ff;
+  --case-ink:    #fff6ea;
+
+  /* --- type roles (DIRECTION §e). --font-mono is retired here. ---- */
+  --font-label:  "Switzer", "Segoe UI", system-ui, sans-serif;
+  --font-num:    "Switzer", "Segoe UI", system-ui, sans-serif;
+  --font-quote:  "Zodiak", Georgia, serif;
+  --font-mono:   "Switzer", "Segoe UI", system-ui, sans-serif; /* legacy refs → Switzer */
+
+  /* --- structural ------------------------------------------------- */
   --shell: 86rem;
   --gutter: clamp(1.1rem, 4vw, 4.5rem);
-  --atlas-orange: #ff7043;
-  --atlas-blue: #213bfa;
-  --atlas-ink: #0b1439;
-  --atlas-paper: #fff5eb;
-  --atlas-ease: cubic-bezier(.23, 1, .32, 1);
+  --r-lg: 0; --r-md: 0; --r-sm: 0;
+  --shadow-lift: none;
+  --shadow-dark: 0 30px 80px rgba(8, 12, 38, 0.45);
+  --clock-switch: var(--dur-2, 380ms);
 }
 
-html { scroll-padding-top: 4.5rem; }
-body { background: var(--ground); color: var(--ink); }
-::selection { background: var(--atlas-orange); color: var(--atlas-ink); }
-.progress { height: 5px; display: none; }
-.progress span {
-  width: 100%;
-  background: var(--atlas-orange);
-  transform-origin: left center;
-}
-@supports (animation-timeline: scroll()) {
-  .progress { display: block; }
-  .progress span { animation: page-progress linear both; animation-timeline: scroll(root block); }
-}
-@keyframes page-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.skip { background: var(--atlas-orange); color: var(--atlas-ink); }
+/* The page's default module is the hero (cobalt flux). */
+html { background: #1f2bd0; color: var(--i-hero); }
+body { background: transparent; color: var(--i-hero); }
 
-/* A thin typographic instrument instead of a floating white navbar. */
+/* ---- one universal derivation, declared once (DIRECTION §c) ----- */
+
+.chapter,
+.marquee-field,
+.footer,
+.topbar { --panel: color-mix(in oklab, var(--ink) 7%, var(--field)); }
+
+::selection { background: var(--accent); color: #12123a; }
+
+/* ---------------------------------------------------------------------
+   1. SECTION FIELDS — hard cuts, no gradients
+   --------------------------------------------------------------------- */
+
+.chapter,
+section[id] { position: relative; }
+
+/* every module sets --field / --ink (and its tuned secondaries) */
+#overview {
+  --field: var(--f-hero);    --ink: var(--i-hero);
+  --ink-2: #c7d0ff;          /* 6.00:1 */
+  --line:   #4d55dd;         /* decorative */
+  --line-2: #9c9ddf;         /* 3.59:1     */
+  --series-0: #fff6ea; --series-1: #ffe9a8; --series-2: #c7d0ff; --series-3: #ff7043;
+  background: var(--field);
+  color: var(--ink);
+}
+
+#workbook {
+  --field: var(--f-workbook); --ink: var(--i-workbook);
+  --ink-2: #5b5570;           /* 6.34:1 */
+  --line:   #d8cbc0;
+  --line-2: #7a7486;          /* 4.04:1 */
+  --series-0: #12123a;
+  background: var(--field);
+  color: var(--ink);
+}
+
+#trend {
+  --field: var(--f-trend);    --ink: var(--i-trend);
+  --ink-2: #d6f2ee;           /* 5.09:1 */
+  --line:   #3f8f92;
+  --line-2: #c9e6e2;          /* 3.9:1  */
+  --series-0: #c9e6e2; --series-1: #ffffff; --series-2: #ffe9a8; --series-3: #7dffe8;
+  background: var(--field);
+  color: var(--ink);
+}
+
+.marquee-field {
+  --field: var(--f-marquee);  --ink: var(--i-marquee);
+  --ink-2: #4a2420;
+  --line:   #d94a34;
+  --line-2: #7a2a20;
+  background: var(--field);
+  color: var(--ink);
+}
+
+#futures {
+  --field: var(--f-futures);  --ink: var(--i-futures);
+  --ink-2: #a9b4e0;           /* 9.43:1 */
+  --line:   #2a3050;
+  --line-2: #6b6a74;          /* 3.61:1 */
+  /* the saturated palette is live HERE and only here */
+  --series-0: #54c8ff; --series-1: #ff8a3d; --series-2: #00e0c6; --series-3: #f5c400;
+  --series-pat: #ff4d8d;
+  background: var(--field);
+  color: var(--ink);
+}
+
+#margins {
+  --field: var(--f-margins);  --ink: var(--i-margins);
+  --ink-2: #ffd9c9;           /* 4.80:1 */
+  --line:   #d17c8c;
+  --line-2: #eab4bb;          /* 3.52:1 */
+  --series-0: #ffd9a8; --series-1: #fff6ea; --series-2: #7dffe8; --series-3: #c9d2ff;
+  background: var(--field);
+  color: var(--ink);
+}
+
+#ledger {
+  --field: var(--f-ledger);   --ink: var(--i-ledger);
+  --ink-2: #5a5468;           /* 6.09:1 */
+  --line:   #d6c9b4;
+  --line-2: #757180;          /* 3.99:1 */
+  --series-0: #1f2bd0; --series-1: #0a5c61; --series-2: #8a1f3a; --series-3: #5a5468;
+  background: var(--field);
+  color: var(--ink);
+}
+
+#method {
+  --field: var(--f-method);   --ink: var(--i-method);
+  --ink-2: #3a2a22;           /* 4.99:1 */
+  --line:   #b3572f;
+  --line-2: #7a3b3e;          /* 3.03:1 */
+  --series-0: #12123a;
+  background: var(--field);
+  color: var(--ink);
+}
+
+.footer {
+  --field: var(--f-footer);   --ink: var(--i-footer);
+  --ink-2: #b3bdd9;           /* 10.17:1 */
+  --line:   #2a3350;
+  --line-2: #68738f;
+  background: var(--field);
+  color: var(--ink);
+}
+
 .topbar {
-  background: #1428bf;
+  --field: var(--f-topbar);   --ink: var(--i-topbar);
+  --ink-2: #bfc6ea;           /* 9.29:1 */
+  --line:   #3a4585;
+  --line-2: #bfc6ea;
+  background: color-mix(in srgb, var(--field) 94%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 0;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  color: var(--i-topbar);
 }
-.topbar-row { min-height: 3.8rem; }
-.wordmark { font-size: .98rem; letter-spacing: -.025em; font-weight: 700; color: var(--atlas-paper); }
-.wordmark b { color: var(--atlas-orange); }
-.top-nav { gap: 1.2rem; }
-.top-nav a {
-  border: 0;
-  border-bottom: 2px solid transparent;
+
+/* the rail is a fixed layer over a changing ground: pin its own ink */
+.topbar .wordmark { color: var(--i-topbar); }
+.topbar .wordmark b { color: var(--accent); }
+.topbar .top-nav a { color: #bfc6ea; }
+.topbar .top-nav a:hover,
+.topbar .top-nav a.is-active { color: var(--i-topbar); border-bottom-color: var(--accent); }
+.topbar .topbar-chip { color: #bfc6ea; }
+
+/* kill the old radial/bloom fields outright (§h) */
+.chapter--hero,
+.chapter--dark { background: var(--field); }
+
+/* ---------------------------------------------------------------------
+   2. TYPE — Switzer for the model, Zodiak for the record's own voice
+   --------------------------------------------------------------------- */
+
+body { font-family: var(--font-body); }
+h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
+  font-family: var(--font-display);
+}
+
+.chapter-no, .kicker, .foot-label, .stat-eyebrow, .face-label,
+.control-label, .spark-labels span {
+  font-family: var(--font-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.chapter-no {
+  display: block;
+  color: var(--ink-2);
+  margin-bottom: 0.9rem;
+}
+
+/* numerals everywhere: tabular, right-aligned in their own column */
+.num, .hero-value, .kpi-value, .case-value, .context-value,
+.ledger-table td.num, .assum-card td.num,
+[data-kpi-value], [data-case-value], .growth-label {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.chapter-title { color: var(--ink); }
+.chapter-lede, .lede { color: var(--ink); opacity: 1; }
+.chapter-lede { max-width: 46ch; }
+
+/* --- Zodiak is job-locked to these four sites (§e) ---------------
+   1 workbook disclosure quote · 2 ledger fineprint · 3 method note ·
+   4 margins FY2026-empty-slot note + footer disclaimer. Nothing else. */
+.workbook-note,
+.workbook-note b,
+.fineprint p,
+.fineprint p strong,
+.fineprint p b,
+.human-note p,
+.human-note b,
+.cash-grid .note-card p,
+.cash-grid .note-card b,
+.footer p {
+  font-family: var(--font-quote);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.workbook-note  { font-size: 19px; line-height: 1.45; }
+.fineprint p    { font-size: 17px; line-height: 1.5; }
+.human-note p   { font-size: 22px; line-height: 1.4; }
+.cash-grid .note-card p { font-size: 17px; line-height: 1.5; }
+.footer p       { font-size: 15px; line-height: 1.5; }
+.human-note > b:first-child, .human-note .human-note-lead { font-weight: 700; }
+/* no Zodiak numerals, ever: a numeral in the quote face is a bug (§e) */
+.workbook-note .num, .fineprint .num, .human-note .num,
+.cash-grid .note-card .num { font-family: var(--font-quote); }
+
+/* ---------------------------------------------------------------------
+   3. GENERIC SURFACES — tonal steps, radius 0, shadow none
+   --------------------------------------------------------------------- */
+
+.panel,
+.plate,
+.note-card,
+.ledger-card,
+.assum-card,
+.drivers-card,
+.context-card,
+.case-card,
+.kpi,
+.spark-card,
+.preview-card,
+.sources-list li,
+.evidence {
   border-radius: 0;
-  padding: .5rem 0;
-  color: #e5eaff;
-  font-size: .82rem;
-  letter-spacing: .01em;
-}
-.top-nav a:hover, .top-nav a.is-active {
-  background: transparent;
-  border: 0;
-  border-bottom: 2px solid var(--atlas-orange);
-  color: var(--atlas-paper);
-}
-.topbar-chip { color: #ecf0ff; }
-
-/* Chapter rhythm: alternating cobalt / midnight / orange, hard edges. */
-.chapter {
-  overflow: clip;
-  padding-block: clamp(5rem, 9vw, 10rem);
-  border-top: 0;
-}
-.chapter-head { margin-bottom: clamp(2.5rem, 6vw, 5rem); }
-.chapter-no, .kicker, .foot-label, .stat-eyebrow, .face-label {
-  font-family: var(--font-body);
-  font-weight: 700;
-  letter-spacing: .035em;
-  text-transform: none;
-}
-.chapter-no { display: inline-block; color: var(--atlas-orange); font-size: .95rem; }
-.chapter-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(3.15rem, 7.1vw, 7.4rem);
-  line-height: .93;
-  letter-spacing: -.038em;
-  max-width: 17ch;
-  margin-top: .55rem;
-}
-.chapter-lede { color: var(--ink-soft); max-width: 49ch; font-size: clamp(1.1rem, 1.75vw, 1.45rem); }
-
-/* Opening spread: the headline and the living model face one another. */
-.chapter--hero {
-  padding-block: clamp(7.5rem, 11vw, 10rem) clamp(4rem, 6vw, 6rem);
-  background: var(--atlas-blue);
-}
-.chapter--hero .shell {
-  display: grid;
-  grid-template-columns: minmax(0, .83fr) minmax(0, 1.17fr);
-  grid-template-rows: auto auto auto auto 1fr auto;
-  column-gap: clamp(2rem, 5vw, 6rem);
-  align-items: start;
-}
-.chapter--hero .kicker { grid-column: 1; grid-row: 1; color: #fff0c2; font-size: .9rem; }
-.hero-title {
-  grid-column: 1;
-  grid-row: 2;
-  max-width: 11ch;
-  font-family: var(--font-display);
-  font-size: clamp(4.1rem, 7.5vw, 9rem);
-  line-height: .91;
-  letter-spacing: -.04em;
-  margin-top: clamp(.8rem, 2vw, 2.5rem);
-}
-.hero-title em { color: var(--atlas-orange); font-style: normal; font-weight: 700; }
-.hero-lede { grid-column: 1; grid-row: 3; margin-top: 1.8rem; color: #f2f1ff; max-width: 38ch; }
-.hero-tags {
-  grid-column: 1;
-  grid-row: 4;
-  margin-top: 2.5rem;
-  display: grid;
-  gap: 0;
-  border-top: 1px solid rgba(255,255,255,.5);
-}
-.hero-tags li {
-  flex-direction: row;
-  justify-content: space-between;
-  min-width: 0;
-  gap: 1rem;
-  padding: .85rem 0;
-  border: 0;
-  border-bottom: 1px solid rgba(255,255,255,.45);
-  background: transparent;
-}
-.hero-tags span { color: #ebedff; font-size: .78rem; letter-spacing: .01em; text-transform: none; }
-.hero-tags b { color: #fff3d2; font-size: .95rem; white-space: nowrap; }
-.hero-panel {
-  grid-column: 2;
-  grid-row: 1 / span 5;
-  align-self: stretch;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  min-height: min(67vw, 46rem);
-  background: var(--atlas-orange);
-  border: 0;
-  padding: clamp(1.5rem, 3vw, 3rem);
-  color: var(--atlas-ink);
   box-shadow: none;
+  border: 1px solid var(--line);
 }
-.hero-panel::before {
-  content: "FY28";
-  position: absolute;
-  inset: auto 3% 0 auto;
-  font-size: clamp(7rem, 20vw, 20rem);
-  font-weight: 700;
-  letter-spacing: -.08em;
-  line-height: 1;
-  color: rgba(8,24,70,.085);
-  pointer-events: none;
+.panel     { background: color-mix(in oklab, var(--ink) 7%, var(--field)); color: var(--ink); }
+.plate     { background: color-mix(in oklab, var(--ink) 11%, var(--field)); color: var(--ink); }
+.note-card { background: color-mix(in oklab, var(--ink) 7%, var(--field)); color: var(--ink); }
+.context-card, .assum-card, .drivers-card {
+  background: color-mix(in oklab, var(--ink) 11%, var(--field));
+  color: var(--ink);
 }
-.hero-deck { border: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; z-index: 1; }
-.hero-deck { display: grid; grid-template-columns: 1fr; gap: .45rem; }
-.hero-value { color: var(--atlas-ink); font-size: clamp(3.4rem, 6.8vw, 8rem); letter-spacing: -.07em; font-weight: 700; white-space: nowrap; }
-.hero-value small { color: #13245c; font-size: .18em; letter-spacing: 0; }
-.hero-deck-eyebrow, .hero-range { color: #102056; font-size: 1rem; letter-spacing: 0; }
-.hero-deck-eyebrow { display: flex; align-items: baseline; gap: .45rem; flex-wrap: wrap; }
-.hero-delta, .hero-delta.is-down { color: #0b1439; font-size: 1.2rem; }
-.hero-deck-right { margin-top: 1rem; }
-.hero-controls { z-index: 2; display: grid; gap: .6rem; margin-top: clamp(2rem, 3vw, 3rem); }
-.hero-control-group { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }
-.hero-control-group > span { flex: 0 0 8rem; font-size: .8rem; font-weight: 700; color: #15204b; }
-.hero-control-group button {
-  appearance: none;
-  background: transparent;
-  color: #12204b;
-  border: 1px solid rgba(13,27,78,.52);
-  padding: .48rem .8rem;
-  min-width: 3.4rem;
-  cursor: pointer;
-  font-size: .84rem;
-  font-weight: 700;
-  transition: background-color .16s ease, color .16s ease, transform .16s ease;
-}
-.hero-control-group button:hover { background: rgba(11,20,57,.15); }
-.hero-control-group button[aria-pressed="true"] { background: #101f56; color: #fff5eb; }
-.hero-control-group button:active { transform: translateY(2px); }
-.hero-panel .chart-viewport { z-index: 2; margin-top: auto; }
-.hero-panel .chart-viewport > svg { overflow: visible; }
-.hero-panel .chart-viewport .fallback-chart text { fill: #142055; }
-.fallback-chart text { font-family: var(--font-body); }
-.hero-panel .chart-viewport .fallback-chart path[stroke="#161b18"] { stroke: #142055; }
-.hero-panel .chart-viewport .fallback-chart path[stroke="#1d4ed8"] { stroke: #0c2255; }
-.hero-panel .chart-viewport .fallback-chart line { stroke: rgba(16,32,86,.35); }
-.scroll-cue { grid-column: 1; grid-row: 6; color: #fff3d2; font-size: .92rem; font-weight: 600; }
-.scroll-cue::after { background: #fff3d2; }
-/* Generated hero path uses the same dark ink as the orange field. */
-#heroChart svg:not(.fallback-chart) path[stroke="#f8f1e9"] { stroke: #102056; }
-#heroChart svg:not(.fallback-chart) circle[fill="#f8f1e9"] { fill: #102056; }
+.panel p, .note-card p, .method-list li p, .assum-card, .drivers-card { color: var(--ink); }
+.note-card p, .note-card b, .note-card .foot-label { color: var(--ink); }
+.panel .foot-label, .note-card .foot-label, .plate .foot-label { color: var(--ink-2); }
+.panel h3, .plate h3, .note-card h3 { color: var(--ink); font-family: var(--font-display); font-weight: 600; }
 
-/* Provenance: violet archive field. */
-#workbook { background: #392486; }
-#workbook .chapter-no, #workbook .evidence b { color: #ffbf69; }
-#workbook .evidence { border-top-color: #ffbf69; }
-#workbook .panel { border-color: rgba(238,226,255,.3); }
-#workbook .workbook-grid > .panel:nth-child(1) { background: #5536ad; }
-#workbook .workbook-grid > .panel:nth-child(2) { background: #291b62; }
-#workbook .chapter-head { display: grid; grid-template-columns: 1fr .7fr; column-gap: 7vw; align-items: end; }
-#workbook .chapter-no { grid-column: 1 / -1; }
-#workbook .chapter-title { max-width: 11ch; }
-#workbook .chapter-lede { margin-top: 0; }
-.evidence-band { display: grid; grid-template-columns: 1.35fr .85fr 1fr .8fr; gap: 0; }
+/* ---------------------------------------------------------------------
+   4. HERO — cobalt flux. The one display-size numeral.
+   --------------------------------------------------------------------- */
+
+.chapter--hero { background: var(--field); padding-block: clamp(6rem, 9vw, 8.5rem) clamp(3.5rem, 5vw, 5.5rem); }
+/* §i.1: display is 96px @1440 → 46px @390, and it is a two-line lockup
+   authored in markup. No max-width in ch, no balance — those re-wrap it. */
+.hero-title {
+  color: var(--ink);
+  font-size: clamp(2.875rem, 6.667vw, 6rem);   /* 46px → 96px */
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+/* §i.1: the headline is a two-line lockup built in markup, never a wrapped
+   paragraph. Do not re-wrap it from CSS. The em keeps the face/weight and
+   gets §i.2's gold — "the part of the sentence that is a forecast". */
+.hero-title,
+.chapter-title { text-wrap: nowrap; }
+.hero-title { max-width: 720px; }
+/* no max-width on .chapter-title: the lead authors each line as a block,
+   so any ch-based cap here would re-wrap their lockup. */
+.hero-title em,
+.hero-em {
+  color: #ffe9a8;          /* 7.55:1 on #1f2bd0 (§i.2) */
+  font-style: normal;      /* Switzer ships no italic: never synthesise one */
+  font-weight: 700;
+  font-size: 1em;
+}
+/* never gold on these two fields — it fails (§i.2) */
+#trend .hero-title em, #trend .hero-em, #trend .chapter-title em,
+#margins .hero-title em, #margins .hero-em, #margins .chapter-title em {
+  color: #fff6ea;          /* 5.61 / 5.89 */
+}
+/* the gold em belongs to the dark fields only */
+#overview .hero-title em { color: #ffe9a8; }
+.chapter--hero .kicker { color: var(--ink-2); font-size: 15px; letter-spacing: 0.02em; text-transform: none; }
+.hero-lede { color: var(--ink); opacity: 0.94; }
+.hero-tags { border-top: 1px solid var(--line-2); }
+.hero-tags li {
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  background: transparent;
+}
+.hero-tags span { color: var(--ink-2); }
+.hero-tags b { color: var(--ink); font-family: var(--font-num); }
+
+/* the deck plate is the CASE field: it re-inks with the signature */
+.hero-panel {
+  background: var(--case-field);
+  color: #12123a;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+.hero-panel::before { color: color-mix(in srgb, #12123a 12%, transparent); content: "FY28"; }
+.hero-value { color: #12123a; font-size: clamp(2.6rem, 6vw, 6.4rem); letter-spacing: -0.05em; }
+.hero-value small { color: color-mix(in srgb, #12123a 78%, transparent); }
+.hero-deck-eyebrow, .hero-range, .hero-deck-eyebrow span { color: #12123a; }
+.hero-delta, .hero-delta.is-down { color: #12123a; }
+.hero-control-group > span { color: #12123a; font-family: var(--font-label); }
+.hero-control-group button {
+  background: transparent;
+  color: #12123a;
+  border: 1px solid color-mix(in srgb, #12123a 55%, transparent);
+  min-height: 30px;
+  min-width: 54px;
+  border-radius: 0;
+}
+.hero-control-group button:hover { background: color-mix(in srgb, #12123a 14%, transparent); }
+.hero-control-group button[aria-pressed="true"] {
+  background: #12123a;
+  color: var(--case-field);
+  border-color: #12123a;
+}
+.scroll-cue { color: var(--ink-2); }
+.scroll-cue::after { background: var(--ink-2); }
+
+/* ---------------------------------------------------------------------
+   5. WORKBOOK — warm paper
+   --------------------------------------------------------------------- */
+
+#workbook { background: var(--field); }
+#workbook .evidence,
 .evidence {
   background: transparent;
   border: 0;
-  border-top: 2px solid var(--atlas-orange);
-  border-radius: 0;
-  padding: 1.3rem 1rem 2rem 0;
+  border-top: 2px solid var(--ink);
+  padding: 1.2rem 1rem 1.8rem 0;
 }
-.evidence b { color: var(--atlas-orange); font-size: clamp(3.4rem, 6.3vw, 7rem); letter-spacing: -.06em; }
-.evidence span { color: #dce5ff; font-size: .88rem; letter-spacing: .01em; text-transform: none; }
-.workbook-grid { grid-template-columns: .75fr 1.25fr; gap: 0; }
-.panel, .plate, .note-card, .ledger-card, .assum-card, .drivers-card, .context-card {
-  border: 1px solid var(--hairline);
+.evidence b {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5.6vw, 6rem);
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+.evidence span { color: var(--ink-2); }
+.workbook-list li { border-bottom-color: var(--line); }
+.workbook-list p { color: var(--ink); }
+.workbook-note {
+  background: var(--ink);
+  color: var(--field);
+  border: 0;
+  padding: 1.1rem 1.2rem;
+}
+.workbook-note b { color: var(--field); }
+.spark-card { border: 0; border-top: 1px solid var(--line-2); background: transparent; }
+.spark-card h3 { color: var(--ink); }
+.spark-card .num { color: var(--ink); }
+.spark-card small { color: var(--ink-2); }
+/* the "where it lands" dot carries the module colour, the line does not */
+.spark-card h3::before { background: var(--dot, var(--ink)); }
+
+/* ---------------------------------------------------------------------
+   6. TREND — deep teal. Lightness rank, not hue.
+   --------------------------------------------------------------------- */
+
+#trend { background: var(--field); }
+#trend .chapter-head { margin-left: 0; }
+.trend-grid > .panel { background: color-mix(in oklab, var(--ink) 7%, var(--field)); }
+.trend-side .panel { background: color-mix(in oklab, var(--ink) 11%, var(--field)); }
+.stat-stack .stat label, .stat-stack small { color: var(--ink-2); }
+.stat-stack .num { color: var(--ink); }
+.growth-bar { background: #7dffe8; }
+.growth-bar.is-negative { background: #ffb3a1; }
+.growth-bar.is-forecast { opacity: 0.92; }
+.growth-label { color: var(--ink-2); }
+
+/* ---------------------------------------------------------------------
+   7. MARQUEE — signal coral, the only thing that "arrives"
+   --------------------------------------------------------------------- */
+
+.marquee-field {
+  background: var(--field);
+  color: var(--ink);
+  border: 0;
+}
+.marquee-seed, .marquee-item, .marquee-item span, .marquee-item b { color: var(--ink); }
+.marquee-item b { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.marquee-item + .marquee-item::before { color: color-mix(in srgb, var(--ink) 55%, var(--field)); }
+.marquee-ctl {
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
+  background: transparent;
+  min-height: 24px;
+  padding: 0.2rem 0.6rem;
+}
+.marquee-ctl:hover { background: color-mix(in srgb, var(--ink) 12%, transparent); }
+
+/* the marquee's Δ column re-renders the three-case FY2028 spread (§b #7) */
+.marquee-item[data-marquee-case] {
+  border: 1px solid transparent;
+  padding-inline: 0.5rem;
+}
+.marquee-item[data-marquee-case].is-selected {
+  background: var(--ink);
+  color: var(--field);
+  border-color: var(--ink);
+}
+.marquee-item[data-marquee-case].is-selected span,
+.marquee-item[data-marquee-case].is-selected b { color: var(--field); }
+
+/* ---------------------------------------------------------------------
+   8. FUTURES — midnight navy + THE CASE LEVER (§g)
+   --------------------------------------------------------------------- */
+
+.chapter--dark, #futures {
+  background: var(--field);
+  color: var(--ink);
+}
+.chapter--dark .chapter-title, .chapter--dark .chapter-lede,
+#futures .chapter-title, #futures .chapter-lede { color: var(--ink); }
+.chapter--dark .chapter-no, #futures .chapter-no { color: var(--ink-2); }
+
+/* KPI band: a tonal step each, the first one carrying the case ink */
+.kpi-band { grid-template-columns: 1.4fr repeat(3, 1fr); gap: 1px; background: var(--line); }
+.kpi {
+  background: color-mix(in oklab, var(--ink) 7%, var(--field));
+  border: 0;
+  padding: clamp(0.9rem, 1.6vw, 1.4rem);
+}
+.kpi:first-child { background: color-mix(in oklab, var(--case-field) 14%, var(--field)); }
+.kpi-head h3 { color: var(--ink-2); }
+.kpi-year { color: var(--ink-2); }
+.kpi-value {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 3.2vw, 2.9rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.kpi-foot { color: var(--ink-2); }
+.kpi-delta { color: #00e0c6; }
+.kpi-delta.is-down { color: #ff8a3d; }
+.kpi-delta.is-flat { color: var(--ink-2); }
+
+.plate { background: color-mix(in oklab, var(--ink) 11%, var(--field)); color: var(--ink); }
+.plate .foot-label, .plate h3 { color: var(--ink); }
+.plate .face-label { color: var(--ink-2); }
+
+.futures-row { grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.75fr); gap: 1rem; }
+.futures-row2 { gap: 1rem; }
+
+.context-card { background: color-mix(in oklab, var(--ink) 11%, var(--field)); border-color: var(--line-2); }
+.context-value { color: var(--ink); }
+.context-card .context-meta, .context-card .context-note, .context-card .face-label { color: var(--ink-2); }
+.context-card .context-meta b { color: var(--ink); }
+.case-scale-dot { border-color: var(--line-2); }
+.case-scale-dot.is-active { background: var(--case-field); border-color: var(--case-field); }
+.case-scale-dot[data-case-dot="Bear Case"].is-active { background: #ff8a3d; border-color: #ff8a3d; }
+.case-scale-dot[data-case-dot="Base Case"].is-active { background: #54c8ff; border-color: #54c8ff; }
+.case-scale-dot[data-case-dot="Bull Case"].is-active { background: #00e0c6; border-color: #00e0c6; }
+
+/* --- case cards: the three cases, as three fields ----------------- */
+.case-card {
+  background: color-mix(in oklab, var(--ink) 7%, var(--field));
+  border: 1px solid var(--line-2);
+  color: var(--ink);
+  min-height: 108px;
+  padding: 1rem;
+  text-align: left;
+}
+.case-card:hover { border-color: var(--ink); }
+.case-card[aria-pressed="true"] {
+  background: var(--case-card-field, var(--case-field));
+  border-color: var(--case-card-field, var(--case-field));
+  color: #0d1024;
+}
+.case-card[data-scenario="Bear Case"] { --case-card-field: #ff8a3d; }
+.case-card[data-scenario="Base Case"] { --case-card-field: #54c8ff; }
+.case-card[data-scenario="Bull Case"] { --case-card-field: #00e0c6; }
+.case-card[aria-pressed="true"] .case-name,
+.case-card[aria-pressed="true"] .case-delta,
+.case-card[aria-pressed="true"] .case-value,
+.case-card[aria-pressed="true"] .case-value small { color: #0d1024; }
+.case-name { font-family: var(--font-label); }
+.case-delta { color: var(--ink-2); }
+.case-value { color: var(--ink); font-family: var(--font-num); }
+.case-fill { background: color-mix(in oklab, var(--ink) 16%, var(--field)); }
+.case-fill span { background: var(--case-card-field, var(--case-field)); }
+.case-card[aria-pressed="true"] .case-fill { background: rgba(13, 16, 36, 0.16); }
+.case-card[aria-pressed="true"] .case-fill span { background: #0d1024; }
+
+/* assumptions: the selected column fills with the case ink */
+.assum-card { background: color-mix(in oklab, var(--ink) 7%, var(--field)); }
+.assum-card th { color: var(--ink-2); border-bottom-color: var(--line-2); }
+.assum-card td { color: var(--ink); border-bottom-color: var(--line); }
+.assum-card th.is-selected {
+  background: var(--case-field);
+  color: #0d1024;
+}
+.assum-card td.is-selected {
+  background: color-mix(in oklab, var(--case-field) 22%, var(--field));
+  color: var(--ink);
+  box-shadow: inset 2px 0 0 var(--case-field);
+}
+
+.drivers-card { background: color-mix(in oklab, var(--ink) 7%, var(--field)); }
+.driver-item { border-bottom-color: var(--line); }
+.driver-name { color: var(--ink-2); }
+.driver-value { color: var(--ink); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.driver-meter { background: color-mix(in oklab, var(--ink) 14%, var(--field)); }
+.driver-meter span { background: var(--case-field); }
+.driver-meter span.is-negative { background: #ff8a3d; }
+
+/* --- THE CASE LEVER (§g) ----------------------------------------- */
+.lever {
+  margin-block: 1.6rem 2rem;
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+  padding-block: 1.2rem 1.4rem;
+}
+.lever-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+.lever-head .foot-label { color: var(--ink); }
+.lever-hint { color: var(--ink-2); font-family: var(--font-label); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* the state stripe: Bear → Base → Bull, flat stops, no gradient */
+.lever-stripe {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  height: 4px;
+  margin-bottom: 0.6rem;
+}
+.lever-stripe span { background: var(--stop); opacity: 0.34; transition: opacity var(--dur-1) var(--ease-micro); }
+.lever-stripe span.is-live { opacity: 1; }
+.lever-stripe span[data-stop="bear"] { --stop: #ff8a3d; }
+.lever-stripe span[data-stop="base"] { --stop: #54c8ff; }
+.lever-stripe span[data-stop="bull"] { --stop: #00e0c6; }
+
+.lever-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+/* a real range input, square-cornered, three detents */
+.lever input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 44px;              /* 44px primary target */
+  background: transparent;
+  cursor: grab;
+  margin: 0;
+  border-radius: 0;
+}
+.lever input[type="range"]:active { cursor: grabbing; }
+.lever input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--line-2);
+  border-radius: 0;
+}
+.lever input[type="range"]::-moz-range-track {
+  height: 2px;
+  background: var(--line-2);
+  border-radius: 0;
+}
+.lever input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 34px;
+  margin-top: -16px;
+  background: var(--case-field);
+  border: 2px solid #0d1024;
   border-radius: 0;
   box-shadow: none;
 }
-.panel { background: var(--card); }
-.workbook-grid > .panel:nth-child(1) { background: #1934a2; }
-.workbook-grid > .panel:nth-child(2) { background: #101f53; }
-.workbook-list li { border-bottom-color: rgba(255,255,255,.2); }
-.workbook-list p, .note-card p, .method-list li p { color: var(--ink-soft); }
-.workbook-note { background: var(--atlas-orange); color: var(--atlas-ink); border: 0; }
-.workbook-note b { color: var(--atlas-ink); }
-.spark-card { border: 0; border-top: 1px solid var(--atlas-orange); border-radius: 0; background: transparent; }
-.spark-card .num, .spark-card h3 { color: var(--ink); }
-.spark-card small { color: var(--ink-dim); }
-
-/* Trend takes a deep teal field; orange bars remain the reference accent. */
-#trend { background: #07545d; }
-#trend .chapter-no { color: #78ead1; }
-#trend .chapter-head { margin-left: 17%; }
-.trend-grid { grid-template-columns: minmax(0, 1.65fr) minmax(18rem, .65fr); gap: 0; }
-.trend-grid > .panel { background: #103b51; }
-.trend-side .panel { background: #0b6871; }
-.stat-stack .stat { color: var(--ink); }
-.stat-stack .stat label, .stat-stack small, .stat-stack .face-label { color: #dce4ff; }
-.growth-bar { background: var(--atlas-orange); }
-.growth-bar.is-forecast { opacity: .75; }
-.marquee-field { background: var(--atlas-orange); border: 0; color: var(--atlas-ink); }
-.marquee-seed, .marquee-item, .marquee-item span { color: var(--atlas-ink); }
-.marquee-item + .marquee-item::before { color: #163ab6; }
-.marquee-ctl { color: var(--atlas-ink); border-color: #193484; }
-
-/* The peak: every selector mutates the four data surfaces together. */
-.chapter--dark, #futures {
-  background: var(--atlas-blue);
-  color: var(--atlas-paper);
+.lever input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 34px;
+  background: var(--case-field);
+  border: 2px solid #0d1024;
+  border-radius: 0;
+  box-shadow: none;
 }
-.chapter--dark .chapter-title, .chapter--dark .chapter-lede { color: var(--atlas-paper); }
-.chapter--dark .chapter-no, .chapter--dark .kicker { color: #ffd1ac; }
-#futures .chapter-head { display: grid; grid-template-columns: 1.1fr .65fr; align-items: end; gap: 1rem 4vw; }
-#futures .chapter-head .chapter-no { grid-column: 1 / -1; }
-#futures .chapter-head .chapter-lede { margin: 0; }
-.kpi-band { grid-template-columns: 1.5fr repeat(3, 1fr); gap: 0; }
-.kpi { background: #112564; border: 1px solid rgba(255,255,255,.22); border-radius: 0; box-shadow: none; }
-.kpi:first-child { background: #11204e; }
-.kpi-value { font-family: var(--font-display); font-weight: 700; letter-spacing: -.05em; }
-.kpi-head h3, .kpi-year, .kpi-foot { color: #d6e2ff; }
-.kpi-delta { color: #90f2d2; }
-.kpi-delta.is-down { color: #ffb5c0; }
-.plate { background: #12275e; color: var(--ink); border-color: rgba(255,255,255,.25); }
-.plate .chapter-no, .plate .foot-label { color: #ffb897; }
-.futures-row { grid-template-columns: minmax(0, 1.55fr) minmax(18rem, .75fr); gap: 0; }
-.futures-row2 { gap: 0; }
-.context-card, .assum-card, .drivers-card { background: #112461; border-color: rgba(255,255,255,.27); }
-.context-value { color: var(--atlas-paper); }
-.context-card .context-meta, .context-card .context-note, .context-card .face-label { color: #e0e9ff; }
-.case-card { background: #11235b; border: 1px solid rgba(255,255,255,.3); border-radius: 0; box-shadow: none; }
-.case-card.is-selected { background: var(--atlas-orange); border-color: var(--atlas-orange); color: var(--atlas-ink); }
-.case-card.is-selected .case-name, .case-card.is-selected .case-delta,
-.case-card.is-selected .case-value, .case-card.is-selected .case-value small { color: var(--atlas-ink); }
-.case-card.is-selected .case-fill { background: rgba(11,20,57,.2); }
-.case-card.is-selected .case-fill span { background: var(--atlas-ink); }
-.assum-card th.is-selected, .assum-card td.is-selected { background: #2554c2; color: #fff5eb; box-shadow: inset 0 0 0 1px #8cb8ff; }
+.lever input[type="range"]:focus-visible { outline: none; }
+.lever input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--field), 0 0 0 6px #ffe9a8;
+}
+.lever input[type="range"]:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--field), 0 0 0 6px #ffe9a8;
+}
 
-/* Profit/cash switches to plum, with mint reserved for cash series. */
-#margins { background: #281746; }
-#margins .chapter-no { color: #d7a5ff; }
-#margins .chapter-head { display: grid; grid-template-columns: 1.1fr .7fr; gap: 1rem 5vw; align-items: end; }
-#margins .chapter-head .chapter-no { grid-column: 1 / -1; }
-#margins .chapter-lede { margin: 0; }
-.margins-grid, .cash-grid { gap: 0; grid-template-columns: minmax(0, 1.5fr) minmax(16rem, .7fr); }
-.margins-grid > .panel, .cash-grid > .panel { background: #3a235b; }
-.note-card { background: #1d3ad1; color: #fff5eb; }
-.note-card p, .note-card b { color: #fff5eb; }
-.note-card .foot-label { color: #ffcfaa; }
-.cash-grid { margin-top: clamp(1.5rem, 3vw, 3.5rem); }
-.cash-grid .note-card { background: #1c2f94; }
+.lever-detents {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 0.2rem;
+}
+.lever-detents button {
+  min-height: 44px;
+  color: var(--ink-2);
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid transparent;
+  padding: 0.4rem 0.2rem;
+  text-align: left;
+}
+.lever-detents button:nth-child(2) { text-align: center; }
+.lever-detents button:nth-child(3) { text-align: right; }
+.lever-detents button:hover { color: var(--ink); }
+.lever-detents button[aria-pressed="true"] { color: var(--ink); border-top-color: var(--case-field); }
+.lever-detents button .detent-delta { display: block; font-size: 11px; opacity: 0.8; letter-spacing: 0.02em; }
 
-/* The ledger reads like a luminous instrument panel. */
-/* The ledger is a warm oxblood register; selected rows retain orange emphasis. */
-#ledger { background: #792c4a; }
-#ledger .chapter-title { color: #fff0e7; }
-#ledger .chapter-head { display: grid; grid-template-columns: 1fr .6fr; gap: 1rem 5vw; align-items: end; }
-#ledger .chapter-head .chapter-no { grid-column: 1 / -1; color: #ffe0bf; }
-#ledger .chapter-lede { margin: 0; }
-.ledger-card { background: #341d46; }
-.ledger-head { background: #4a2450; border-bottom: 1px solid var(--hairline); }
-.ledger-table th { color: #cfddff; border-bottom-color: var(--hairline); }
-.ledger-table td { color: #f1f4ff; border-bottom-color: rgba(255,255,255,.13); }
-.ledger-table tr.is-forecast td { background: #40254d; color: #ecf2ff; }
-.ledger-table tr.is-selected td { background: var(--atlas-orange); color: var(--atlas-ink); }
-.ledger-table tr.is-forecast.is-clickable:hover td { background: #3153bb; color: #fff; }
-.ledger-table tr.is-selected.is-clickable:hover td { background: #ff865b; color: var(--atlas-ink); }
-.year-badge { background: var(--atlas-orange); color: var(--atlas-ink); border-color: var(--atlas-orange); }
-.fineprint p { color: #f0f2ff; }
+/* the four outputs: value / unit / Δ vs Base / beacon */
+.lever-outputs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line-2);
+  margin-top: 1.1rem;
+}
+.lever-output {
+  background: var(--field);
+  padding: 0.85rem 0.9rem 1rem;
+  min-width: 0;
+}
+.lever-output h3 {
+  color: var(--ink-2);
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+.lever-value {
+  display: block;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.3vw, 2.1rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.lever-unit { color: var(--ink-2); font-size: 12px; margin-left: 0.25rem; }
+.lever-beacon {
+  position: relative;
+  height: 4px;
+  margin-top: 0.7rem;
+  background: color-mix(in oklab, var(--ink) 16%, var(--field));
+}
+.lever-beacon span {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 0;
+  background: var(--case-field);
+  transition: width var(--dur-2) var(--ease-reveal);
+}
+.lever-delta {
+  margin-top: 0.45rem;
+  font-family: var(--font-num);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.lever-delta.is-up { color: #00e0c6; }
+.lever-delta.is-down { color: #ff8a3d; }
+.lever-note {
+  margin-top: 0.9rem;
+  color: var(--ink-2);
+  font-size: 13px;
+  max-width: 68ch;
+}
 
-/* Final act is a full color inversion and an oversized farewell. */
-#method { background: var(--atlas-orange); color: var(--atlas-ink); }
-#method .chapter-no { color: #192969; }
-#method .chapter-title { color: var(--atlas-ink); max-width: 14ch; }
-#method .chapter-lede { color: #182452; }
-.method-grid { grid-template-columns: 1.08fr .92fr; gap: 0; }
-.method-grid .panel { background: #111e4c; color: var(--ink); border-color: rgba(11,20,57,.4); }
-.method-list li::before { color: var(--atlas-orange); }
-.method-list li { border-bottom-color: rgba(255,255,255,.24); }
-.human-note { background: #203be1; border: 0; color: #fff5eb; }
-.human-note p, .human-note b { color: #fff5eb; }
-.preview-card, .sources-list li { background: #192b67; border-color: rgba(255,255,255,.25); }
-.preview-card:hover { box-shadow: none; transform: translateY(-3px); }
-.sources-list span, .preview-card figcaption { color: #d7e3ff; }
-.sources-list a { color: var(--ink); border-color: #e1e8ff; }
-.sources-list a:hover { background: var(--atlas-orange); color: var(--atlas-ink); border-color: var(--atlas-orange); }
-.footer { background: #111c55; color: var(--ink); min-height: 33rem; padding-block: clamp(5rem, 10vw, 10rem); border: 0; }
+/* ---------------------------------------------------------------------
+   9. MARGINS — ledger oxblood
+   --------------------------------------------------------------------- */
+
+#margins { background: var(--field); }
+#margins .chapter-lede { color: var(--ink); }
+.margins-grid > .panel, .cash-grid > .panel {
+  background: color-mix(in oklab, var(--ink) 7%, var(--field));
+  border-color: var(--line);
+}
+.note-card { background: color-mix(in oklab, var(--ink) 11%, var(--field)); border-color: var(--line-2); }
+.foot-label { color: var(--ink-2); }
+.margins-grid .foot-label, .cash-grid .foot-label { color: var(--ink-2); }
+
+/* ---------------------------------------------------------------------
+   10. LEDGER — aged paper, a printed register
+   --------------------------------------------------------------------- */
+
+#ledger { background: var(--field); }
+#ledger .chapter-title, #ledger .chapter-lede { color: var(--ink); }
+#ledger .chapter-no { color: var(--ink-2); }
+.ledger-card { background: var(--field); border-color: var(--line); }
+.ledger-head {
+  background: color-mix(in oklab, var(--ink) 6%, var(--field));
+  border-bottom: 1px solid var(--line-2);
+}
+.ledger-count { color: var(--ink-2); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.ledger-table th {
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--line-2);
+  font-family: var(--font-label);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.ledger-table td {
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+.ledger-table td.num { text-align: right; }
+.ledger-table tr.is-forecast td { background: color-mix(in oklab, var(--ink) 5%, var(--field)); }
+.ledger-table tr.is-clickable { cursor: pointer; }
+.ledger-table tr.is-clickable:hover td { background: color-mix(in oklab, var(--ink) 11%, var(--field)); }
+/* selected row: full-row Base field, warm paper ink (8.15:1) */
+.ledger-table tr.is-selected td {
+  background: var(--f-hero);
+  color: var(--f-workbook);
+  font-weight: 700;
+}
+.ledger-table tr.is-selected td.num { color: var(--f-workbook); }
+.ledger-table tr.is-selected .case-chip { background: var(--f-workbook); }
+.ledger-table tr.is-selected .dash,
+.ledger-table tr.is-selected .not-disclosed { color: color-mix(in srgb, var(--f-workbook) 82%, var(--f-hero)); }
+/* per-case row ink (§d) */
+.case-chip { background: currentColor; }
+tr[data-row-scenario="Base Case"] .case-chip,
+.assumption-case-base { color: #1f2bd0; }
+tr[data-row-scenario="Bull Case"] .case-chip { color: #0a5c61; }
+tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
+.case-chip--bear  { background: #8a1f3a; }
+.case-chip--base  { background: #1f2bd0; }
+.case-chip--bull  { background: #0a5c61; }
+.case-chip--actual{ background: #12123a; }
+
+/* the FY2026 FCF slot: an empty dashed outline + NOT DISCLOSED */
+.not-disclosed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--ink-2);
+  font-family: var(--font-label);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.not-disclosed::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 9px;
+  border: 1.5px dashed #eab4bb;
+  background: transparent;
+}
+.dash { color: var(--ink-2); }
+.year-badge {
+  background: var(--ink);
+  color: var(--field);
+  border: 0;
+  border-radius: 0;
+  font-family: var(--font-label);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.fineprint {
+  background: color-mix(in oklab, var(--ink) 5%, var(--field));
+  border-left: 3px solid var(--ink);
+}
+.fineprint p { color: var(--ink); }
+
+/* ---------------------------------------------------------------------
+   11. METHOD — tangerine, the final act
+   --------------------------------------------------------------------- */
+
+#method { background: var(--field); color: var(--ink); }
+#method .chapter-title, #method .chapter-lede { color: var(--ink); }
+#method .chapter-no { color: var(--ink-2); }
+.method-grid .panel { background: var(--ink); color: var(--field); border-color: var(--ink); }
+.method-grid .panel .foot-label { color: color-mix(in srgb, var(--field) 70%, var(--ink)); }
+.method-grid .panel h3 { color: var(--field); }
+.method-grid .panel p { color: var(--field); }
+.method-list li { border-bottom-color: color-mix(in srgb, var(--field) 24%, var(--ink)); }
+.method-list li::before { color: var(--field); }
+.human-note { background: var(--field); border: 1px solid color-mix(in srgb, var(--ink) 40%, var(--field)); color: var(--ink); }
+.human-note p, .human-note b { color: var(--ink); }
+.preview-card, .sources-list li { background: var(--ink); border-color: var(--ink); }
+.preview-card figcaption { color: var(--field); }
+.preview-card:hover { transform: none; box-shadow: 0 0 0 2px var(--ink); }
+.sources-list span { color: color-mix(in srgb, var(--field) 72%, var(--ink)); }
+.sources-list b { color: var(--field); }
+.sources-list a {
+  color: var(--field);
+  border: 1px solid color-mix(in srgb, var(--field) 45%, var(--ink));
+  border-radius: 0;
+  background: transparent;
+}
+.sources-list a:hover { background: var(--field); color: var(--ink); }
+#method .fineprint { background: color-mix(in srgb, var(--ink) 10%, var(--field)); border-left-color: var(--ink); }
+#method .fineprint p { color: var(--ink); }
+
+/* ---------------------------------------------------------------------
+   12. FOOTER — press black, with the state stamp (§b #8)
+   --------------------------------------------------------------------- */
+
+.footer {
+  background: var(--field);
+  color: var(--ink);
+  border: 0;
+  min-height: 24rem;
+  padding-block: clamp(3.5rem, 7vw, 6.5rem);
+}
 .footer::before {
   content: "TCS / OUTLOOK";
   display: block;
   width: min(var(--shell), 100% - var(--gutter) * 2);
-  margin: 0 auto clamp(3rem, 6vw, 6rem);
-  color: var(--atlas-orange);
+  margin: 0 auto clamp(2rem, 4vw, 3.5rem);
+  color: var(--field);
+  -webkit-text-stroke: 1px var(--ink);
   font-weight: 700;
-  font-size: clamp(4rem, 12vw, 11.5rem);
-  letter-spacing: -.075em;
-  line-height: .85;
+  font-size: clamp(2.6rem, 9vw, 8rem);
+  letter-spacing: -0.06em;
+  line-height: 0.86;
 }
-.footer p, .footer .mono { color: #e6ebff; }
+.footer p, .footer .mono { color: var(--ink-2); }
+.footer-state {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  align-items: baseline;
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  border-top: 1px solid var(--line-2);
+  padding-top: 1rem;
+  margin-bottom: 1.4rem;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.footer-state b { color: var(--case-field); font-weight: 700; }
+.footer-state .stamp-dot { color: var(--case-field); }
 
-/* Square, high-contrast input controls; selection itself is the animation cue. */
-.chip, .btn, .dialog-close, .sources-list a { border-radius: 0; box-shadow: none; }
-.chip { background: #172b72; color: #f0f2ff; border-color: #7086c7; }
-.chip:hover { background: #2945aa; color: #fff; border-color: #c7d7ff; }
-.chip[aria-pressed="true"], .chip.is-active { background: var(--atlas-orange); color: var(--atlas-ink); border-color: var(--atlas-orange); }
-.btn { background: #162860; color: #fff5eb; border-color: #96a7d6; }
-.btn:hover { background: #253c9b; color: #fff; }
-.preview-dialog { background: var(--card); color: var(--ink); }
-.preview-dialog::backdrop { background: rgba(8,16,46,.85); }
-.chart-tooltip, .chapter--dark .kpi .chart-tooltip { background: #0b1439; color: #fff5eb; border: 1px solid #92a4de; border-radius: 0; }
-.grid-line { stroke: rgba(222,232,255,.22); }
-.axis-text, .axis-text--muted, .axis-text--strong { fill: #dae4ff; }
-.chart-label:not([fill]) { fill: #fff5eb; }
-.chart-viewport .chart-label:not([fill]) { fill: #fff5eb; }
-.chart-line--actual { stroke: #fff5eb; }
-.forecast-zone { fill: rgba(255,112,67,.15); }
-.forecast-edge { stroke: #ffb18d; }
-.chart-label--inverse { fill: #0b1439 !important; }
-.chart-tooltip .tooltip-row { color: #e0e9ff; }
-.chart-tooltip .tooltip-row b, .chart-tooltip .tooltip-title { color: #fff5eb; }
-.chart-tooltip .tooltip-title span { color: #ffbb9b; }
+/* ---------------------------------------------------------------------
+   13. CONTROLS — chips, buttons: 24px floor, 44px primary
+   --------------------------------------------------------------------- */
 
-/* Each chapter gets a different entrance, so scrolling reads as a sequence.
-   One-shot IntersectionObserver classes keep the effects deterministic. */
-.chapter.is-entering .chapter-head { animation: chapter-head-in .65s var(--atlas-ease) both; }
-#workbook.is-entering .evidence { animation: archive-rise .62s var(--atlas-ease) both; }
+.chip, .btn, .dialog-close { border-radius: 0; box-shadow: none; }
+.chip {
+  background: color-mix(in oklab, var(--ink) 8%, var(--field));
+  color: var(--ink);
+  border: 1px solid var(--line-2);
+  min-height: 30px;
+  padding: 0.35rem 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.chip:hover { background: color-mix(in oklab, var(--ink) 16%, var(--field)); border-color: var(--ink); }
+.chip[aria-pressed="true"], .chip.is-active {
+  background: var(--ink);
+  color: var(--field);
+  border-color: var(--ink);
+  font-weight: 700;
+}
+.btn {
+  background: var(--ink);
+  color: var(--field);
+  border: 1px solid var(--ink);
+  min-height: 36px;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.btn:hover { background: color-mix(in oklab, var(--ink) 86%, var(--field)); }
+.btn--ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
+.btn--ghost:hover { background: color-mix(in oklab, var(--ink) 12%, var(--field)); border-color: var(--ink); }
+.control-label { color: var(--ink-2); }
+
+/* ---------------------------------------------------------------------
+   14. FOCUS — a two-tone ring that survives EVERY field
+   ---------------------------------------------------------------------
+   No single colour clears 3:1 on all nine fields (measured). So the ring
+   is a PAIR: a dark inner band + a light outer band. Whatever the field,
+   at least one band clears 3:1 against it. Same geometry everywhere.
+   --------------------------------------------------------------------- */
+
+:where(a, button, input, select, textarea, summary,
+       [tabindex]:not([tabindex="-1"]),
+       tr[tabindex], .chart-viewport[tabindex]):focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #12123a,
+    0 0 0 5px #ffe9a8;
+}
+/* on the dark fields the pair inverts so the warm band does the work */
+#futures :where(a, button, input, tr[tabindex], [tabindex]):focus-visible,
+.footer :where(a, button, input, [tabindex]):focus-visible,
+.marquee-field :where(a, button, [tabindex]):focus-visible,
+#overview :where(a, button, input, [tabindex]):focus-visible {
+  box-shadow:
+    0 0 0 2px #ffe9a8,
+    0 0 0 5px #0d1024;
+}
+
+/* ---------------------------------------------------------------------
+   15. MOTION — decelerate only. --ease-spring is banned.
+   --------------------------------------------------------------------- */
+
+.case-card, .chip, .btn, .kpi, .driver-meter span {
+  transition:
+    background-color var(--dur-1) var(--ease-micro),
+    color var(--dur-1) var(--ease-micro),
+    border-color var(--dur-1) var(--ease-micro);
+}
+/* field colour NEVER animates (DIRECTION §f) */
+#overview, #workbook, #trend, #futures, #margins, #ledger, #method,
+.marquee-field, .footer, .topbar { transition: none !important; }
+
+.chapter.is-entering .chapter-head {
+  animation: field-head-in var(--dur-3) var(--ease-reveal) both;
+}
+#workbook.is-entering .evidence { animation: field-rise var(--dur-3) var(--ease-reveal) both; }
 #workbook.is-entering .evidence:nth-child(2) { animation-delay: 70ms; }
 #workbook.is-entering .evidence:nth-child(3) { animation-delay: 140ms; }
 #workbook.is-entering .evidence:nth-child(4) { animation-delay: 210ms; }
-#trend.is-entering .trend-grid { animation: trend-sweep .78s var(--atlas-ease) both; }
-#futures.is-entering .kpi { animation: future-pop .58s var(--atlas-ease) both; }
+#futures.is-entering .kpi { animation: field-rise var(--dur-3) var(--ease-reveal) both; }
 #futures.is-entering .kpi:nth-child(2) { animation-delay: 70ms; }
 #futures.is-entering .kpi:nth-child(3) { animation-delay: 140ms; }
 #futures.is-entering .kpi:nth-child(4) { animation-delay: 210ms; }
-#margins.is-entering .margins-grid { animation: margin-reveal .85s var(--atlas-ease) both; }
-#margins.is-entering .cash-grid { animation: margin-reveal .85s 140ms var(--atlas-ease) both; }
-#ledger.is-entering .ledger-card { animation: ledger-slide .72s var(--atlas-ease) both; }
-#method.is-entering .method-grid { animation: method-wipe .9s var(--atlas-ease) both; }
-@keyframes chapter-head-in { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: 0 0; } }
-@keyframes archive-rise { from { opacity: 0; translate: 0 28px; } to { opacity: 1; translate: 0 0; } }
-@keyframes trend-sweep { from { opacity: 0; translate: -34px 0; } to { opacity: 1; translate: 0 0; } }
-@keyframes future-pop { from { opacity: 0; scale: .92; } to { opacity: 1; scale: 1; } }
-@keyframes margin-reveal { from { clip-path: inset(0 0 0 22%); opacity: .4; } to { clip-path: inset(0); opacity: 1; } }
-@keyframes ledger-slide { from { opacity: 0; translate: 38px 0; } to { opacity: 1; translate: 0 0; } }
-@keyframes method-wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+#trend.is-entering .trend-grid { animation: field-rise var(--dur-3) var(--ease-reveal) both; }
+#margins.is-entering .margins-grid,
+#margins.is-entering .cash-grid { animation: field-rise var(--dur-3) var(--ease-reveal) both; }
+#ledger.is-entering .ledger-card { animation: field-rise var(--dur-3) var(--ease-reveal) both; }
+#method.is-entering .method-grid { animation: field-rise var(--dur-3) var(--ease-reveal) both; }
 
-/* State-change feedback is in addition to the existing number tweens / SVG bar builds.
-   Animation is short because case selection is a repeated interaction. */
-.case-card, .chip { transition: background-color .16s ease, color .16s ease, border-color .16s ease, transform .16s ease; }
-.case-card:hover { transform: translateY(-3px); border-color: #fff5eb; }
-.control-row button:active, .case-card:active { transform: translateY(2px); }
-:is(a, button, tr[tabindex]):focus-visible { outline: 3px solid #ffca84; outline-offset: 3px; }
+@keyframes field-head-in { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
+@keyframes field-rise    { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: 0 0; } }
 
-@media (max-width: 72em) {
-  .chapter--hero .shell { grid-template-columns: 1fr 1fr; column-gap: 2rem; }
-  .hero-title { font-size: clamp(3.6rem, 7vw, 6rem); }
-  .hero-value { font-size: clamp(2.8rem, 5.5vw, 5rem); }
-  .hero-panel { min-height: 34rem; }
-  #trend .chapter-head { margin-left: 0; }
-  .trend-grid, .margins-grid, .cash-grid, .futures-row { grid-template-columns: 1fr; }
-  .workbook-grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 55.9em) {
-  .topbar-row { min-height: 3.3rem; }
-  .topbar-chip { display: block; margin-left: auto; }
-  .chapter--hero .shell { display: flex; flex-direction: column; }
-  .hero-title { font-size: clamp(4.1rem, 12vw, 7rem); max-width: 12ch; }
-  .hero-lede { max-width: 55ch; }
-  .hero-tags { width: 100%; }
-  .hero-panel { width: 100%; margin-top: 2rem; min-height: 28rem; order: 4; }
-  .hero-tags { order: 5; margin-top: 2rem; }
-  .scroll-cue { order: 6; margin-top: 1.5rem; }
-  #workbook .chapter-head, #futures .chapter-head, #margins .chapter-head, #ledger .chapter-head { display: block; }
-  #workbook .chapter-lede, #futures .chapter-lede, #margins .chapter-lede, #ledger .chapter-lede { margin-top: 1.25rem; }
-  .workbook-grid, .method-grid { grid-template-columns: 1fr; }
-  .evidence-band { grid-template-columns: 1fr 1fr; }
-  .kpi-band { grid-template-columns: 1fr 1fr; }
-  .chapter-title { font-size: clamp(3.1rem, 9vw, 6rem); }
-}
-@media (max-width: 37em) {
-  .chapter { padding-block: 5rem; }
-  .chapter--hero { padding-top: 6.7rem; }
-  .hero-title { font-size: clamp(3.7rem, 15vw, 5.5rem); }
-  .hero-value { font-size: clamp(2.9rem, 12vw, 5.2rem); }
-  .hero-panel { padding: 1.25rem; min-height: 25rem; }
-  .hero-controls { margin-top: .8rem; }
-  .hero-panel::before { font-size: 9rem; }
-  .hero-control-group > span { flex-basis: 100%; }
-  .hero-tags li { font-size: .83rem; }
-  .evidence b { font-size: 3.4rem; }
-  .kpi-band { grid-template-columns: 1fr 1fr; }
-  .kpi { padding: .8rem; }
-  .kpi-value { font-size: clamp(1.6rem, 6vw, 2.2rem); }
-  .chapter-title { font-size: clamp(2.9rem, 12vw, 4.8rem); }
-  .footer::before { font-size: 18vw; }
-}
 @media (prefers-reduced-motion: reduce) {
-  .case-card, .chip { transition-duration: .01ms; }
-  .progress { display: none; }
+  :root { --dur-0: 1ms; --dur-1: 1ms; --dur-2: 1ms; --dur-3: 1ms; --dur-4: 1ms; --dur-5: 1ms; }
   .chapter.is-entering .chapter-head,
   #workbook.is-entering .evidence,
   #trend.is-entering .trend-grid,
@@ -477,4 +1019,34 @@ body { background: var(--ground); color: var(--ink); }
   #margins.is-entering .cash-grid,
   #ledger.is-entering .ledger-card,
   #method.is-entering .method-grid { animation: none; }
+  .lever-beacon span { transition: none; }
+}
+
+/* ---------------------------------------------------------------------
+   16. RESPONSIVE
+   --------------------------------------------------------------------- */
+
+@media (max-width: 72em) {
+  .chapter--hero .shell { grid-template-columns: 1fr; }
+  .trend-grid, .margins-grid, .cash-grid, .futures-row { grid-template-columns: 1fr; }
+  .lever-outputs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 55.9em) {
+  .kpi-band { grid-template-columns: 1fr 1fr; }
+  .evidence-band { grid-template-columns: 1fr 1fr; }
+  .method-grid, .workbook-grid { grid-template-columns: 1fr; }
+  .chapter-title { font-size: clamp(2rem, 7vw, 3.4rem); }
+}
+@media (max-width: 37em) {
+  /* §i.1 @390: display 46px, h1 44px, h2 38px */
+  .hero-title { font-size: 2.875rem; }
+  #futures .chapter-title { font-size: 2.75rem; }
+  .chapter-title { font-size: 2.375rem; }
+  .hero-value { font-size: clamp(2.1rem, 9.5vw, 3.2rem); }
+  .kpi-band { grid-template-columns: 1fr; }
+  .lever-outputs { grid-template-columns: 1fr 1fr; }
+  .lever-value { font-size: 1.4rem; }
+  .chapter { padding-block: 3.6rem; }
+  .footer::before { font-size: 16vw; }
+  .evidence-band { grid-template-columns: 1fr 1fr; }
 }

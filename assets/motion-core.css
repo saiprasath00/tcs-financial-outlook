@@ -4,20 +4,30 @@
    What it does
      The resting state for every data-* recipe (what no-JS, reduced-motion and
      CDN-failure visitors see), the CSS halves of the marquee and sticky stack,
-     and Lenis's recommended CSS. Load it after tokens.css.
+     the number windows the state re-set animates inside, and the crafted hover
+     states. Load it after tokens.css.
    Options (custom properties)
      --marquee-gap (2rem)   gap between marquee items and at the loop seam
      --pin-gap (4vw), --pin-pad (4vw), --pin-panel-w (min(72vw, 56rem))
      --stack-top (10svh), --stack-step (1rem), --stack-gap (8svh), --stack-shade-color (#000)
+     --count-ch (1)         figures reserved for a [data-count] node
+     --re-set-w             width reserved for a re-setting value (motion-core.js sets it)
    Fallback behaviour
-     Nothing here starts hidden. Motion rules apply only when all three hold:
-     @media (prefers-reduced-motion: no-preference), :root[data-motion="full"] and
-     a class that motion-core.js adds once it has wired the matching control
-     (.is-live, .is-pinned).
+     Nothing here starts hidden and nothing here moves colour. Motion rules apply only
+     when all three hold: @media (prefers-reduced-motion: no-preference),
+     :root[data-motion="full"] and a class motion-core.js adds only after it has wired
+     the matching control (.is-live, .is-pinned, .is-marquee-set). The re-set clips
+     cannot hide anything on their own: they are a 1.25em window with overflow: clip,
+     which renders text at rest exactly as inline text does.
+   Colour policy (design/DIRECTION.md §c, §f)
+     No rule in this file sets a background, border colour or text colour on a section,
+     a panel or a control. Fields belong to reboot.css; motion here is transform and
+     opacity only, plus the two neutral tonal steps below that are not fields:
+     the case-card and chip hovers are delegated to reboot.css, which owns those inks.
    Tested against
      lenis 1.3.26 (its dist/lenis.css is copied verbatim below), gsap 3.15.0
-     SplitText mask markup, Chromium 145, 2026-09-25 (split masks measured at
-     0px layout shift; sticky cards verified stuck at their offset).
+     SplitText mask markup. Chromium/Edge 145 headless: split masks measured at 0px
+     layout shift; the re-set window measured at 0px block movement.
    ========================================================================== */
 
 /* ---- Lenis 1.3.26 dist/lenis.css ----------------------------------------- */
@@ -46,17 +56,100 @@ html.lenis body { height: auto; }
    121px heading). Each later mask overlaps the previous by the full 0.24em
    instead; only the outer edges take 0.12em. SplitText docs: avoid
    text-wrap: balance on split text. `wrap` is set at rest too, so line breaks
-   do not change at split time. */
+   do not change at split time — and §e of DIRECTION asks for balance on h2s, so
+   the heading keeps balance at rest and gives it up only while it is split. */
 .rv-line-mask { padding-block: 0.12em; margin-block: -0.24em 0; }
 .rv-line-mask:first-child { margin-top: -0.12em; }
 .rv-line-mask:last-child { margin-bottom: -0.12em; }
-[data-reveal="lines"], [data-intro] { text-wrap: wrap; }
+[data-reveal="lines"] { text-wrap: balance; }
+[data-reveal="lines"]:has(.rv-line-mask),
+[data-reveal="lines"].rv-split { text-wrap: wrap; }
+[data-intro] { text-wrap: wrap; }
 
 /* ---- data-reveal="image": the wrapper clips the media's scale settle ----- */
 [data-reveal="image"] { overflow: clip; }
 
 /* ---- data-parallax on media: the direct parent is the clipping frame ----- */
 :where(:has(> :is(img, video, canvas, picture)[data-parallax])) { overflow: clip; }
+
+/* ---- the re-set window -----------------------------------------------------
+   A figure that changes on a selection slides into place inside a clipped 1.25em
+   window (motion-core.js adds .is-reset for one clock). At rest this is an ordinary
+   inline-level box: the window is 1.25em of line box with a hair of vertical padding
+   so a tight display leading is not shaved, and overflow: clip only bites while the
+   transform below is applied. Width is reserved from the longest value the node can
+   show, so a figure going from "9,999" to "2,67,021" cannot reflow the line it sits
+   in (§e: figures are right-aligned in their own column, always).
+   The move is transform-only and lives inside the box: the block never moves. */
+:where(#heroValue, .kpi-value, .case-value, .context-value, #spreadTitle, #heroDelta,
+  #contextVsActual, #trendForecast, #trendLatest) {
+  display: inline-block;
+  overflow: clip;
+  max-width: 100%;
+  min-width: var(--re-set-w, auto);
+  padding-block: 0.05em;
+  vertical-align: bottom;
+  /* tabular figures everywhere a figure changes: §e's type rule, enforced here too */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion="full"] :is(#heroValue, .kpi-value, .case-value, .context-value,
+    #spreadTitle, #heroDelta, #contextVsActual, #trendForecast, #trendLatest) {
+    /* --reset-dur / --reset-delay are set by motion-core.js from --dur-2; the fallbacks
+       below are the same values so the first change reads even if a token is missing. */
+    transition: transform var(--reset-dur, 289ms) var(--ease-reveal, cubic-bezier(.22, 1, .36, 1))
+                var(--reset-delay, 0ms);
+  }
+  :root[data-motion="full"] :is(#heroValue, .kpi-value, .case-value, .context-value,
+    #spreadTitle, #heroDelta, #contextVsActual, #trendForecast, #trendLatest).is-reset {
+    /* 0.62em: the readout arrives from just below its own baseline — a set, not a fade. */
+    transform: translateY(0.62em);
+  }
+}
+
+/* ---- [data-count]: a counter reserves its digits, never its box ----------- */
+[data-count] {
+  display: inline-block;
+  min-width: calc(var(--count-ch, 1) * 1ch);
+  font-variant-numeric: tabular-nums;
+  text-align: right; /* right-aligned in its own column: §e */
+}
+
+/* ---- data-reveal="scrub": the scrubbed scene ------------------------------
+   Markup: data-reveal="scrub" on the scene, with children marked
+   data-scrub="case|plate|rule|glyph". At rest the scene is laid out normally and
+   completely visible; the scrub only applies transforms while it is on screen and
+   always resolves to identity at both ends of its range. No colour is touched:
+   the three case cards stay the field they already are (§f: fields never animate). */
+[data-reveal="scrub"] { position: relative; overflow: clip; max-width: 100%; }
+[data-scrub="case"] { transform-origin: 50% 60%; will-change: transform; }
+/* A plate arrives by un-clipping in step with its travel; the start stays partly open
+   (inset 12%, never 100%), so a frozen frame still shows the plate. */
+[data-scrub="plate"] { clip-path: inset(0% 0% 0% 0%); }
+/* The chapter rule draws in from its start edge — a scaleX, never a width. */
+[data-scrub="rule"] {
+  transform-origin: 0% 50%;
+  border-block-start: 1px solid currentColor;
+  opacity: 0.35;
+}
+/* The oversized chapter numeral, a tonal watermark off the ink (opacity, not a hue:
+   §c forbids accents sprinkled on decoration). It travels slower than its frame. */
+[data-scrub="glyph"] {
+  position: absolute;
+  inset: auto 0 0 auto;
+  font-family: var(--font-display, inherit);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  font-size: clamp(6rem, 18vw, 15rem);
+  pointer-events: none;
+  user-select: none;
+  color: var(--ink, currentColor);
+  opacity: 0.07;
+  z-index: 0;
+}
 
 /* ---- data-marquee ----------------------------------------------------------
    Markup: [data-marquee] > [data-marquee-track] > [data-marquee-group] > items,
@@ -85,14 +178,26 @@ html.lenis body { height: auto; }
   :root[data-motion="full"] [data-marquee][data-marquee-direction="right"].is-live [data-marquee-track] {
     animation-direction: reverse;
   }
-  /* Hover/focus pause helps reading; the button is what satisfies WCAG 2.2.2 for keyboard and touch.
-     Same prefix as the rule above: that rule's `animation` shorthand resets play-state to running,
-     so a less specific pause rule would silently lose. */
+  /* Hover/focus pause helps reading; the button is what satisfies WCAG 2.2.2 for keyboard
+     and touch. Same prefix as the rule above: that rule's `animation` shorthand resets
+     play-state to running, so a less specific pause rule would silently lose. */
   :root[data-motion="full"] [data-marquee].is-live:is(:hover, :focus-within, .is-paused) [data-marquee-track] {
     animation-play-state: paused;
   }
 }
 @keyframes marquee { to { translate: -50% 0; } }
+
+/* The loop starts running far from the page's first paint, so its own onset gets a
+   moment: the band slides its content in over --dur-5 the one time it is wired.
+   It is a JS-only class, so no-JS and reduced motion never see this at all. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion="full"] [data-marquee].is-marquee-set [data-marquee-track] {
+    animation-name: marquee, marquee-arrive;
+    animation-duration: var(--marquee-duration, 40s), var(--dur-5, 1200ms);
+    animation-timing-function: linear, var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+  }
+}
+@keyframes marquee-arrive { from { translate: 0 0.9em; } }
 
 /* JS-only controls ship with the `hidden` attribute and stay hidden until motion-core wires
    them. Guard it: an author rule such as `.btn { display: inline-flex }` beats the UA
@@ -103,7 +208,8 @@ html.lenis body { height: auto; }
    Markup: section[data-pin="horizontal"] > … [data-pin-track] > [data-pin-panel]*
    At rest, under reduced motion and below pinMinWidth, the panels are a plain
    vertical stack. motion-core adds .is-pinned only on wide screens with full motion.
-   Keep the pinned section <= 100svh tall and body copy out of it (house rule). */
+   Keep the pinned section <= 100svh tall and body copy out of it (house rule).
+   This page passes pin: false — see the report on task-3 for why. */
 [data-pin="horizontal"] [data-pin-track] { display: grid; gap: var(--pin-gap, 2rem); }
 [data-pin="horizontal"].is-pinned {
   height: 100svh;
@@ -152,3 +258,48 @@ html.lenis body { height: auto; }
   opacity: 0;
   pointer-events: none;
 }
+
+/* ---- crafted hover states --------------------------------------------------
+   §h and motion-core.js's hard rules: hover never moves the box and never animates
+   an underline. Chips and case cards are owned by reboot.css (it carries their
+   field inks); this file adds only the two moves reboot.css cannot express safely
+   on its own, both of which stay inside a static box:
+     - the card's inner rule takes a heavier stroke (border-width is layout, so it
+       is drawn with a shadow inset instead: a paint, not a box),
+     - the number inside a card steps up in weight (typographic, zero reflow, because
+       the tabular figure reserves its width above).
+   Everything is gated on no-preference; reduce gets the resting state only. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion="full"] .case-card .case-value,
+  :root[data-motion="full"] .kpi .kpi-value {
+    transition: font-weight var(--dur-1, 200ms) var(--ease-micro, cubic-bezier(.33, 1, .68, 1));
+  }
+  @media (hover: hover) and (pointer: fine) {
+    :root[data-motion="full"] .case-card:hover .case-value { font-weight: 800; }
+    :root[data-motion="full"] .case-card:hover .case-delta { font-weight: 700; }
+    :root[data-motion="full"] .kpi:hover .kpi-value { font-weight: 800; }
+    :root[data-motion="full"] .chip:hover { letter-spacing: 0.055em; }
+    :root[data-motion="full"] .chip {
+      transition-property: background-color, color, border-color, letter-spacing;
+      transition-duration: var(--dur-1, 200ms);
+      transition-timing-function: var(--ease-micro, cubic-bezier(.33, 1, .68, 1));
+    }
+  }
+}
+
+/* ---- press feedback: 80ms, --dur-0 (§f) ------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion="full"] :is(.chip, .case-card, .btn):active {
+    transition-duration: var(--dur-0, 80ms);
+  }
+}
+
+/* ---- reduced motion: nothing to keep --------------------------------------
+   Reduced-motion CSS already collapses every --dur-* to 1ms in tokens.css. The
+   rules below only make sure a painted class a resize or a live OS flip left
+   behind cannot keep a transform applied. */
+@media (prefers-reduced-motion: reduce) {
+  [data-marquee] { animation: none !important; }
+  [data-marquee-track] { animation: none !important; translate: none !important; }
+}
+:root[data-motion="reduce"] [data-marquee-track] { animation: none !important; translate: none !important; }

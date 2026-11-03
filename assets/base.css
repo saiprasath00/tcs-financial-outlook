@@ -91,7 +91,24 @@ body {
   line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+}
+
+/* Overflow containment lives on <html>, not <body>.
+   Measured at 390px: <html> had overflow-x: visible, so the body's overflow did
+   not propagate and the marquee's 6,668px translated track widened the page to
+   631px of scroll width. The scroll container for a document is the root
+   element — clipping there is what actually contains a full-bleed marquee. */
+html {
+  overflow-x: clip;
+}
+
+/* Belt and braces for the one field that is wider than any viewport by
+   construction. */
+.marquee-field,
+[data-marquee],
+[data-marquee].is-live {
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 /* ---- Media defaults ---------------------------------------------------- */
@@ -119,7 +136,7 @@ a {
 }
 
 a:focus-visible, button:focus-visible {
-  outline: 2px solid var(--violet);
+  outline: 2px solid var(--tangerine);
   outline-offset: 3px;
 }
 
@@ -172,7 +189,7 @@ table {
   font-weight: 700;
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
-  background: var(--violet);
+  background: var(--tangerine);
   color: var(--ground);
   transform: translateY(-120%);
   transition: transform var(--dur-1) var(--ease-micro);
@@ -209,7 +226,7 @@ table {
   flex-shrink: 0;
   color: var(--ink);
 }
-.wordmark b { color: var(--violet); }
+.wordmark b { color: var(--tangerine); }
 
 .top-nav {
   display: flex;
@@ -231,7 +248,7 @@ table {
 }
 .top-nav a:hover, .top-nav a.is-active {
   color: var(--ink);
-  border-color: var(--violet);
+  border-color: var(--tangerine);
 }
 
 .topbar-chip {
@@ -261,7 +278,7 @@ table {
   display: block;
   width: 100%;
   height: 100%;
-  background: var(--violet);
+  background: var(--tangerine);
   transform: scaleX(0);
   transform-origin: left center;
 }
@@ -327,6 +344,34 @@ small { font-size: var(--step-small); }
 
 /* ---- Buttons and chips ------------------------------------------------ */
 
+/* ---- Headline two-line lockups (DIRECTION.md §i.1) --------------------
+   Every chapter headline and the hero are explicit two-line lockups. Each
+   line is a block, so the break never depends on text-wrap: balance and a
+   line can never reflow into three. Verified at 1440 and 390.
+   -------------------------------------------------------------------- */
+
+.lockup-line {
+  display: block;
+  white-space: nowrap;      /* one line stays one line */
+}
+
+.hero-title .lockup-line { max-width: 720px; }
+
+/* The em is emphasis by position, not by slant: Switzer ships no italic file,
+   so font-style: italic would synthesise a fake oblique. DIRECTION.md §i.1.
+   Ink is warm gold #ffe9a8 (7.55:1 on #1f2bd0) — rejects tangerine at 3.31:1. */
+.hero-em {
+  font-style: normal;
+  color: #ffe9a8;
+}
+
+/* On the oxblood and teal fields gold fails; there the em is the body ink and
+   the line break carries the emphasis (DIRECTION.md §i.2). */
+#margins .hero-em,
+#trend .hero-em {
+  color: #fff6ea;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -336,14 +381,14 @@ small { font-size: var(--step-small); }
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: var(--violet);
+  background: var(--tangerine);
   color: var(--ground);
   border-radius: var(--r-sm);
   transition: background var(--dur-1) var(--ease-micro), opacity var(--dur-1);
   cursor: pointer;
   border: none;
 }
-.btn:hover { background: var(--violet-deep); }
+.btn:hover { background: var(--tangerine-deep); }
 .btn:active { opacity: 0.8; }
 
 .btn--ghost {
@@ -368,7 +413,7 @@ small { font-size: var(--step-small); }
 }
 .chip:hover { color: var(--ink); border-color: var(--hairline-strong); background: var(--plate); }
 .chip.is-active, .chip[aria-pressed="true"] {
-  background: var(--violet);
+  background: var(--tangerine);
   color: var(--ground);
   border-color: transparent;
 }
@@ -465,7 +510,7 @@ small { font-size: var(--step-small); }
   overflow: auto;
   box-shadow: var(--shadow-dark);
 }
-.preview-dialog::backdrop { background: rgba(11,20,57,0.7); backdrop-filter: blur(4px); }
+.preview-dialog::backdrop { background: rgba(11, 20, 57, 0.86); }
 .preview-dialog header {
   display: flex;
   justify-content: space-between;

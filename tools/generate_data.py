@@ -81,15 +81,35 @@ for s, y, sort, rev, ebit, ebitda, pat, cfo, fcf, eps, shares in scenario_rows:
 
 # ---------- Audit-context assumptions from the workbook ----------
 assumptions_rows = list(wb["Assumptions"].iter_rows(values_only=True))
+
+def plain_text(value):
+    """Strip emoji and pictographs from workbook free text.
+
+    The source workbook uses a warning emoji to mark an estimated row. It is
+    meaningful in Excel but not in the rendered table, where it reads as
+    decoration (and fails the site's no-emoji rule). The words are kept; only
+    the symbol goes.
+    """
+    if not value:
+        return ""
+    text = "".join(
+        ch for ch in str(value)
+        if not (0x1F000 <= ord(ch) <= 0x1FAFF       # pictographs / emoji
+                or 0x2600 <= ord(ch) <= 0x27BF      # misc symbols / dingbats
+                or ord(ch) == 0xFE0F                # variation selector-16
+                or ord(ch) == 0x20E3)               # combining enclosing keycap
+    )
+    return " ".join(text.split())
+
 assumption_table = []
 for r in assumptions_rows[9:19]:
     if r[1] in (None, ""):
         continue
     assumption_table.append({
-        "parameter": r[1],
+        "parameter": plain_text(r[1]),
         "base": r[2], "bull": r[3], "bear": r[4],
         "unit": r[5],
-        "note": r[6] or "",
+        "note": plain_text(r[6]),
     })
 
 # ---------- Derived sanity checks ----------

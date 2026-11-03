@@ -58,24 +58,32 @@
   --night-mid:       #d3defb;
   --night-dim:       #b9c9ef;
 
-  /* ---- Accent colors ------------------------------------------------- */
-  --violet:       #ff7043;
-  --violet-deep:  #e64a1b;
-  --violet-tint:  rgba(255, 112, 67, 0.12);
-  --violet-line:  rgba(255, 112, 67, 0.4);
-  --blue:         #213bfa;
-  --blue-mid:     #1d34d8;
-  --teal:         #0dc5a0;
-  --amber:        #f5a623;
-  --rose:         #f43f73;
+  /* ---- Accent colors -------------------------------------------------
+     Honest names (DIRECTION.md §i.3): a token named for a hue it does not
+     hold is a trap for the next person reading this file. No aliases — the
+     old --violet* / --atlas-* names are deleted, not forwarded. */
+  --tangerine:       #ff7043;
+  --tangerine-deep:  #e64a1b;
+  --tangerine-tint:  rgba(255, 112, 67, 0.12);
+  --tangerine-line:  rgba(255, 112, 67, 0.4);
+  --cobalt:          #213bfa;
+  --cobalt-mid:      #1d34d8;
+  --midnight:        #0b1439;
+  --warm-white:      #fff5eb;
+  /* Warm gold — the selected-case and forecast-bar ink, and the hero <em>
+     (7.55:1 on the hero field; see DIRECTION.md §i.2). */
+  --gold:            #ffe9a8;
+  --teal:            #0dc5a0;
+  --amber:           #f5a623;
+  --rose:            #f43f73;
 
   /* ---- Chart series palette ----------------------------------------- */
   --series-0: #213bfa;   /* cobalt — Base Case / reported */
   --series-1: #ff7043;   /* tangerine — Bull Case accent */
   --series-2: #0dc5a0;   /* teal — Bear Case */
   --series-3: #f5a623;   /* amber — FCF */
-  --series-4: #c84bff;   /* violet — supplemental */
-  --series-5: #ff3d7c;   /* rose — supplemental */
+  --series-violet: #c84bff;   /* supplemental */
+  --series-rose:   #ff3d7c;   /* supplemental */
 
   /* ---- Structural tokens -------------------------------------------- */
   --shell:       86rem;
@@ -85,6 +93,51 @@
   --r-sm:        0.25rem;
   --shadow-lift: 0 2px 12px rgba(11,20,57,0.12), 0 1px 3px rgba(11,20,57,0.08);
   --shadow-dark: 0 4px 24px rgba(11,20,57,0.32), 0 2px 6px rgba(11,20,57,0.18);
+
+  /* ---- The nine section fields (DIRECTION.md §c) ---------------------
+     reboot.css binds each to its section id; these tokens are the single
+     source of truth so charts, the footer stamp and the topbar rail all
+     read the same values. Hard steps, no gradient anywhere. */
+  --f-hero:     #1f2bd0;
+  --f-workbook: #fff0e7;
+  --f-trend:    #0c6e74;
+  --f-marquee:  #ff5b45;
+  --f-futures:  #080c26;
+  --f-margins:  #b22a4e;
+  --f-ledger:   #f3ebd8;
+  --f-method:   #ff7043;
+  --f-footer:   #0a0f1f;
+  --f-topbar:   #141c5a;
+
+  --i-hero:     #fff6ea;
+  --i-workbook: #12123a;
+  --i-trend:    #fff3d6;
+  --i-marquee:  #1a0f12;
+  --i-futures:  #fff6ea;
+  --i-margins:  #fff6ea;
+  --i-ledger:   #12123a;
+  --i-method:   #12123a;
+  --i-footer:   #fff6ea;
+  --i-topbar:   #fff6ea;
+
+  /* ---- Case encoding (set per case by app.js on <html>) -------------- */
+  --accent:       #ff7043;
+  --accent-deep:  #c2410c;
+  --case-field:   #54c8ff;   /* Base — app.js overrides per selection */
+  --case-line:    #54c8ff;
+  --case-ink:     #0b1439;
+
+  /* ---- Type roles (DIRECTION.md §e) ---------------------------------- */
+  --font-display: "Switzer", "Segoe UI", system-ui, sans-serif;
+  --font-body:    "Switzer", "Segoe UI", system-ui, sans-serif;
+  --font-label:   "Switzer", "Segoe UI", system-ui, sans-serif;
+  --font-num:     "Switzer", "Segoe UI", system-ui, sans-serif;
+  /* The subject's own words only — never headings, charts, tables or numbers. */
+  --font-quote:   "Zodiak", "Iowan Old Style", Georgia, serif;
+  --font-mono:    "Switzer", "Segoe UI", system-ui, sans-serif;  /* legacy alias */
+
+  /* The switch clock: every state change re-sets in this duration. */
+  --clock-switch: 380ms;
 
   /* ---- Grid units ---------------------------------------------------- */
   --grid: 1rem;
