@@ -676,10 +676,27 @@
             : { ...base, fill: cashColor, opacity: 0.92 },
           svg);
       } else if (row.kind === "actual") {
-        text(svg, cx + barW / 2 + 1, m.t + plotH - 8, "n/a", "axis-text axis-text--muted", {
-          "text-anchor": "middle",
-          "font-size": compact ? 9.5 : 9
-        });
+        /* FY2026 has no published free-cash-flow figure. Draw the slot as a
+           visible dashed column at the height of the operating cash flow, so
+           the absence reads as a deliberate gap in the record rather than a
+           chart that failed to load. */
+        const ghostH = row.cfo != null ? (row.cfo / max) * plotH : plotH * 0.62;
+        el("rect", {
+          x: cx + 1, y: m.t + plotH - ghostH, width: barW, height: ghostH,
+          fill: "none", stroke: cashColor, "stroke-width": 1.4,
+          "stroke-dasharray": "4 3", opacity: 0.55, "class": "chart-bar-ghost"
+        }, svg);
+        text(svg, cx + barW / 2 + 1, m.t + plotH - ghostH - 7, "n/a",
+          "axis-text axis-text--muted", {
+            "text-anchor": "middle",
+            "font-size": compact ? 9.5 : 9.5
+          });
+        text(svg, cx + barW / 2 + 1, m.t + plotH - 6, "CFO",
+          "axis-text axis-text--muted", {
+            "text-anchor": "middle",
+            "font-size": compact ? 8 : 8.5,
+            opacity: 0.75
+          });
       }
 
       /* Direct labels put the two verified numbers on the chart itself. */

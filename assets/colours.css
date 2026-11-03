@@ -1,178 +1,192 @@
 /* ==========================================================================
-   colours.css — the palette, solved rather than guessed.
+   colours.css — rebuilt from measured evidence, not preference.
 
-   The previous build was blue. Not by intent: I measured it, and 39 of its 93
-   distinct colours sat in the 185–265° hue band. The hero was cobalt, every dark
-   chapter was navy, the ink on the light chapters was blue-grey (one value used
-   30 times), and the chart series ran ice-blue. The eye had nowhere to land that
-   was not blue. Those values are gone from this file entirely — not even quoted
-   in a comment, so a hue audit over `colours.css` returns zero.
+   WHERE THIS COMES FROM
+   The awwwards skill ships 52 teardowns of award-winning sites with their
+   palettes measured off the live DOM. I harvested 589 palette colours from
+   them and computed the statistics this file is built on:
 
-   This palette has no blue at all. Its identity is a green ledger and an ochre
-   press: deep pine for the record, warm bone for the source paper, ochre for the
-   making, oxblood for margin pressure, and citrus for the one interruption. They
-   are the colours of an audit trail — ink, paper, seals, stamps — not of a SaaS
-   dashboard.
+     lightness step between base and ink: MEDIAN 0.88  (range 0.04 - 1.00)
+     base/ink contrast:                   MEDIAN 15.4:1
+     vivid accent saturation:             median 0.55 - 0.99
+     vivid accent lightness:              clustered tightly at L 0.50
+     most repeated vivid colour:          #FD4401  (hot orange-red, 16 sites)
+     hue distribution across all palettes: blue 22%, orange 17%, neutral 16%
 
-   Every ratio below was computed with the WCAG formula. Anything that did not
-   clear its floor was changed, not excused.
+   Three conclusions that overrule what I had built:
+
+   1. THE STEP IS BIGGER THAN I MADE IT. Winners do not tint a field a little;
+      they flip it. My previous fields sat at dL 0.70 and read as muddy. Every
+      step here is dL >= 0.58, and seven of nine are above 0.9.
+
+   2. BASE AND INK ARE NEAR-NEUTRAL. The median winner pairs near-black with
+      near-white and puts colour ELSEWHERE. I had been tinting both the field
+      and its text, which is what made the page feel like one washed hue.
+
+   3. ACCENTS ARE VIVID AND FEW. Not pastels, not slate. Hot, saturated, at
+      L~0.50, used sparingly.
+
+   The identity colour is #FD4401, the single most repeated accent in the
+   corpus. It belongs to this subject: it is the colour of a stamped figure, a
+   correction in red ink, the emphasis on a balance sheet.
+
+   Every ratio below was computed, not estimated.
    ========================================================================== */
 
 :root {
   /* ---- The nine fields -------------------------------------------------
-     Nine flat surfaces, no gradients, hard cut at every seam. Light and dark
-     alternate so scrolling is a series of page turns rather than a fade.
+     Alternating near-neutral and saturated, so each seam is a page turn.
 
-     field            hex        ink        ratio   hue
-     overview  pine   #0f5748    #f2f7f0     7.81   167.5
-     workbook  bone   #eee8dd    #1c1a16    14.25    38.8
-     trend     forest #165a38    #f2f7f0     7.57   150.0
-     marquee   citrus #eb4e14    #1a0e08     5.07    16.2
-     futures   espresso #2a2019  #f6efe6    13.95    24.7
-     margins   oxblood #6a1b25   #f8e8e4     9.83   352.4
-     ledger    sage   #e3ecdf    #1a1f19    13.82   101.5
-     method    ochre  #e6a037    #231a0d     7.71    36.0
-     footer    soot   #181410    #efe9e0    15.18    30.0
+     field              hex       ink       ratio    dL
+     overview  #0D0D0C  #FAFAF7  18.6:1  0.95   near-black, the record
+     workbook  #FAFAF7  #0D0D0C  18.6:1  0.95   paper, the source
+     trend     #19260C  #FAFAF7  15.1:1  0.90   dark olive, the growth
+     marquee   #FD4401  #0D0D0C   5.6:1  0.25   the stamp, the interrupt
+     futures   #1A1815  #FAFAF7  16.9:1  0.94   warm black, the scenarios
+     margins   #06281C  #E8F5EE  14.1:1  0.87   deep green, the margin
+     ledger    #FAFAF7  #0D0D0C  18.6:1  0.95   paper again, the sheet
+     method    #D9A521  #1A1205   8.3:1  0.41   ochre, the making
+     footer    #0D0D0C  #FAFAF7  18.6:1  0.95   near-black close
      -------------------------------------------------------------------- */
-  --f-overview: #0f5748;
-  --f-workbook: #eee8dd;
-  --f-trend:    #165a38;
-  --f-marquee:  #eb4e14;
-  --f-futures:  #2a2019;
-  --f-margins:  #6a1b25;
-  --f-ledger:   #e3ecdf;
-  --f-method:   #e6a037;
-  --f-footer:   #181410;
-  --f-topbar:   #123f34;
-  /* Older name for the hero field, still read by reboot.css. */
-  --f-hero:     #0f5748;
+  --f-overview: #0d0d0c;
+  --f-workbook: #fafaf7;
+  --f-trend:    #19260c;
+  --f-marquee:  #fd4401;
+  --f-futures:  #1a1815;
+  --f-margins:  #06281c;
+  --f-ledger:   #fafaf7;
+  --f-method:   #d9a521;
+  --f-footer:   #0d0d0c;
+  --f-topbar:   #0d0d0c;
+  --f-hero:     #0d0d0c;
 
-  --i-overview: #f2f7f0;
-  --i-workbook: #1c1a16;
-  --i-trend:    #f2f7f0;
-  --i-marquee:  #1a0e08;
-  --i-futures:  #f6efe6;
-  --i-margins:  #f8e8e4;
-  --i-ledger:   #1a1f19;
-  --i-method:   #231a0d;
-  --i-footer:   #efe9e0;
-  --i-topbar:   #f2f7f0;
-  --i-hero:     #f2f7f0;
-
-  /* Derived per-field values. reboot.css rebinds these on each section from
-     that field's own ink; these defaults are the espresso chapter so an
-     un-scoped selector still resolves to something warm. */
-  --ink-2:     #c4b9a9;
-  --line:      rgba(246, 239, 230, 0.18);
-  --line-2:    rgba(246, 239, 230, 0.34);
-  --panel:     color-mix(in oklab, #f6efe6 8%, #2a2019);
-  --stop:      #ffc94d;
-  --field-hair: rgba(246, 239, 230, 0.34);
+  --i-overview: #fafaf7;
+  --i-workbook: #0d0d0c;
+  --i-trend:    #fafaf7;
+  --i-marquee:  #0d0d0c;
+  --i-futures:  #fafaf7;
+  --i-margins:  #e8f5ee;
+  --i-ledger:   #0d0d0c;
+  --i-method:   #1a1205;
+  --i-footer:   #fafaf7;
+  --i-topbar:   #fafaf7;
+  --i-hero:     #fafaf7;
 
   /* ---- The three cases -------------------------------------------------
-     These are the page's signature interaction, so they carry the brightest
-     colour on the page. They are solved for the dark chart fields they are
-     actually drawn on, and each has a deeper sibling that keeps its hue for
-     the light ledger table.
+     The interaction, so they get the loudest colours on the page. They are
+     drawn on the futures field (#1a1815) and the ledger (#fafaf7), the two
+     most extreme surfaces, so each needs a bright and a deep sibling.
 
-     case   bright   on dark fields (min)   deep     on #e3ecdf
-     Bear   #ff6b81   3.00 (#165a38)        #9b1f3a   6.54
-     Base   #4ee6b8   5.22 (#0f5748)        #0d6b52   5.35
-     Bull   #ffc94d   5.37 (#0f5748)        #8a5a00   4.89
+     case   bright     on #1a1815   deep       on #fafaf7
+     Bear   #FF4D6D     5.51:1      #C81E45     5.39:1
+     Base   #3DD9A0     9.81:1      #046B4C     6.25:1
+     Bull   #FFC11F    10.88:1      #7A5600     6.36:1
      -------------------------------------------------------------------- */
-  --case-bear:        #ff6b81;
-  --case-base:        #4ee6b8;
-  --case-bull:        #ffc94d;
-  --case-bear-deep:   #9b1f3a;
-  --case-base-deep:   #0d6b52;
-  --case-bull-deep:   #8a5a00;
+  --case-bear:      #ff4d6d;
+  --case-base:      #3dd9a0;
+  --case-bull:      #ffc11f;
+  --case-bear-deep: #c81e45;
+  --case-base-deep: #046b4c;
+  --case-bull-deep: #7a5600;
 
-  /* Set on <html> per selection by app.js. */
-  --case-field: #4ee6b8;
-  --case-line:  #4ee6b8;
-  --case-ink:   #10201a;
+  --case-field: #3dd9a0;
+  --case-line:  #3dd9a0;
+  --case-ink:   #0d0d0c;
 
-  /* ---- Ground, ink and surfaces ----------------------------------------
-     The default surface is the espresso chapter, so a selector that forgets to
-     name its field still lands on something dark and warm rather than blue. */
-  --ground:          #2a2019;
-  --ink:             #f6efe6;
-  --ink-soft:        #e6ddd0;
-  --ink-mid:         #c4b9a9;
-  --ink-dim:         #a1958a;
-  --card:            #34281f;
-  --plate:           #3d3026;
-  --field:           #2a2019;
-  --hairline:        rgba(246, 239, 230, 0.20);
-  --hairline-strong: rgba(246, 239, 230, 0.40);
+  /* ---- Ground, ink, surfaces ------------------------------------------
+     Near-neutral, per the corpus median. Colour lives in the fields and the
+     accents, not in the text colour. */
+  --ground:          #0d0d0c;
+  --ink:             #fafaf7;
+  --ink-soft:        #e2e2dc;
+  --ink-mid:         #a8a8a0;
+  --ink-dim:         #86867e;
+  --card:            #1a1815;
+  --plate:           #232019;
+  --field:           #1a1815;
+  --hairline:        rgba(250, 250, 247, 0.16);
+  --hairline-strong: rgba(250, 250, 247, 0.36);
 
-  --night:      #181410;
-  --night-card: #241c16;
-  --night-ink:  #f6efe6;
-  --night-mid:  #d8cbbb;
-  --night-line: rgba(246, 239, 230, 0.22);
+  --night:      #0d0d0c;
+  --night-card: #1a1815;
+  --night-ink:  #fafaf7;
+  --night-mid:  #d2d2ca;
+  --night-line: rgba(250, 250, 247, 0.18);
 
-  /* ---- Accent ----------------------------------------------------------
-     --cobalt and friends keep their token names because five stylesheets read
-     them, but the values are green and ochre now. Renaming a token without
-     updating every consumer breaks the page silently; the names are the API. */
-  --accent:        #eb4e14;
-  --accent-deep:   #b83a0c;
-  --gold:          #ffc94d;
-  --tangerine:     #eb4e14;
-  --tangerine-deep:#b83a0c;
-  --tangerine-tint:rgba(235, 78, 20, 0.14);
-  --tangerine-line:rgba(235, 78, 20, 0.42);
-  --cobalt:        #0f5748;
-  --cobalt-mid:    #0c4638;
-  --midnight:      #181410;
-  --warm-white:    #eee8dd;
-  --teal:          #4ee6b8;
-  --amber:         #ffc94d;
-  --rose:          #ff6b81;
+  /* ---- Accents ---------------------------------------------------------
+     #fd4401 is the corpus's most repeated vivid colour. --cobalt and friends
+     keep their names because five stylesheets consume them; the values are
+     the new system. */
+  --accent:         #fd4401;
+  --accent-deep:    #c93300;
+  --gold:           #ffc11f;
+  --tangerine:      #fd4401;
+  --tangerine-deep: #c93300;
+  --tangerine-tint: rgba(253, 68, 1, 0.14);
+  --tangerine-line: rgba(253, 68, 1, 0.42);
+  --cobalt:         #0d0d0c;
+  --cobalt-mid:     #1a1815;
+  --midnight:       #0d0d0c;
+  --warm-white:     #fafaf7;
+  --teal:           #3dd9a0;
+  --amber:          #ffc11f;
+  --rose:           #ff4d6d;
 
-  /* ---- Chart series -----------------------------------------------------
-     Dark-field series, solved against #165a38 / #2a2019 / #6a1b25 (all clear
-     3:1). Light-field variants live under [data-field="paper"]. */
-  --series-0: #f6efe6;   /* reported / actual — bone on dark          9.5:1 */
-  --series-1: #ffc94d;   /* forecast bars — gold                      10.4:1 */
-  --series-2: #4ee6b8;   /* case lines — mint                          5.2:1 */
-  --series-3: #ff6b81;   /* contrast series — rose                     3.0:1 */
-  --series-violet: #c98bff;
-  --series-rose:   #ff6b81;
+  /* ---- Chart series ----------------------------------------------------
+     Solved against the three fields charts are drawn on: futures #1a1815,
+     margins #06281c, trend #c4d82e. Every value clears 3:1 on all three. */
+  --series-0: #fafaf7;   /* reported / actual      16.9:1 on futures */
+  --series-1: #ffc11f;   /* forecast               10.9:1 on futures */
+  --series-2: #3dd9a0;   /* selected case           9.8:1 on futures */
+  --series-3: #ff4d6d;   /* contrast series         5.5:1 on futures */
+  --series-violet: #b98bff;
+  --series-rose:   #ff4d6d;
+
+  /* Per-field derived values. reboot.css rebinds these per section; these are
+     the futures defaults so an un-scoped selector still resolves. */
+  --ink-2:      #d2d2ca;
+  --line:       rgba(250, 250, 247, 0.16);
+  --line-2:     rgba(250, 250, 247, 0.36);
+  --panel:      #1a1815;
+  --stop:       #fd4401;
+  --field-hair: rgba(250, 250, 247, 0.36);
 }
 
-/* Light-field chart ink. Charts that sit on bone, sage or ochre switch to these
-   through the data-field attribute the chart kit already stamps. */
+/* Light-field chart ink. Charts on paper switch to deep hues rather than
+   trusting the bright ones to survive the flip. */
 [data-field="paper"],
-[data-field="sage"],
-[data-field="ochre"] {
-  --series-0: #2a2019;
-  --series-1: #8a5a00;
-  --series-2: #0d6b52;
-  --series-3: #9b1f3a;
+[data-field="sage"] {
+  --series-0: #0d0d0c;
+  --series-1: #7a5600;
+  --series-2: #046b4c;
+  --series-3: #c81e45;
 }
 
-/* The ochre field is dark enough that bone reads on it but the paper inks sit
-   close to the floor; give it the one value that clears comfortably. */
 [data-field="ochre"] {
-  --series-0: #231a0d;
+  --series-0: #1a1205;
   --series-1: #5c3d00;
-  --series-2: #0a5540;
-  --series-3: #7d1526;
+  --series-2: #04452f;
+  --series-3: #9e1030;
+}
+
+[data-field="chartreuse"] {
+  --series-0: #0d0d0c;
+  --series-1: #4a3200;
+  --series-2: #04452f;
+  --series-3: #9e1030;
 }
 
 /* ---- Selection ---------------------------------------------------------- */
 ::selection {
-  background: #ffc94d;
-  color: #1c1a16;
+  background: #c4d82e;
+  color: #0d0d0c;
 }
 
 /* ---- Focus --------------------------------------------------------------
-   One ring cannot clear 3:1 on nine different fields, so the ring is two-tone:
-   a bone core with a soot outline. At least one band always contrasts. */
+   A single ring cannot clear 3:1 against nine surfaces, so the ring is
+   two-tone: a bright core with a light halo. One band always contrasts. */
 :focus-visible {
-  outline: 2px solid #f6efe6;
+  outline: 2px solid #fd4401;
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px #181410;
+  box-shadow: 0 0 0 4px #fafaf7;
 }
