@@ -16,3 +16,7 @@ Thumbs.db
 # Test harnesses
 .verify/
 
+
+# Local preview stills
+preview/
+

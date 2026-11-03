@@ -16,37 +16,12 @@
 
 :root {
   /* --- the nine fields, as one lookup ------------------------------ */
-  --f-hero:      #1f2bd0;  /* cobalt flux */
-  --f-workbook:  #fff0e7;  /* warm paper */
-  --f-trend:     #0c6e74;  /* deep teal */
-  --f-marquee:   #ff5b45;  /* signal coral */
-  --f-futures:   #080c26;  /* midnight navy */
-  --f-margins:   #b22a4e;  /* ledger oxblood */
-  --f-ledger:    #f3ebd8;  /* aged ledger paper */
-  --f-method:    #ff7043;  /* tangerine */
-  --f-footer:    #0a0f1f;  /* press black */
-  --f-topbar:    #141c5a;  /* cobalt dusk (fixed layer, off the cycle) */
 
   /* --- ink on those fields ---------------------------------------- */
-  --i-hero:      #fff6ea;
-  --i-workbook:  #12123a;
-  --i-trend:     #fff3d6;
-  --i-marquee:   #1a0f12;
-  --i-futures:   #fff6ea;
-  --i-margins:   #fff6ea;
-  --i-ledger:    #12123a;
-  --i-method:    #12123a;
-  --i-footer:    #fff6ea;
-  --i-topbar:    #fff6ea;
 
   /* --- the accent: tangerine. Marks that MEAN something only ------ */
-  --accent:      #ff7043;
-  --accent-deep: #c2410c;
 
   /* --- case identity, driven from <html data-case> (see ------- */
-  --case-field:  #54c8ff;  /* Base */
-  --case-line:   #54c8ff;
-  --case-ink:    #fff6ea;
 
   /* --- type roles (. --font-mono is retired here. ---- */
   --font-label:  "Switzer", "Segoe UI", system-ui, sans-serif;
@@ -64,7 +39,7 @@
 }
 
 /* The page's default module is the hero (cobalt flux). */
-html { background: #1f2bd0; color: var(--i-hero); }
+html { background: var(--f-hero); color: var(--i-hero); }
 body { background: transparent; color: var(--i-hero); }
 
 /* ---- one universal derivation, declared once (----- */
@@ -74,7 +49,7 @@ body { background: transparent; color: var(--i-hero); }
 .footer,
 .topbar { --panel: color-mix(in oklab, var(--ink) 7%, var(--field)); }
 
-::selection { background: var(--accent); color: #12123a; }
+::selection { background: var(--accent); color: var(--ink-2); }
 
 /* ---------------------------------------------------------------------
  1. SECTION FIELDS — hard cuts, no gradients
@@ -86,99 +61,61 @@ section[id] { position: relative; }
 /* every module sets --field / --ink (and its tuned secondaries) */
 #overview {
   --field: var(--f-hero);    --ink: var(--i-hero);
-  --ink-2: #c7d0ff;          /* 6.00:1 */
-  --line:   #4d55dd;         /* decorative */
-  --line-2: #9c9ddf;         /* 3.59:1 */
-  --series-0: #fff6ea; --series-1: #ffe9a8; --series-2: #c7d0ff; --series-3: #ff7043;
   background: var(--field);
   color: var(--ink);
 }
 
 #workbook {
   --field: var(--f-workbook); --ink: var(--i-workbook);
-  --ink-2: #5b5570;           /* 6.34:1 */
-  --line:   #d8cbc0;
-  --line-2: #7a7486;          /* 4.04:1 */
-  --series-0: #12123a;
   background: var(--field);
   color: var(--ink);
 }
 
 #trend {
   --field: var(--f-trend);    --ink: var(--i-trend);
-  --ink-2: #d6f2ee;           /* 5.09:1 */
-  --line:   #3f8f92;
-  --line-2: #c9e6e2;          /* 3.9:1 */
-  --series-0: #c9e6e2; --series-1: #ffffff; --series-2: #ffe9a8; --series-3: #7dffe8;
   background: var(--field);
   color: var(--ink);
 }
 
 .marquee-field {
   --field: var(--f-marquee);  --ink: var(--i-marquee);
-  --ink-2: #4a2420;
-  --line:   #d94a34;
-  --line-2: #7a2a20;
   background: var(--field);
   color: var(--ink);
 }
 
 #futures {
   --field: var(--f-futures);  --ink: var(--i-futures);
-  --ink-2: #a9b4e0;           /* 9.43:1 */
-  --line:   #2a3050;
-  --line-2: #6b6a74;          /* 3.61:1 */
   /* the saturated palette is live HERE and only here */
-  --series-0: #54c8ff; --series-1: #ff8a3d; --series-2: #00e0c6; --series-3: #f5c400;
-  --series-pat: #ff4d8d;
   background: var(--field);
   color: var(--ink);
 }
 
 #margins {
   --field: var(--f-margins);  --ink: var(--i-margins);
-  --ink-2: #ffd9c9;           /* 4.80:1 */
-  --line:   #d17c8c;
-  --line-2: #eab4bb;          /* 3.52:1 */
-  --series-0: #ffd9a8; --series-1: #fff6ea; --series-2: #7dffe8; --series-3: #c9d2ff;
   background: var(--field);
   color: var(--ink);
 }
 
 #ledger {
   --field: var(--f-ledger);   --ink: var(--i-ledger);
-  --ink-2: #5a5468;           /* 6.09:1 */
-  --line:   #d6c9b4;
-  --line-2: #757180;          /* 3.99:1 */
-  --series-0: #1f2bd0; --series-1: #0a5c61; --series-2: #8a1f3a; --series-3: #5a5468;
   background: var(--field);
   color: var(--ink);
 }
 
 #method {
   --field: var(--f-method);   --ink: var(--i-method);
-  --ink-2: #3a2a22;           /* 4.99:1 */
-  --line:   #b3572f;
-  --line-2: #7a3b3e;          /* 3.03:1 */
-  --series-0: #12123a;
   background: var(--field);
   color: var(--ink);
 }
 
 .footer {
   --field: var(--f-footer);   --ink: var(--i-footer);
-  --ink-2: #b3bdd9;           /* 10.17:1 */
-  --line:   #2a3350;
-  --line-2: #68738f;
   background: var(--field);
   color: var(--ink);
 }
 
 .topbar {
   --field: var(--f-topbar);   --ink: var(--i-topbar);
-  --ink-2: #bfc6ea;           /* 9.29:1 */
-  --line:   #3a4585;
-  --line-2: #bfc6ea;
   background: color-mix(in srgb, var(--field) 94%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -189,10 +126,10 @@ section[id] { position: relative; }
 /* the rail is a fixed layer over a changing ground: pin its own ink */
 .topbar .wordmark { color: var(--i-topbar); }
 .topbar .wordmark b { color: var(--accent); }
-.topbar .top-nav a { color: #bfc6ea; }
+.topbar .top-nav a { color: var(--ink-dim); }
 .topbar .top-nav a:hover,
 .topbar .top-nav a.is-active { color: var(--i-topbar); border-bottom-color: var(--accent); }
-.topbar .topbar-chip { color: #bfc6ea; }
+.topbar .topbar-chip { color: var(--ink-dim); }
 
 /* kill the old radial/bloom fields outright */
 .chapter--hero,
@@ -318,7 +255,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
  so any ch-based cap here would re-wrap their lockup. */
 .hero-title em,
 .hero-em {
-  color: #ffe9a8;          /* 7.55:1 on #1f2bd0 */
+  color: #ffe9a8;          /* 7.55:1 on var(--f-hero) */
   font-style: normal;      /* Switzer ships no italic: never synthesise one */
   font-weight: 700;
   font-size: 1em;
@@ -344,30 +281,30 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 /* the deck plate is the CASE field: it re-inks with the signature */
 .hero-panel {
   background: var(--case-field);
-  color: #12123a;
+  color: var(--ink-2);
   border: 0;
   box-shadow: none;
   border-radius: 0;
 }
-.hero-panel::before { color: color-mix(in srgb, #12123a 12%, transparent); content: "FY28"; }
-.hero-value { color: #12123a; font-size: clamp(2.6rem, 6vw, 6.4rem); letter-spacing: -0.05em; }
-.hero-value small { color: color-mix(in srgb, #12123a 78%, transparent); }
-.hero-deck-eyebrow, .hero-range, .hero-deck-eyebrow span { color: #12123a; }
-.hero-delta, .hero-delta.is-down { color: #12123a; }
-.hero-control-group > span { color: #12123a; font-family: var(--font-label); }
+.hero-panel::before { color: color-mix(in srgb, var(--ink-2) 12%, transparent); content: "FY28"; }
+.hero-value { color: var(--ink-2); font-size: clamp(2.6rem, 6vw, 6.4rem); letter-spacing: -0.05em; }
+.hero-value small { color: color-mix(in srgb, var(--ink-2) 78%, transparent); }
+.hero-deck-eyebrow, .hero-range, .hero-deck-eyebrow span { color: var(--ink-2); }
+.hero-delta, .hero-delta.is-down { color: var(--ink-2); }
+.hero-control-group > span { color: var(--ink-2); font-family: var(--font-label); }
 .hero-control-group button {
   background: transparent;
-  color: #12123a;
-  border: 1px solid color-mix(in srgb, #12123a 55%, transparent);
+  color: var(--ink-2);
+  border: 1px solid color-mix(in srgb, var(--ink-2) 55%, transparent);
   min-height: 30px;
   min-width: 54px;
   border-radius: 0;
 }
-.hero-control-group button:hover { background: color-mix(in srgb, #12123a 14%, transparent); }
+.hero-control-group button:hover { background: color-mix(in srgb, var(--ink-2) 14%, transparent); }
 .hero-control-group button[aria-pressed="true"] {
-  background: #12123a;
+  background: var(--ink-2);
   color: var(--case-field);
-  border-color: #12123a;
+  border-color: var(--ink-2);
 }
 .scroll-cue { color: var(--ink-2); }
 .scroll-cue::after { background: var(--ink-2); }
@@ -506,7 +443,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .case-scale-dot { border-color: var(--line-2); }
 .case-scale-dot.is-active { background: var(--case-field); border-color: var(--case-field); }
 .case-scale-dot[data-case-dot="Bear Case"].is-active { background: #ff8a3d; border-color: #ff8a3d; }
-.case-scale-dot[data-case-dot="Base Case"].is-active { background: #54c8ff; border-color: #54c8ff; }
+.case-scale-dot[data-case-dot="Base Case"].is-active { background: var(--case-base); border-color: var(--case-base); }
 .case-scale-dot[data-case-dot="Bull Case"].is-active { background: #00e0c6; border-color: #00e0c6; }
 
 /* --- case cards: the three cases, as three fields ----------------- */
@@ -522,22 +459,22 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .case-card[aria-pressed="true"] {
   background: var(--case-card-field, var(--case-field));
   border-color: var(--case-card-field, var(--case-field));
-  color: #0d1024;
+  color: var(--f-futures);
 }
 .case-card[data-scenario="Bear Case"] { --case-card-field: #ff8a3d; }
-.case-card[data-scenario="Base Case"] { --case-card-field: #54c8ff; }
+.case-card[data-scenario="Base Case"] { --case-card-field: var(--case-base); }
 .case-card[data-scenario="Bull Case"] { --case-card-field: #00e0c6; }
 .case-card[aria-pressed="true"] .case-name,
 .case-card[aria-pressed="true"] .case-delta,
 .case-card[aria-pressed="true"] .case-value,
-.case-card[aria-pressed="true"] .case-value small { color: #0d1024; }
+.case-card[aria-pressed="true"] .case-value small { color: var(--f-futures); }
 .case-name { font-family: var(--font-label); }
 .case-delta { color: var(--ink-2); }
 .case-value { color: var(--ink); font-family: var(--font-num); }
 .case-fill { background: color-mix(in oklab, var(--ink) 16%, var(--field)); }
 .case-fill span { background: var(--case-card-field, var(--case-field)); }
 .case-card[aria-pressed="true"] .case-fill { background: rgba(13, 16, 36, 0.16); }
-.case-card[aria-pressed="true"] .case-fill span { background: #0d1024; }
+.case-card[aria-pressed="true"] .case-fill span { background: var(--f-futures); }
 
 /* assumptions: the selected column fills with the case ink */
 .assum-card { background: color-mix(in oklab, var(--ink) 7%, var(--field)); }
@@ -545,7 +482,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .assum-card td { color: var(--ink); border-bottom-color: var(--line); }
 .assum-card th.is-selected {
   background: var(--case-field);
-  color: #0d1024;
+  color: var(--f-futures);
 }
 .assum-card td.is-selected {
   background: color-mix(in oklab, var(--case-field) 22%, var(--field));
@@ -589,7 +526,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 .lever-stripe span { background: var(--stop); opacity: 0.34; transition: opacity var(--dur-1) var(--ease-micro); }
 .lever-stripe span.is-live { opacity: 1; }
 .lever-stripe span[data-stop="bear"] { --stop: #ff8a3d; }
-.lever-stripe span[data-stop="base"] { --stop: #54c8ff; }
+.lever-stripe span[data-stop="base"] { --stop: var(--case-base); }
 .lever-stripe span[data-stop="bull"] { --stop: #00e0c6; }
 
 .lever-track {
@@ -627,7 +564,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
   height: 34px;
   margin-top: -16px;
   background: var(--case-field);
-  border: 2px solid #0d1024;
+  border: 2px solid var(--f-futures);
   border-radius: 0;
   box-shadow: none;
 }
@@ -635,7 +572,7 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
   width: 22px;
   height: 34px;
   background: var(--case-field);
-  border: 2px solid #0d1024;
+  border: 2px solid var(--f-futures);
   border-radius: 0;
   box-shadow: none;
 }
@@ -792,13 +729,13 @@ h1, h2, h3, h4, h5, h6, .hero-title, .chapter-title, .chapter-no {
 /* per-case row ink */
 .case-chip { background: currentColor; }
 tr[data-row-scenario="Base Case"] .case-chip,
-.assumption-case-base { color: #1f2bd0; }
+.assumption-case-base { color: var(--f-hero); }
 tr[data-row-scenario="Bull Case"] .case-chip { color: #0a5c61; }
 tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
 .case-chip--bear  { background: #8a1f3a; }
-.case-chip--base  { background: #1f2bd0; }
+.case-chip--base  { background: var(--f-hero); }
 .case-chip--bull  { background: #0a5c61; }
-.case-chip--actual{ background: #12123a; }
+.case-chip--actual{ background: var(--ink-2); }
 
 /* the FY2026 FCF slot: an empty dashed outline + NOT DISCLOSED */
 .not-disclosed {
@@ -962,7 +899,7 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
        tr[tabindex], .chart-viewport[tabindex]):focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 2px #12123a,
+    0 0 0 2px var(--ink-2),
     0 0 0 5px #ffe9a8;
 }
 /* on the dark fields the pair inverts so the warm band does the work */
@@ -972,7 +909,7 @@ tr[data-row-scenario="Bear Case"] .case-chip { color: #8a1f3a; }
 #overview :where(a, button, input, [tabindex]):focus-visible {
   box-shadow:
     0 0 0 2px #ffe9a8,
-    0 0 0 5px #0d1024;
+    0 0 0 5px var(--f-futures);
 }
 
 /* ---------------------------------------------------------------------

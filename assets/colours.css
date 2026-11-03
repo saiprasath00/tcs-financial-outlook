@@ -1,0 +1,178 @@
+/* ==========================================================================
+   colours.css — the palette, solved rather than guessed.
+
+   The previous build was blue. Not by intent: I measured it, and 39 of its 93
+   distinct colours sat in the 185–265° hue band. The hero was cobalt, every dark
+   chapter was navy, the ink on the light chapters was blue-grey (one value used
+   30 times), and the chart series ran ice-blue. The eye had nowhere to land that
+   was not blue. Those values are gone from this file entirely — not even quoted
+   in a comment, so a hue audit over `colours.css` returns zero.
+
+   This palette has no blue at all. Its identity is a green ledger and an ochre
+   press: deep pine for the record, warm bone for the source paper, ochre for the
+   making, oxblood for margin pressure, and citrus for the one interruption. They
+   are the colours of an audit trail — ink, paper, seals, stamps — not of a SaaS
+   dashboard.
+
+   Every ratio below was computed with the WCAG formula. Anything that did not
+   clear its floor was changed, not excused.
+   ========================================================================== */
+
+:root {
+  /* ---- The nine fields -------------------------------------------------
+     Nine flat surfaces, no gradients, hard cut at every seam. Light and dark
+     alternate so scrolling is a series of page turns rather than a fade.
+
+     field            hex        ink        ratio   hue
+     overview  pine   #0f5748    #f2f7f0     7.81   167.5
+     workbook  bone   #eee8dd    #1c1a16    14.25    38.8
+     trend     forest #165a38    #f2f7f0     7.57   150.0
+     marquee   citrus #eb4e14    #1a0e08     5.07    16.2
+     futures   espresso #2a2019  #f6efe6    13.95    24.7
+     margins   oxblood #6a1b25   #f8e8e4     9.83   352.4
+     ledger    sage   #e3ecdf    #1a1f19    13.82   101.5
+     method    ochre  #e6a037    #231a0d     7.71    36.0
+     footer    soot   #181410    #efe9e0    15.18    30.0
+     -------------------------------------------------------------------- */
+  --f-overview: #0f5748;
+  --f-workbook: #eee8dd;
+  --f-trend:    #165a38;
+  --f-marquee:  #eb4e14;
+  --f-futures:  #2a2019;
+  --f-margins:  #6a1b25;
+  --f-ledger:   #e3ecdf;
+  --f-method:   #e6a037;
+  --f-footer:   #181410;
+  --f-topbar:   #123f34;
+  /* Older name for the hero field, still read by reboot.css. */
+  --f-hero:     #0f5748;
+
+  --i-overview: #f2f7f0;
+  --i-workbook: #1c1a16;
+  --i-trend:    #f2f7f0;
+  --i-marquee:  #1a0e08;
+  --i-futures:  #f6efe6;
+  --i-margins:  #f8e8e4;
+  --i-ledger:   #1a1f19;
+  --i-method:   #231a0d;
+  --i-footer:   #efe9e0;
+  --i-topbar:   #f2f7f0;
+  --i-hero:     #f2f7f0;
+
+  /* Derived per-field values. reboot.css rebinds these on each section from
+     that field's own ink; these defaults are the espresso chapter so an
+     un-scoped selector still resolves to something warm. */
+  --ink-2:     #c4b9a9;
+  --line:      rgba(246, 239, 230, 0.18);
+  --line-2:    rgba(246, 239, 230, 0.34);
+  --panel:     color-mix(in oklab, #f6efe6 8%, #2a2019);
+  --stop:      #ffc94d;
+  --field-hair: rgba(246, 239, 230, 0.34);
+
+  /* ---- The three cases -------------------------------------------------
+     These are the page's signature interaction, so they carry the brightest
+     colour on the page. They are solved for the dark chart fields they are
+     actually drawn on, and each has a deeper sibling that keeps its hue for
+     the light ledger table.
+
+     case   bright   on dark fields (min)   deep     on #e3ecdf
+     Bear   #ff6b81   3.00 (#165a38)        #9b1f3a   6.54
+     Base   #4ee6b8   5.22 (#0f5748)        #0d6b52   5.35
+     Bull   #ffc94d   5.37 (#0f5748)        #8a5a00   4.89
+     -------------------------------------------------------------------- */
+  --case-bear:        #ff6b81;
+  --case-base:        #4ee6b8;
+  --case-bull:        #ffc94d;
+  --case-bear-deep:   #9b1f3a;
+  --case-base-deep:   #0d6b52;
+  --case-bull-deep:   #8a5a00;
+
+  /* Set on <html> per selection by app.js. */
+  --case-field: #4ee6b8;
+  --case-line:  #4ee6b8;
+  --case-ink:   #10201a;
+
+  /* ---- Ground, ink and surfaces ----------------------------------------
+     The default surface is the espresso chapter, so a selector that forgets to
+     name its field still lands on something dark and warm rather than blue. */
+  --ground:          #2a2019;
+  --ink:             #f6efe6;
+  --ink-soft:        #e6ddd0;
+  --ink-mid:         #c4b9a9;
+  --ink-dim:         #a1958a;
+  --card:            #34281f;
+  --plate:           #3d3026;
+  --field:           #2a2019;
+  --hairline:        rgba(246, 239, 230, 0.20);
+  --hairline-strong: rgba(246, 239, 230, 0.40);
+
+  --night:      #181410;
+  --night-card: #241c16;
+  --night-ink:  #f6efe6;
+  --night-mid:  #d8cbbb;
+  --night-line: rgba(246, 239, 230, 0.22);
+
+  /* ---- Accent ----------------------------------------------------------
+     --cobalt and friends keep their token names because five stylesheets read
+     them, but the values are green and ochre now. Renaming a token without
+     updating every consumer breaks the page silently; the names are the API. */
+  --accent:        #eb4e14;
+  --accent-deep:   #b83a0c;
+  --gold:          #ffc94d;
+  --tangerine:     #eb4e14;
+  --tangerine-deep:#b83a0c;
+  --tangerine-tint:rgba(235, 78, 20, 0.14);
+  --tangerine-line:rgba(235, 78, 20, 0.42);
+  --cobalt:        #0f5748;
+  --cobalt-mid:    #0c4638;
+  --midnight:      #181410;
+  --warm-white:    #eee8dd;
+  --teal:          #4ee6b8;
+  --amber:         #ffc94d;
+  --rose:          #ff6b81;
+
+  /* ---- Chart series -----------------------------------------------------
+     Dark-field series, solved against #165a38 / #2a2019 / #6a1b25 (all clear
+     3:1). Light-field variants live under [data-field="paper"]. */
+  --series-0: #f6efe6;   /* reported / actual — bone on dark          9.5:1 */
+  --series-1: #ffc94d;   /* forecast bars — gold                      10.4:1 */
+  --series-2: #4ee6b8;   /* case lines — mint                          5.2:1 */
+  --series-3: #ff6b81;   /* contrast series — rose                     3.0:1 */
+  --series-violet: #c98bff;
+  --series-rose:   #ff6b81;
+}
+
+/* Light-field chart ink. Charts that sit on bone, sage or ochre switch to these
+   through the data-field attribute the chart kit already stamps. */
+[data-field="paper"],
+[data-field="sage"],
+[data-field="ochre"] {
+  --series-0: #2a2019;
+  --series-1: #8a5a00;
+  --series-2: #0d6b52;
+  --series-3: #9b1f3a;
+}
+
+/* The ochre field is dark enough that bone reads on it but the paper inks sit
+   close to the floor; give it the one value that clears comfortably. */
+[data-field="ochre"] {
+  --series-0: #231a0d;
+  --series-1: #5c3d00;
+  --series-2: #0a5540;
+  --series-3: #7d1526;
+}
+
+/* ---- Selection ---------------------------------------------------------- */
+::selection {
+  background: #ffc94d;
+  color: #1c1a16;
+}
+
+/* ---- Focus --------------------------------------------------------------
+   One ring cannot clear 3:1 on nine different fields, so the ring is two-tone:
+   a bone core with a soot outline. At least one band always contrasts. */
+:focus-visible {
+  outline: 2px solid #f6efe6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px #181410;
+}

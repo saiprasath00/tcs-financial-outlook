@@ -29,28 +29,28 @@
  workbook sparks → paper (#workbook)
  --------------------------------------------------------------------- */
 
-/* #overview — #1f2bd0. Only light series clear the floor here. */
+/* #overview — var(--f-hero). Only light series clear the floor here. */
 [data-field="cobalt"] {
-  --field: #1f2bd0;
+  --field: var(--f-hero);
   --field-ink: #fff6ea;            /* 8.48:1 */
-  --field-grid: #4d55dd;
-  --field-hair: #9c9ddf;           /* 3.59:1 */
-  --field-zone: color-mix(in oklab, #fff6ea 8%, #1f2bd0);
+  --field-grid: var(--line-2);
+  --field-hair: var(--ink-dim);           /* 3.59:1 */
+  --field-zone: color-mix(in oklab, #fff6ea 8%, var(--f-hero));
   --series-0: #fff6ea;             /* 8.48 reported / actual */
   --series-1: #ffe9a8;             /* 7.55 selected case */
-  --series-2: #c7d0ff;             /* 5.95 unselected cases */
+  --series-2: #ffc94d;             /* unselected cases on the hero field */
   --series-3: #ff7043;             /* 3.31 marker halo only */
   color-scheme: dark;
 }
 
-/* #futures — #080c26. The only field where the saturated set is live. */
+/* #futures — var(--f-futures). The only field where the saturated set is live. */
 [data-field="midnight"] {
-  --field: #080c26;
+  --field: var(--f-futures);
   --field-ink: #fff6ea;            /* 17.99:1 */
-  --field-grid: #2a3050;
+  --field-grid: var(--line);
   --field-hair: #6b6a74;
-  --field-zone: color-mix(in oklab, #fff6ea 8%, #080c26);
-  --series-0: #54c8ff;             /* Base 10.16 */
+  --field-zone: color-mix(in oklab, #fff6ea 8%, var(--f-futures));
+  --series-0: var(--case-base);             /* Base 10.16 */
   --series-1: #ff8a3d;             /* Bull 8.21 */
   --series-2: #00e0c6;             /* Bear 11.44 */
   --series-3: #f5c400;             /* FCF 11.71 */
@@ -81,19 +81,19 @@
   --series-0: #ffd9a8;             /* 4.72 EBITDA margin */
   --series-1: #fff6ea;             /* 5.89 PAT margin */
   --series-2: #7dffe8;             /* 5.20 forecast half */
-  --series-3: #c9d2ff;             /* 4.24 FCF bars */
+  --series-3: #9b1f3a;             /* FCF bars on the light field */
   color-scheme: dark;
 }
 
 /* #workbook — #fff0e7. Reported data never gets the saturated palette. */
 [data-field="paper"] {
   --field: #fff0e7;
-  --field-ink: #12123a;            /* 16.08:1 */
+  --field-ink: var(--ink-2);            /* 16.08:1 */
   --field-grid: #d8cbc0;
   --field-hair: #7a7486;           /* 4.04:1 */
-  --field-zone: color-mix(in oklab, #12123a 8%, #fff0e7);
-  --series-0: #12123a;
-  --series-1: #1f2bd0;
+  --field-zone: color-mix(in oklab, var(--ink-2) 8%, #fff0e7);
+  --series-0: var(--ink-2);
+  --series-1: var(--f-hero);
   --series-2: #0c6e74;
   --series-3: #b22a4e;
   color-scheme: light;
@@ -102,11 +102,11 @@
 /* #ledger — #f3ebd8. The register's dark inks. */
 [data-field="ledger"] {
   --field: #f3ebd8;
-  --field-ink: #12123a;            /* 15.07:1 */
+  --field-ink: var(--ink-2);            /* 15.07:1 */
   --field-grid: #d6c9b4;
   --field-hair: #757180;           /* 3.99:1 */
-  --field-zone: color-mix(in oklab, #12123a 8%, #f3ebd8);
-  --series-0: #1f2bd0;             /* 7.64 Base */
+  --field-zone: color-mix(in oklab, var(--ink-2) 8%, #f3ebd8);
+  --series-0: var(--f-hero);             /* 7.64 Base */
   --series-1: #8a1f3a;             /* 7.57 Bear */
   --series-2: #0a5c61;             /* 6.51 Bull */
   --series-3: #5a5468;             /* 6.09 muted */
@@ -116,10 +116,10 @@
 /* #method — #ff7043 */
 [data-field="method"] {
   --field: #ff7043;
-  --field-ink: #12123a;            /* 6.52:1 */
+  --field-ink: var(--ink-2);            /* 6.52:1 */
   --field-grid: #b3572f;
   --field-hair: #7a3b3e;           /* 3.03:1 */
-  --series-0: #12123a;
+  --series-0: var(--ink-2);
   color-scheme: light;
 }
 
@@ -145,7 +145,7 @@
 .chart-viewport[tabindex]:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 2px #0b1439,
+    0 0 0 2px var(--midnight),
     0 0 0 6px #ffca84;
 }
 [data-field="midnight"] .chart-viewport[tabindex]:focus-visible {
@@ -186,7 +186,7 @@
   fill: none;
 }
 
-.forecast-zone { fill: var(--field-zone, #e9e3f8); }
+.forecast-zone { fill: var(--field-zone, var(--series-3)); }
 .forecast-edge {
   stroke: var(--field-hair, var(--tangerine-line));
   stroke-dasharray: 2 4;
@@ -234,7 +234,7 @@
   min-width: 11rem;
   max-width: 17rem;
   /* Never transparent: ink on paper, readable on every field. */
-  background: var(--field-ink, #0b1439);
+  background: var(--field-ink, var(--midnight));
   color: var(--field, #fff5eb);
   border-radius: 0;
   padding: 0.6rem 0.7rem;

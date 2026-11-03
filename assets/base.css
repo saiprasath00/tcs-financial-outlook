@@ -358,7 +358,7 @@ small { font-size: var(--step-small); }
 .hero-title .lockup-line { max-width: 720px; }
 
 /* The em is emphasis by position, not by slant: Switzer ships no italic file,
- so font-style: italic would synthesise a fake oblique.Ink is warm gold #ffe9a8 (7.55:1 on #1f2bd0) — rejects tangerine at 3.31:1. */
+ so font-style: italic would synthesise a fake oblique.Ink is warm gold #ffe9a8 (7.55:1 on var(--f-hero)) — rejects tangerine at 3.31:1. */
 .hero-em {
   font-style: normal;
   color: #ffe9a8;

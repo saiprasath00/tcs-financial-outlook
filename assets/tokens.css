@@ -41,49 +41,15 @@
   --ease-reveal:      cubic-bezier(0.22, 1, 0.36, 1);
 
   /* ---- Base palette (light fallback; reboot.css replaces these) ------ */
-  --ground:          #ffffff;
-  --card:            #f4f5f7;
-  --plate:           #eceef2;
-  --field:           #dde2f0;
-  --ink:             #0b1439;
-  --ink-soft:        #2d3a5e;
-  --ink-mid:         #5c6b8a;
-  --ink-dim:         #8895b2;
-  --hairline:        rgba(11, 20, 57, 0.12);
-  --hairline-strong: rgba(11, 20, 57, 0.24);
-  --night:           #0b1439;
-  --night-card:      #112251;
-  --night-line:      rgba(222, 232, 255, 0.24);
-  --night-ink:       #fff5eb;
-  --night-mid:       #d3defb;
-  --night-dim:       #b9c9ef;
 
   /* ---- Accent colors -------------------------------------------------
  Honest names (: a token named for a hue it does not
  hold is a trap for the next person reading this file. No aliases — the
  old --violet* / --atlas-* names are deleted, not forwarded. */
-  --tangerine:       #ff7043;
-  --tangerine-deep:  #e64a1b;
-  --tangerine-tint:  rgba(255, 112, 67, 0.12);
-  --tangerine-line:  rgba(255, 112, 67, 0.4);
-  --cobalt:          #213bfa;
-  --cobalt-mid:      #1d34d8;
-  --midnight:        #0b1439;
-  --warm-white:      #fff5eb;
   /* Warm gold — the selected-case and forecast-bar ink, and the hero <em>
  (7.55:1 on the hero field; see. */
-  --gold:            #ffe9a8;
-  --teal:            #0dc5a0;
-  --amber:           #f5a623;
-  --rose:            #f43f73;
 
   /* ---- Chart series palette ----------------------------------------- */
-  --series-0: #213bfa;   /* cobalt — Base Case / reported */
-  --series-1: #ff7043;   /* tangerine — Bull Case accent */
-  --series-2: #0dc5a0;   /* teal — Bear Case */
-  --series-3: #f5a623;   /* amber — FCF */
-  --series-violet: #c84bff;   /* supplemental */
-  --series-rose:   #ff3d7c;   /* supplemental */
 
   /* ---- Structural tokens -------------------------------------------- */
   --shell:       86rem;
@@ -98,34 +64,9 @@
  reboot.css binds each to its section id; these tokens are the single
  source of truth so charts, the footer stamp and the topbar rail all
  read the same values. Hard steps, no gradient anywhere. */
-  --f-hero:     #1f2bd0;
-  --f-workbook: #fff0e7;
-  --f-trend:    #0c6e74;
-  --f-marquee:  #ff5b45;
-  --f-futures:  #080c26;
-  --f-margins:  #b22a4e;
-  --f-ledger:   #f3ebd8;
-  --f-method:   #ff7043;
-  --f-footer:   #0a0f1f;
-  --f-topbar:   #141c5a;
 
-  --i-hero:     #fff6ea;
-  --i-workbook: #12123a;
-  --i-trend:    #fff3d6;
-  --i-marquee:  #1a0f12;
-  --i-futures:  #fff6ea;
-  --i-margins:  #fff6ea;
-  --i-ledger:   #12123a;
-  --i-method:   #12123a;
-  --i-footer:   #fff6ea;
-  --i-topbar:   #fff6ea;
 
   /* ---- Case encoding (set per case by app.js on <html>) -------------- */
-  --accent:       #ff7043;
-  --accent-deep:  #c2410c;
-  --case-field:   #54c8ff;   /* Base — app.js overrides per selection */
-  --case-line:    #54c8ff;
-  --case-ink:     #0b1439;
 
   /* ---- Type roles (---------------------------------- */
   --font-display: "Switzer", "Segoe UI", system-ui, sans-serif;

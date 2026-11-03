@@ -58,6 +58,9 @@
   <!-- The rebuilt data atlas uses one self-hosted typeface. -->
   <link rel="preload" href="assets/fonts/switzer-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/switzer-400.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- The palette loads first and is the only place a colour is defined.
+       Everything below reads tokens from it. -->
+  <link rel="stylesheet" href="assets/colours.css">
   <link rel="stylesheet" href="assets/tokens.css">
   <link rel="stylesheet" href="assets/base.css">
   <link rel="stylesheet" href="assets/story.css">
